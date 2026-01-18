@@ -13,18 +13,18 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   identity:
     # Site name - shown in navbar, footer, copyright, and browser title by default
-    name: "Your Name"
+    name: "Stefano Blando"
     # Legal entity for copyright notices (defaults to name if not set)
-    organization: ""
+    organization: "Stefano Blando"
     # Schema.org type for structured data
     type: person                        # person | organization | local_business
     # Short tagline displayed on your site
-    tagline: ""
+    tagline: "PhD Candidate in AI & Economics"
     # Site meta description for search engines and social sharing
-    description: "The highly-customizable Hugo Academic theme powered by HugoBlox Kit. Easily create your personal academic website."
+    description: "Personal academic website of Stefano Blando, PhD Candidate in AI & Economics."
     # Social accounts (used for meta tags like Twitter Cards)
     social:
-      twitter: "LoreLabs_"              # Twitter/X handle for Twitter Cards (without @)
+      twitter: ""               # Lascia vuoto se non vuoi che appaia nei metadata
 
   # ────────────────────────────────────────────────────────────────────────────
   # THEME
@@ -116,9 +116,9 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   copyright:
     # Copyright notice - supports {year}, {name}, {license} placeholders
-    notice: "© {year} {name}. This work is licensed under {license}"
+    notice: "© {year} {name}."
     license:
-      type: cc                          # cc | custom
+      type: custom                      # cc | custom
       allow_derivatives: false
       share_alike: true
       allow_commercial: false
@@ -129,7 +129,7 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   seo:
     # Browser tab title override (defaults to identity.name if not set)
-    title: ""
+    title: "Stefano Blando | AI & Economics"
     # For local_business identity type only
     location:
       address:
@@ -147,7 +147,7 @@ hugoblox:
       allow:
         - /
       disallow: []
-      note: "Guidance for AI crawlers - customize to match your public content."
+      note: "Guidance for AI crawlers."
       contact: ""
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -155,9 +155,9 @@ hugoblox:
   # Content rendering and behavior
   # ────────────────────────────────────────────────────────────────────────────
   content:
-    # Math rendering
+    # Math rendering (IMPORTANTE: ABILITATO PER FORMULE LATEX)
     math:
-      enable: false
+      enable: true
     # Table of contents
     toc:
       enable: true
@@ -280,12 +280,5 @@ hugoblox:
   # Pro subscription features and affiliate program
   # ────────────────────────────────────────────────────────────────────────────
   pro:
-    # Hide "Powered by HugoBlox" attribution
-    # Requires: Pro subscription to support HugoBlox via alternative means
-    # Note: Even with Pro, you can keep this false to support open source!
-    # Get Pro: https://hugoblox.com/pro
     hide_attribution: false
-    
-    # Affiliate referral code for rewards program
-    # Join affiliate program: https://hugoblox.com/affiliates
     affiliate_code: ""
