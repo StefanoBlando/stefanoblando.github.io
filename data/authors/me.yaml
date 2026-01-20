@@ -62,8 +62,8 @@ education:
     institution: University of Rome Tor Vergata
     start: 2019-09-15
     end: 2022-10-19
-  - degree: BA in Philosophy
-    institution: University of Rome Tor Vergata
+  - degree: BA in Philosophy (unconcluded)
+    institution: University of Rome La Sapienza
     start: 2014-09-01
     end: 2017-07-01
 
@@ -76,9 +76,11 @@ skills:
     items:
       - label: Python
         level: 5
-      - label: Agent-Based Modeling (Mesa, NetLogo)
+      - label: R
         level: 5
-      - label: Reinforcement Learning
+      - label: Agent-Based Modeling
+        level: 5
+      - label: Machine Learning, Reinforcement Learning
         level: 4
       - label: Network Science
         level: 4
@@ -90,6 +92,11 @@ skills:
         level: 5
       - label: Financial Networks
         level: 5
+      - label: Computational Economics
+        level: 5
+      - label: Algorithmic Methods
+        level: 4 
+      - label: Statistical Model Checking (SMC)
 
 languages:
   - name: Italian
@@ -97,18 +104,27 @@ languages:
     label: Native
   - name: English
     level: 5
-    label: Professional Working Proficiency
+    label: Fluent (C2)
+  - name: French
+    level: 3 
+    label: Intermediate Proficiency (B1)
+  - name: German 
+    level: 2 
+    label: Basic Proficiency (A2)
+  - name: Spanish 
+    level: 2
+    label: Basic Proficiency (A2)
 
 awards:
   - title: PhD Fellowship
     awarder: National PhD Program in AI
-    date: "2023-11-01"
+    date: "2025-11-01"
     icon: hero/trophy
   - title: 2nd Place AI Data Hackathon
     awarder: ""
-    date: ""
+    date: "2024-12-12"
     icon: hero/star
   - title: Alpine Climate Challenge Finalist
-    awarder: ""
+    awarder: "2025-03-12"
     date: ""
     icon: hero/star
