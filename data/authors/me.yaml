@@ -86,17 +86,6 @@ skills:
         level: 4
       - label: LaTeX
         level: 5
-  - name: Research
-    items:
-      - label: Economic Complexity
-        level: 5
-      - label: Financial Networks
-        level: 5
-      - label: Computational Economics
-        level: 5
-      - label: Algorithmic Methods
-        level: 4 
-      - label: Statistical Model Checking (SMC)
 
 languages:
   - name: Italian
