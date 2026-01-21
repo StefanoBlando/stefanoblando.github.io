@@ -75,7 +75,7 @@ skills:
   - name: Skilss
     items:
       - label: Python
-        percent: 100 # Puoi usare "percent: 100" se preferisci la barra
+        level: 5 # Puoi usare "percent: 100" se preferisci la barra
       - label: R
         level: 5
       - label: SQL
