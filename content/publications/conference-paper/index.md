@@ -12,7 +12,7 @@ publishDate: "2024-04-04T00:00:00Z"
 # Legend: 0 = Uncategorized; 1 = Conference paper; 2 = Journal article;
 # 3 = Preprint / Working Paper; 4 = Report; 5 = Book; 6 = Book section;
 # 7 = Thesis; 8 = Patent
-publication_types: ["7"]
+publication_types: [7]
 
 # Publication name and optional abbreviation (e.g. journal).
 publication: "University of Rome Tor Vergata - School of Economics and Finance"
@@ -38,7 +38,7 @@ links:
 - name: Supervisor
   url: https://economia.uniroma2.it/facolta/docenti/curriculum/alessio-farcomeni # Prof. Alessio Farcomeni
 - name: Code
-  url: https://github.com/stefanoblando/Robust-Portfolio-Optimization # Assicurati che il link sia giusto
+  url: https://github.com/stefanoblando/robust-portfolio-optimization # Assicurati che il link sia giusto
 
 url_pdf: ''
 url_code: ''
