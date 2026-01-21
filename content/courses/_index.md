@@ -2,6 +2,7 @@
 title: Courses
 summary: My courses
 type: landing
+draft: true  <-- AGGIUNGI QUESTA RIGA
 
 cascade:
   - target:
