@@ -11,8 +11,8 @@ hugoblox:
     name: "Stefano Blando"
     organization: "Stefano Blando"
     type: person
-    tagline: "PhD Candidate in AI & Economics"
-    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Researching Complex Systems, Network Science, and Economic Networks."
+    tagline: "PhD Candidate in Artificial Intelligence"
+    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Researching Complex Systems, Network Science, Machine Learning."
     social:
       # twitter: ""  # Commentato per nasconderlo dai metadata
 
