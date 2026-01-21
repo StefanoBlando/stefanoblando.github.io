@@ -1,90 +1,63 @@
 ---
-title: 'An example conference paper'
-
-# Authors
-# If you created a profile for a user (e.g. the default `me` user), write the username (folder name) here
-# and it will be replaced with their full name and linked to their profile.
+title: "High-dimensional Robust Portfolio Optimization Under Sparse Contamination: A Factor-Analytic Approach"
 authors:
-  - me
-  - Robert Ford
-
-# Author notes (optional)
-author_notes:
-  - 'Equal contribution'
-  - 'Equal contribution'
-
-date: '2013-07-01T00:00:00Z'
+- admin
+date: "2025-04-04"
+doi: ""
 
 # Schedule page publish date (NOT publication's date).
-publishDate: '2017-01-01T00:00:00Z'
+publishDate: "2024-04-04T00:00:00Z"
 
 # Publication type.
-# Accepts a single type but formatted as a YAML list (for Hugo requirements).
-# Enter a publication type from the CSL standard.
-publication_types: ['paper-conference']
+# Legend: 0 = Uncategorized; 1 = Conference paper; 2 = Journal article;
+# 3 = Preprint / Working Paper; 4 = Report; 5 = Book; 6 = Book section;
+# 7 = Thesis; 8 = Patent
+publication_types: ["7"]
 
-# Publication name and optional abbreviated publication name.
-publication: In *HugoBlox Kit Conference*
-publication_short: In *ICW*
+# Publication name and optional abbreviation (e.g. journal).
+publication: "University of Rome Tor Vergata - School of Economics and Finance"
+publication_short: "MSc Thesis"
 
-abstract: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.
+abstract: "This thesis addresses the challenge of portfolio optimization in high-dimensional settings (p > n) affected by sparse contamination (outliers). By proposing a robust Factor-Analytic approach, the study demonstrates how to stabilize covariance matrix estimation against data anomalies. The resulting allocation strategies exhibit superior resilience and risk-adjusted returns compared to traditional Mean-Variance frameworks, especially during market shocks."
 
 # Summary. An optional shortened abstract.
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum.
+summary: "A robust statistical framework for optimizing high-dimensional portfolios in the presence of market outliers."
 
 tags:
-  - Large Language Models
+- Quantitative Finance
+- Robust Statistics
+- Portfolio Optimization
+- High-Dimensional Data
+- R
 
 # Display this page in the Featured widget?
 featured: true
 
-# Standard identifiers for auto-linking
-hugoblox:
-  ids:
-    doi: 10.5555/123456
-
-# Custom links
+# Custom links (optional).
 links:
-  - type: pdf
-    url: ""
-  - type: code
-    url: https://github.com/HugoBlox/kit
-  - type: dataset
-    url: https://github.com/HugoBlox/kit
-  - type: slides
-    url: https://www.slideshare.net/
-  - type: source
-    url: https://github.com/HugoBlox/kit
-  - type: video
-    url: https://youtube.com
+- name: Supervisor
+  url: https://economia.uniroma2.it/facolta/docenti/curriculum/alessio-farcomeni # Prof. Alessio Farcomeni
+- name: Code
+  url: https://github.com/stefanoblando/Robust-Portfolio-Optimization # Assicurati che il link sia giusto
+
+url_pdf: ''
+url_code: ''
+url_dataset: ''
+url_poster: ''
+url_project: ''
+url_slides: ''
+url_source: ''
+url_video: ''
 
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder.
 image:
-  caption: 'Image credit: [**Unsplash**](https://unsplash.com/photos/pLCdAaMFLTE)'
-  focal_point: ''
+  caption: 'Robust Frontier'
+  focal_point: ""
   preview_only: false
 
 # Associated Projects (optional).
-#   Associate this publication with one or more of your projects.
-#   Simply enter your project's folder or file name without extension.
-#   E.g. `internal-project` references `content/project/internal-project/index.md`.
-#   Otherwise, set `projects: []`.
+# Associate this publication with one of your projects.
 projects:
-  - example
-
-# Slides (optional).
-#   Associate this publication with Markdown slides.
-#   Simply enter your slide deck's filename without extension.
-#   E.g. `slides: "example"` references `content/slides/example/index.md`.
-#   Otherwise, set `slides: ""`.
-slides: ""
+- robust-portfolio-optimization # DEVE corrispondere al nome della cartella in content/project/
 ---
-
-> [!NOTE]
-> Click the _Cite_ button above to demo the feature to enable visitors to import publication metadata into their reference management software.
-
-> [!NOTE]
-> Create your slides in Markdown - click the _Slides_ button to check out the example.
-
-Add the publication's **full text** or **supplementary notes** here. You can use rich formatting such as including [code, math, and images](https://docs.hugoblox.com/content/writing-markdown-latex/).
