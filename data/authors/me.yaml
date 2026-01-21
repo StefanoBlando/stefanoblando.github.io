@@ -78,9 +78,19 @@ skills:
         level: 5
       - label: R
         level: 5
+      - label: SQL
+        level: 5
+      - label: MATLAB
+        level: 5
+      - label: SAS
+        level: 4
+      - label: Git
+        level: 4
+      - label: Machine Learning
+        level: 5
       - label: Agent-Based Modeling
         level: 5
-      - label: Machine Learning, Reinforcement Learning
+      - label: Reinforcement Learning
         level: 4
       - label: Network Science
         level: 4
