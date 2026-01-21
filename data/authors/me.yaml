@@ -71,7 +71,7 @@ education:
 experience: []
 
 # Skills (Diviso in due gruppi per creare due colonne)
-skills and methods:
+skills:
   - name: Skilss
     items:
       - label: Python
