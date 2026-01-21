@@ -1,7 +1,7 @@
 ---
 title: "High-dimensional Robust Portfolio Optimization Under Sparse Contamination: A Factor-Analytic Approach"
 authors:
-- admin
+- me
 date: "2025-04-04"
 doi: ""
 
