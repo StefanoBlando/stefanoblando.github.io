@@ -70,12 +70,12 @@ education:
 # Sezione Esperienze Lavorative (Lascia vuota o metti le tue se ne hai)
 experience: []
 
-# Skills (Modificabile a piacere)
-skills:
-  - name: Technical Skills
+# Skills (Diviso in due gruppi per creare due colonne)
+skills and methods:
+  - name: Skilss
     items:
       - label: Python
-        level: 5
+        percent: 100 # Puoi usare "percent: 100" se preferisci la barra
       - label: R
         level: 5
       - label: SQL
@@ -86,6 +86,11 @@ skills:
         level: 4
       - label: Git
         level: 4
+      - label: LaTeX
+        level: 5
+
+  - name: Methods
+    items:
       - label: Machine Learning
         level: 5
       - label: Agent-Based Modeling
@@ -94,8 +99,10 @@ skills:
         level: 4
       - label: Network Science
         level: 4
-      - label: LaTeX
-        level: 5
+      - label: Systemic Risk Analysis
+        level: 4
+      - label: Causal Inference
+        level: 4
 
 languages:
   - name: Italian
