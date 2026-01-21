@@ -150,18 +150,6 @@ hugoblox:
       note: "Guidance for AI crawlers."
       contact: ""
 
-# ────────────────────────────────────────────────────────────────────────────
-  # MARKETING & SHARING
-  # ────────────────────────────────────────────────────────────────────────────
-  marketing:
-    sharing:
-      enabled: true
-      platforms:
-        facebook: false
-        twitter: false
-        linkedin: true
-        whatsapp: false
-        email: true
         
   # ────────────────────────────────────────────────────────────────────────────
   # CONTENT
