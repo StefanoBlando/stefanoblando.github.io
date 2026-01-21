@@ -21,11 +21,11 @@ hugoblox:
     # Short tagline displayed on your site
     tagline: "PhD Candidate in AI & Economics"
     # Site meta description for search engines and social sharing
-    description: "Personal academic website of Stefano Blando, PhD Candidate in AI & Economics."
-    # Social accounts (used for meta tags like Twitter Cards)
+    # Site meta description for search engines and social sharing
+    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Researching Complex Systems, Network Science, and Economic Networks."
+    # Social accounts
     social:
-      twitter: ""               # Lascia vuoto se non vuoi che appaia nei metadata
-
+      # twitter: ""  <-- Commentalo col # così è disattivato del tutto
   # ────────────────────────────────────────────────────────────────────────────
   # THEME
   # Color and visual design system
@@ -129,7 +129,7 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   seo:
     # Browser tab title override (defaults to identity.name if not set)
-    title: "Stefano Blando | AI & Economics"
+    title: "Stefano Blando | Artificial Intelligence"
     # For local_business identity type only
     location:
       address:
@@ -150,6 +150,19 @@ hugoblox:
       note: "Guidance for AI crawlers."
       contact: ""
 
+# ────────────────────────────────────────────────────────────────────────────
+  # MARKETING & SHARING
+  # ────────────────────────────────────────────────────────────────────────────
+  marketing:
+    sharing:
+      enabled: true
+      platforms:
+        facebook: false
+        twitter: false
+        linkedin: true
+        whatsapp: false
+        email: true
+        
   # ────────────────────────────────────────────────────────────────────────────
   # CONTENT
   # Content rendering and behavior
@@ -241,9 +254,9 @@ hugoblox:
   # Regional formatting preferences
   # ────────────────────────────────────────────────────────────────────────────
   locale:
-    date_format: "Jan 2, 2006"          # Go time format
-    time_format: "3:04 PM"
-    address_format: en-us
+    date_format: "Jan 2, 2006" 
+    time_format: "15:04"      <-- Formato 24h (Europeo)
+    address_format: en-gb     <-- Formato indirizzo europeo
 
   # ────────────────────────────────────────────────────────────────────────────
   # SECURITY
