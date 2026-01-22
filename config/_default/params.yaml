@@ -9,11 +9,11 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   identity:
     name: "Stefano Blando"
-    organization: "University of Pisa & Sant'Anna School" # Meglio mettere l'istituzione reale per l'autorità accademica
+    organization: "Scuola Superiore Sant'Anna & University of Pisa" # Meglio mettere l'istituzione reale per l'autorità accademica
     type: person
     tagline: "PhD Candidate in Artificial Intelligence"
     # SEO OPTIMIZATION: Descrizione più ricca di keyword per i motori di ricerca
-    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Research focus on Graph Neural Networks (GNN), Systemic Risk, Complex Systems, and Financial Machine Learning."
+    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Research focus on Agent-based Models (ABM), Graph Neural Networks (GNN), Systemic Risk, Complex Systems, and Machine Learning."
     social:
       # twitter: ""  # Commentato come da tua richiesta
 
