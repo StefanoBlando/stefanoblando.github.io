@@ -90,7 +90,7 @@ hugoblox:
   # COPYRIGHT
   # ────────────────────────────────────────────────────────────────────────────
   copyright:
-    notice: "© {year} {name}."
+    notice: "© {year} {me}."
     license:
       type: custom
       allow_derivatives: false
