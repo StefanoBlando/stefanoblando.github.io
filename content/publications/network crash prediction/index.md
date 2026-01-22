@@ -39,15 +39,15 @@ links:
   url: https://github.com/stefanoblando/systemic-risk-prediction
 - type: project
   url: project/systemic-risk-prediction/
-- # type: dataset
+ # type: dataset
    # url: ""
--  # type: poster
+  # type: poster
    # url: ""
--  # type: slides
+  # type: slides
    # url: ""
--  # type: source
+  # type: source
   # url: ""
-- # type: video
+ # type: video
   # url: ""
 
 # Featured image
