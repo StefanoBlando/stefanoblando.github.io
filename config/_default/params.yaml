@@ -9,19 +9,20 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   identity:
     name: "Stefano Blando"
-    organization: "Stefano Blando"
+    organization: "University of Pisa & Sant'Anna School" # Meglio mettere l'istituzione reale per l'autorità accademica
     type: person
     tagline: "PhD Candidate in Artificial Intelligence"
-    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Researching Complex Systems, Network Science, Machine Learning."
+    # SEO OPTIMIZATION: Descrizione più ricca di keyword per i motori di ricerca
+    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Research focus on Graph Neural Networks (GNN), Systemic Risk, Complex Systems, and Financial Machine Learning."
     social:
-      # twitter: ""  # Commentato per nasconderlo dai metadata
+      # twitter: ""  # Commentato come da tua richiesta
 
   # ────────────────────────────────────────────────────────────────────────────
-  # MARKETING & SHARING (DISABILITATI I PULSANTI SOCIAL)
+  # MARKETING & SHARING
   # ────────────────────────────────────────────────────────────────────────────
   marketing:
     sharing:
-      enabled: false  # Questo nasconde le icone Facebook/X/WhatsApp dai paper
+      enabled: false  # Rimane nascosto visivamente, ma i meta-tag per LinkedIn/Twitter verranno generati comunque se il tema lo supporta.
 
   # ────────────────────────────────────────────────────────────────────────────
   # THEME
@@ -97,17 +98,18 @@ hugoblox:
       allow_commercial: false
 
   # ────────────────────────────────────────────────────────────────────────────
-  # SEO
+  # SEO (SEZIONE CRITICA OTTIMIZZATA)
   # ────────────────────────────────────────────────────────────────────────────
   seo:
-    title: "Stefano Blando | Artificial Intelligence"
+    # SEO OPTIMIZATION: Titolo più descrittivo per la SERP (Search Engine Results Page)
+    title: "Stefano Blando | AI Researcher & PhD Candidate"
     location:
       address:
         street: ""
-        city: ""
-        region: ""
+        city: "Pisa"        # Aiuta per la geolocalizzazione accademica
+        region: "Tuscany"
         postal_code: ""
-        country: ""
+        country: "Italy"
       coordinates:
         latitude: null
         longitude: null
@@ -116,7 +118,7 @@ hugoblox:
       allow:
         - /
       disallow: []
-      note: "Guidance for AI crawlers."
+      note: "Research portfolio compliant with AI crawlers."
       contact: ""
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -155,11 +157,11 @@ hugoblox:
       shortname: ""
 
   # ────────────────────────────────────────────────────────────────────────────
-  # ANALYTICS
+  # ANALYTICS (DA COMPILARE PER LA SEO)
   # ────────────────────────────────────────────────────────────────────────────
   analytics:
     google:
-      measurement_id: ""
+      measurement_id: "G-NX5N314DTK" # INSERISCI QUI IL TUO ID (es. G-XXXXXXXX) - Fondamentale per monitorare il traffico
     google_tag_manager:
       container_id: ""
     plausible:
@@ -174,10 +176,10 @@ hugoblox:
       site_id: ""
 
   # ────────────────────────────────────────────────────────────────────────────
-  # VERIFICATION
+  # VERIFICATION (DA COMPILARE PER ESSERE INDICIZZATI SUBITO)
   # ────────────────────────────────────────────────────────────────────────────
   verification:
-    google: ""
+    google: "xJEVgSpLZbZSsI4L1nTO9juTfxE-J_53EVLt2opx10s" # INSERISCI QUI IL CODICE DI GOOGLE SEARCH CONSOLE
     bing: ""
     baidu: ""
     yandex: ""
