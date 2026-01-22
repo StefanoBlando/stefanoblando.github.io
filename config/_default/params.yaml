@@ -161,7 +161,7 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   analytics:
     google:
-      measurement_id: "" # INSERISCI QUI IL TUO ID (es. G-XXXXXXXX) - Fondamentale per monitorare il traffico
+      measurement_id: "G-NX5N314DTK" # INSERISCI QUI IL TUO ID (es. G-XXXXXXXX) - Fondamentale per monitorare il traffico
     google_tag_manager:
       container_id: ""
     plausible:
