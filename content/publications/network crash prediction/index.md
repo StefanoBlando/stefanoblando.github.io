@@ -39,16 +39,16 @@ links:
   url: https://github.com/stefanoblando/systemic-risk-prediction
 - type: project
   url: project/systemic-risk-prediction/
-- type: dataset
-  url: ""
-- type: poster
-  url: ""
-- type: slides
-  url: ""
-- type: source
-  url: ""
-- type: video
-  url: ""
+- # type: dataset
+   # url: ""
+-  # type: poster
+   # url: ""
+-  # type: slides
+   # url: ""
+-  # type: source
+  # url: ""
+- # type: video
+  # url: ""
 
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder. 
