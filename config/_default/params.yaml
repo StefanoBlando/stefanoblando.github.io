@@ -1,236 +1,238 @@
- ══════════════════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════════
 # HUGO BLOX CONFIGURATION
 # ══════════════════════════════════════════════════════════════════════════════
 hugoblox:
-  schema: "2.0"
+  schema: "2.0"
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # IDENTITY
-  # ────────────────────────────────────────────────────────────────────────────
-  identity:
-    name: "Stefano Blando"
-    organization: "Stefano Blando"
-    type: person
-    tagline: "PhD Candidate in Artificial Intelligence"
-    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Researching Complex Systems, Network Science, Machine Learning."
-    social:
-      # twitter: ""  # Commentato per nasconderlo dai metadata
+  # ────────────────────────────────────────────────────────────────────────────
+  # IDENTITY
+  # ────────────────────────────────────────────────────────────────────────────
+  identity:
+    name: "Stefano Blando"
+    organization: "University of Pisa & Sant'Anna School" # Meglio mettere l'istituzione reale per l'autorità accademica
+    type: person
+    tagline: "PhD Candidate in Artificial Intelligence"
+    # SEO OPTIMIZATION: Descrizione più ricca di keyword per i motori di ricerca
+    description: "Stefano Blando - PhD Candidate in AI at SSSA & UniPi. Research focus on Graph Neural Networks (GNN), Systemic Risk, Complex Systems, and Financial Machine Learning."
+    social:
+      # twitter: ""  # Commentato come da tua richiesta
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # MARKETING & SHARING (DISABILITATI I PULSANTI SOCIAL)
-  # ────────────────────────────────────────────────────────────────────────────
-  marketing:
-    sharing:
-      enabled: false  # Questo nasconde le icone Facebook/X/WhatsApp dai paper
+  # ────────────────────────────────────────────────────────────────────────────
+  # MARKETING & SHARING
+  # ────────────────────────────────────────────────────────────────────────────
+  marketing:
+    sharing:
+      enabled: false  # Rimane nascosto visivamente, ma i meta-tag per LinkedIn/Twitter verranno generati comunque se il tema lo supporta.
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # THEME
-  # ────────────────────────────────────────────────────────────────────────────
-  theme:
-    mode: system
-    pack: "default"
-    colors:
-      primary: ""
-      secondary: ""
-      neutral: ""
-    colors_light: {}
-    colors_dark: {}
-    surfaces:
-      background: ""
-      foreground: ""
-      header:
-        background: ""
-        foreground: ""
-      footer:
-        background: ""
-        foreground: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # THEME
+  # ────────────────────────────────────────────────────────────────────────────
+  theme:
+    mode: system
+    pack: "default"
+    colors:
+      primary: ""
+      secondary: ""
+      neutral: ""
+    colors_light: {}
+    colors_dark: {}
+    surfaces:
+      background: ""
+      foreground: ""
+      header:
+        background: ""
+        foreground: ""
+      footer:
+        background: ""
+        foreground: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # TYPOGRAPHY
-  # ────────────────────────────────────────────────────────────────────────────
-  typography:
-    font: "sans"
-    size: "md"
+  # ────────────────────────────────────────────────────────────────────────────
+  # TYPOGRAPHY
+  # ────────────────────────────────────────────────────────────────────────────
+  typography:
+    font: "sans"
+    size: "md"
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # LAYOUT
-  # ────────────────────────────────────────────────────────────────────────────
-  layout:
-    radius: "md"
-    spacing: "comfortable"
-    avatar_shape: circle
+  # ────────────────────────────────────────────────────────────────────────────
+  # LAYOUT
+  # ────────────────────────────────────────────────────────────────────────────
+  layout:
+    radius: "md"
+    spacing: "comfortable"
+    avatar_shape: circle
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # HEADER
-  # ────────────────────────────────────────────────────────────────────────────
-  header:
-    enable: true
-    style: navbar
-    sticky: true
-    align: center
-    search: true
-    theme_toggle: true
-    theme_picker: true
-    language_switcher: true
-    cta:
-      enable: false
-      text: ""
-      url: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # HEADER
+  # ────────────────────────────────────────────────────────────────────────────
+  header:
+    enable: true
+    style: navbar
+    sticky: true
+    align: center
+    search: true
+    theme_toggle: true
+    theme_picker: true
+    language_switcher: true
+    cta:
+      enable: false
+      text: ""
+      url: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # FOOTER
-  # ────────────────────────────────────────────────────────────────────────────
-  footer:
-    style: minimal
-    language_switcher: true
-    text: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # FOOTER
+  # ────────────────────────────────────────────────────────────────────────────
+  footer:
+    style: minimal
+    language_switcher: true
+    text: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # COPYRIGHT
-  # ────────────────────────────────────────────────────────────────────────────
-  copyright:
-    notice: "© {year} {name}."
-    license:
-      type: custom
-      allow_derivatives: false
-      share_alike: true
-      allow_commercial: false
+  # ────────────────────────────────────────────────────────────────────────────
+  # COPYRIGHT
+  # ────────────────────────────────────────────────────────────────────────────
+  copyright:
+    notice: "© {year} {name}."
+    license:
+      type: custom
+      allow_derivatives: false
+      share_alike: true
+      allow_commercial: false
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # SEO
-  # ────────────────────────────────────────────────────────────────────────────
-  seo:
-    title: "Stefano Blando | Artificial Intelligence"
-    location:
-      address:
-        street: ""
-        city: ""
-        region: ""
-        postal_code: ""
-        country: ""
-      coordinates:
-        latitude: null
-        longitude: null
-      phone: ""
-    ai:
-      allow:
-        - /
-      disallow: []
-      note: "Guidance for AI crawlers."
-      contact: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # SEO (SEZIONE CRITICA OTTIMIZZATA)
+  # ────────────────────────────────────────────────────────────────────────────
+  seo:
+    # SEO OPTIMIZATION: Titolo più descrittivo per la SERP (Search Engine Results Page)
+    title: "Stefano Blando | AI Researcher & PhD Candidate"
+    location:
+      address:
+        street: ""
+        city: "Pisa"        # Aiuta per la geolocalizzazione accademica
+        region: "Tuscany"
+        postal_code: ""
+        country: "Italy"
+      coordinates:
+        latitude: null
+        longitude: null
+      phone: ""
+    ai:
+      allow:
+        - /
+      disallow: []
+      note: "Research portfolio compliant with AI crawlers."
+      contact: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # CONTENT
-  # ────────────────────────────────────────────────────────────────────────────
-  content:
-    math:
-      enable: true # FONDAMENTALE PER LE TUE TESI (LaTeX)
-    toc:
-      enable: true
-    reading_time:
-      enable: true
-    citations:
-      style: apa
+  # ────────────────────────────────────────────────────────────────────────────
+  # CONTENT
+  # ────────────────────────────────────────────────────────────────────────────
+  content:
+    math:
+      enable: true # FONDAMENTALE PER LE TUE TESI (LaTeX)
+    toc:
+      enable: true
+    reading_time:
+      enable: true
+    citations:
+      style: apa
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # SEARCH
-  # ────────────────────────────────────────────────────────────────────────────
-  search:
-    enable: true
-    suggestions: []
-    quick_actions: []
+  # ────────────────────────────────────────────────────────────────────────────
+  # SEARCH
+  # ────────────────────────────────────────────────────────────────────────────
+  search:
+    enable: true
+    suggestions: []
+    quick_actions: []
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # COMMENTS
-  # ────────────────────────────────────────────────────────────────────────────
-  comments:
-    enable: false
-    provider: ""
-    giscus:
-      repo: ""
-      repo_id: ""
-      category: ""
-      category_id: ""
-    disqus:
-      shortname: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # COMMENTS
+  # ────────────────────────────────────────────────────────────────────────────
+  comments:
+    enable: false
+    provider: ""
+    giscus:
+      repo: ""
+      repo_id: ""
+      category: ""
+      category_id: ""
+    disqus:
+      shortname: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # ANALYTICS
-  # ────────────────────────────────────────────────────────────────────────────
-  analytics:
-    google:
-      measurement_id: "G-NX5N314DTK"
-    google_tag_manager:
-      container_id: ""
-    plausible:
-      domain: ""
-    fathom:
-      site_id: ""
-    pirsch:
-      site_id: ""
-    clarity:
-      project_id: ""
-    baidu:
-      site_id: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # ANALYTICS (DA COMPILARE PER LA SEO)
+  # ────────────────────────────────────────────────────────────────────────────
+  analytics:
+    google:
+      measurement_id: "" # INSERISCI QUI IL TUO ID (es. G-XXXXXXXX) - Fondamentale per monitorare il traffico
+    google_tag_manager:
+      container_id: ""
+    plausible:
+      domain: ""
+    fathom:
+      site_id: ""
+    pirsch:
+      site_id: ""
+    clarity:
+      project_id: ""
+    baidu:
+      site_id: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # VERIFICATION
-  # ────────────────────────────────────────────────────────────────────────────
-  verification:
-    google: "xJEVgSpLZbZSsI4L1nTO9juTfxE-J_53EVLt2opx10s"
-    bing: ""
-    baidu: ""
-    yandex: ""
-    pinterest: ""
-    naver: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # VERIFICATION (DA COMPILARE PER ESSERE INDICIZZATI SUBITO)
+  # ────────────────────────────────────────────────────────────────────────────
+  verification:
+    google: "" # INSERISCI QUI IL CODICE DI GOOGLE SEARCH CONSOLE
+    bing: ""
+    baidu: ""
+    yandex: ""
+    pinterest: ""
+    naver: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # REPOSITORY
-  # ────────────────────────────────────────────────────────────────────────────
-  repository:
-    enable: false
-    url: ""
-    branch: main
-    content_dir: content
+  # ────────────────────────────────────────────────────────────────────────────
+  # REPOSITORY
+  # ────────────────────────────────────────────────────────────────────────────
+  repository:
+    enable: false
+    url: ""
+    branch: main
+    content_dir: content
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # LOCALE
-  # ────────────────────────────────────────────────────────────────────────────
-  locale:
-    date_format: "Jan 2, 2006"
-    time_format: "15:04"    # FORMATO 24H (Europeo)
-    address_format: en-gb   # FORMATO INDIRIZZO EUROPEO
+  # ────────────────────────────────────────────────────────────────────────────
+  # LOCALE
+  # ────────────────────────────────────────────────────────────────────────────
+  locale:
+    date_format: "Jan 2, 2006"
+    time_format: "15:04"    # FORMATO 24H (Europeo)
+    address_format: en-gb   # FORMATO INDIRIZZO EUROPEO
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # SECURITY
-  # ────────────────────────────────────────────────────────────────────────────
-  security:
-    csp:
-      policy: ""
-      report_only: false
-    frame_options: allow
-    permissions_policy: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # SECURITY
+  # ────────────────────────────────────────────────────────────────────────────
+  security:
+    csp:
+      policy: ""
+      report_only: false
+    frame_options: allow
+    permissions_policy: ""
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # PRIVACY
-  # ────────────────────────────────────────────────────────────────────────────
-  privacy:
-    enable: false
-    anonymize_analytics: true
+  # ────────────────────────────────────────────────────────────────────────────
+  # PRIVACY
+  # ────────────────────────────────────────────────────────────────────────────
+  privacy:
+    enable: false
+    anonymize_analytics: true
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # DEBUG
-  # ────────────────────────────────────────────────────────────────────────────
-  debug:
-    enable: false
-    hud:
-      position: bottom-left
-      opacity: 1.0
-    export_logs: true
+  # ────────────────────────────────────────────────────────────────────────────
+  # DEBUG
+  # ────────────────────────────────────────────────────────────────────────────
+  debug:
+    enable: false
+    hud:
+      position: bottom-left
+      opacity: 1.0
+    export_logs: true
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # PRO
-  # ────────────────────────────────────────────────────────────────────────────
-  pro:
-    hide_attribution: false
-    affiliate_code: ""
+  # ────────────────────────────────────────────────────────────────────────────
+  # PRO
+  # ────────────────────────────────────────────────────────────────────────────
+  pro:
+    hide_attribution: false
+    affiliate_code: ""
