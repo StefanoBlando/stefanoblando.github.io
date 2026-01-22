@@ -1,11 +1,11 @@
 ---
-title: "An example preprint / working paper"
+title: "Network Topology Analysis for Systemic Risk Prediction"
 authors:
 - me
-date: "2019-04-07T00:00:00Z"
+date: "2026-01-01T00:00:00Z"
 
 # Schedule page publish date (NOT publication's date).
-publishDate: "2017-01-01T00:00:00Z"
+publishDate: "2026-01-01T00:00:00Z"
 
 # Publication type.
 # Accepts a single type but formatted as a YAML list (for Hugo requirements).
@@ -13,47 +13,47 @@ publishDate: "2017-01-01T00:00:00Z"
 publication_types: ["article"]
 
 # Publication name and optional abbreviated publication name.
-publication: ""
-publication_short: ""
+publication: "Working Paper (Graph Neural Networks)"
+publication_short: "Working Paper"
 
-abstract: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.
+abstract: "This research presents a novel framework for predicting financial market crashes and volatility spillovers by combining Dynamic Correlation Networks with Graph Neural Networks (GNNs). Specifically, the study employs the GraphSAGE architecture to learn inductive node embeddings from the evolving market topology. By capturing non-linear dependencies and topological shifts in the asset correlation network, the model aims to identify precursors of systemic risk events earlier and more accurately than traditional econometric indicators."
 
 # Summary. An optional shortened abstract.
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum.
+summary: "Application of Dynamic Correlation Networks and Graph Neural Networks (GraphSAGE) to predict market crashes and volatility spillovers."
 
 tags:
-- Large Language Models
+- Systemic Risk
+- Graph Neural Networks
+- GraphSAGE
+- Financial Markets
+- Deep Learning
 
 featured: true
 
-hugoblox:
-  ids:
-    arxiv: 1512.04133v1
+# hugoblox:
+#   ids:
+#     arxiv: 
 
 links:
-- type: preprint
-  provider: arxiv
-  id: 1512.04133v1
 - type: code
-  url: https://github.com/HugoBlox/kit
-- type: slides
-  url: https://www.slideshare.net/
+  url: https://github.com/stefanoblando/systemic-risk-prediction
+- type: project
+  url: project/systemic-risk-prediction/
 - type: dataset
-  url: "#"
+  url: ""
 - type: poster
-  url: "#"
+  url: ""
+- type: slides
+  url: ""
 - type: source
-  url: "#"
+  url: ""
 - type: video
-  url: https://youtube.com
-- type: custom
-  label: Custom Link
-  url: http://example.org
+  url: ""
 
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder. 
 image:
-  caption: 'Image credit: [**Unsplash**](https://unsplash.com/photos/s9CC2SKySJM)'
+  caption: 'Dynamic Correlation Network'
   focal_point: ""
   preview_only: false
 
@@ -63,7 +63,7 @@ image:
 #   E.g. `internal-project` references `content/project/internal-project/index.md`.
 #   Otherwise, set `projects: []`.
 projects:
-- internal-project
+- systemic-risk-prediction
 
 # Slides (optional).
 #   Associate this publication with Markdown slides.
@@ -73,9 +73,7 @@ projects:
 slides: ""
 ---
 
-This work is driven by the results in my [previous paper](/publications/conference-paper/) on LLMs.
+This work represents a methodological application of **Graph Neural Networks** to financial time series, derived from my Master Thesis research.
 
 > [!NOTE]
-> Create your slides in Markdown - click the *Slides* button to check out the example.
-
-Add the publication's **full text** or **supplementary notes** here. You can use rich formatting such as including [code, math, and images](https://docs.hugoblox.com/content/writing-markdown-latex/).
+> The code implements **GraphSAGE** for inductive representation learning on dynamic financial networks.
