@@ -16,7 +16,7 @@ publishDate: "2024-04-04T00:00:00Z"
 publication_types: 7
 
 # Publication name and optional abbreviation (e.g. journal).
-publication: "University of Rome Tor Vergata - School of Economics and Finance"
+publication: "MSc Thesis, working paper
 publication_short: "MSc Thesis"
 
 abstract: "This thesis addresses the challenge of portfolio optimization in high-dimensional settings (p > n) affected by sparse contamination (outliers). By proposing a robust Factor-Analytic approach, the study demonstrates how to stabilize covariance matrix estimation against data anomalies. The resulting allocation strategies exhibit superior resilience and risk-adjusted returns compared to traditional Mean-Variance frameworks, especially during market shocks."
