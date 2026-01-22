@@ -1,7 +1,7 @@
 ---
 title: "Multi-Method Triangulation for Large-Scale Multilingual Text Analytics"
 authors:
-- "Stefano Blando"
+- me
 - "Domenica Fioredistella Iezzi" # Aggiunto Co-Autore
 date: "2026-01-15"
 doi: ""
@@ -11,7 +11,7 @@ publishDate: "2025-02-01T00:00:00Z"
 
 # Publication type.
 # 3 = Preprint / Working Paper
-publication_types: ["3"]
+publication_types: [3]
 
 # Publication name.
 publication: "Methodological Working Paper (Draft)"
