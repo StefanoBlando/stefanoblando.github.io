@@ -159,7 +159,7 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   analytics:
     google:
-      measurement_id: ""
+      measurement_id: "G-NX5N314DTK"
     google_tag_manager:
       container_id: ""
     plausible:
