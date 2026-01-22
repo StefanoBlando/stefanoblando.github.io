@@ -63,7 +63,7 @@ image:
 #   E.g. `internal-project` references `content/project/internal-project/index.md`.
 #   Otherwise, set `projects: []`.
 projects:
-- systemic-risk-prediction
+- systemic-risk-prediction-networks
 
 # Slides (optional).
 #   Associate this publication with Markdown slides.
@@ -75,5 +75,5 @@ slides: ""
 
 This work represents a methodological application of **Graph Neural Networks** to financial time series, derived from my Master Thesis research.
 
-> [!NOTE]
-> The code implements **GraphSAGE** for inductive representation learning on dynamic financial networks.
+> #[!NOTE]
+> #The code implements **GraphSAGE** for inductive representation learning on dynamic financial networks.
