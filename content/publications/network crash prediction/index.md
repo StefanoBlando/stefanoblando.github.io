@@ -74,6 +74,3 @@ slides: ""
 ---
 
 This work represents a methodological application of **Graph Neural Networks** to financial time series, derived from my Master Thesis research.
-
-> #[!NOTE]
-> #The code implements **GraphSAGE** for inductive representation learning on dynamic financial networks.
