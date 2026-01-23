@@ -14,8 +14,11 @@ status:
 
 role: PhD Candidate in Artificial Intelligence
 
+# BIO BREVE
 bio: |
-  PhD Researcher in AI bridging Economic Theory and Data-Driven Science via Complex Systems & Simulation.
+  Stefano Blando is a PhD Researcher within the National PhD Program in Artificial Intelligence (AI for Society), based at the Scuola Superiore Sant'Anna and the University of Pisa.
+  His research bridges the gap between Economic Theory and Data-Driven AI. Building on a solid multi-disciplinary foundation in Economics & Finance, Statistics, and Machine Learning, he focuses on the rigorous validation of complex systems.
+  His goal is to overcome the limitations of static equilibrium models by applying advanced computational frameworks to socio-economic dynamics.
 
 affiliations:
   - name: National PhD Program in AI (SSSA & UniPi)
@@ -45,7 +48,6 @@ interests:
   - High-Dimensional Statistics
   - Systemic Risk & Resilience
 
-# --- QUI INIZIA L'EDUCAZIONE (TIMELINE SCUOLA) ---
 education:
   - degree: PhD in Artificial Intelligence
     institution: Scuola Superiore Sant'Anna & University of Pisa
@@ -85,8 +87,6 @@ education:
     end: 2017-07-01
     summary: "Foundational studies in Logic and Philosophy of Science."
 
-# --- QUI INIZIA L'ESPERIENZA (TIMELINE LAVORO) ---
-# Questa è la parte che mancava! Ora che è qui dentro, il widget la troverà.
 experience:
   - title: PhD Researcher
     company: Scuola Superiore Sant'Anna
@@ -123,7 +123,6 @@ experience:
       * Led macroeconomic and sectoral analysis initiatives.
       * Facilitated partnerships with financial firms (e.g., Deltahedge) and organized networking visits (Google EMEA HQ).
 
-# --- SKILLS E LINGUE ---
 skills:
   - name: Technical Skills
     items:
@@ -175,14 +174,10 @@ languages:
     label: Basic (A2)
 
 awards:
-  - title: PhD Fellowship
-    awarder: National PhD Program in AI
-    date: "2025-11-01"
-    icon: hero/trophy
   - title: Bertelsmann Next Gen Tech Booster
     awarder: Udacity & Bertelsmann
     date: "2024-11-01"
-    summary: "Selected for Generative AI Nanodegree (Top 3% of candidates)."
+    summary: "Selected for Generative AI Nanodegree (Top 2% of candidates)."
     icon: hero/star
   - title: 1st Place Huawei DigitALL Night
     awarder: Huawei
