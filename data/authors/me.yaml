@@ -92,9 +92,21 @@ education:
     summary: "Focus on Logic and Philosophy of Science."
 
 experience:
+  - title: PhD Researcher
+    company: Scuola Superiore Sant'Anna
+    company_url: 'https://www.santannapisa.it/'
+    location: Pisa, Italy
+    date_start: 2023-11-01
+    date_end: Present
+    description: |
+      Conducting research on the validation of complex systems within the National PhD Program in AI.
+      * Developing Automated Parameter Calibration methods using Simulation-Based Inference (SBI).
+      * Applying Graph Neural Networks (GNNs) for Systemic Risk prediction.
+      * **Teaching Assistant:** Supporting courses in Computational Economics and AI.
+
   - title: Academic Tutor & Teaching Assistant
     company: University of Rome Tor Vergata
-    company_url: ''
+    company_url: 'https://economia.uniroma2.it/'
     location: Rome, Italy
     date_start: 2020-03-01
     date_end: 2025-01-31
@@ -114,7 +126,6 @@ experience:
       Coordinated a team of 70+ members and organized 10+ financial workshops and events.
       * Led macroeconomic and sectoral analysis initiatives.
       * Facilitated partnerships with financial firms (e.g., Deltahedge) and organized networking visits (Google EMEA HQ).
-
 skills:
   - name: Technical Skills
     items:
