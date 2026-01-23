@@ -56,8 +56,9 @@ image:
   focal_point: ""
   preview_only: false
 
-# Associated Projects (optional).
-# Associate this publication with one of your projects.
+
+# Associated Projects.
+# Questo serve per mostrare la scheda del progetto in fondo alla pagina
 projects:
-- network-crash-prediction # IMPORTANTE: Deve corrispondere al nome della cartella in content/projects/
+- network-crash-prediction
 ---
