@@ -15,7 +15,7 @@ links:
     url: https://github.com/stefanoblando/systemic-risk-prediction
 ---
 
-This project implements the research for the Master Thesis **"Network Topology Analysis and Machine Learning Techniques for Systemic Risk Prediction in U.S. Equity Markets."** It investigates the application of complex network theory and deep learning to forecast systemic events using daily price data from **210 S&P 500 constituents spanning 2013–2025**.
+This project implements the research for the Master Thesis **"Network Topology and Machine Learning for Systemic Risk: From Early Warning to Trading Strategies."** It investigates the application of complex network theory and deep learning to forecast systemic events using daily price data from **210 S&P 500 constituents spanning 2013–2025**.
 
 **Novel Methodological Contributions:**
 * **Hybrid Predictive Framework:** Integration of network-derived features (Eigenvalue entropy, Absorption Ratio, Modularity) with traditional market indicators to predict crash targets.
