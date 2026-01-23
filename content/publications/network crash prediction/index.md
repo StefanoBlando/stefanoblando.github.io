@@ -1,11 +1,17 @@
 ---
-title: "Network Topology and Machine Learning for Systemic Risk"
-authors:
-- me
-date: "2026-01-01T00:00:00Z"
+title: "Network Topology and Machine Learning for Systemic Risk: From Early Warning to Trading Strategies"
 
-# Schedule page publish date (NOT publication's date).
+authors:
+  - me
+
+date: "2026-01-01T00:00:00Z"
 publishDate: "2026-01-01T00:00:00Z"
+
+# "2" indica solitamente "Journal Article" nel tema Academic/Hugo Blox
+publication_types: ["2"] 
+
+featured: true
+---
 
 # Publication type.
 # Accepts a single type but formatted as a YAML list (for Hugo requirements).
