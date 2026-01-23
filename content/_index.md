@@ -6,18 +6,17 @@ date: 2022-10-24
 type: landing
 
 design:
-  # Default section spacing
   spacing: '6rem'
 
 sections:
-  # 1. LA TUA BIOGRAFIA
+  # 1. BIOGRAFIA
   - block: resume-biography-3
     content:
-      username: me  
+      username: me
       text: ''
       button:
         text: Download CV
-        url: uploads/resume.pdf 
+        url: uploads/resume.pdf
     design:
       background:
         gradient_mesh:
@@ -28,20 +27,23 @@ sections:
         size: large
         shape: circle
 
-  # 2. LA TUA RICERCA
+  # 2. RESEARCH OVERVIEW (Dettagliata e strutturata)
   - block: markdown
     content:
       title: '📚 Research Overview'
       subtitle: ''
-      text: |-
-        My research focuses on **Dynamic Economic Networks**, using **Agent-Based Modeling (ABM)** and **Reinforcement Learning** to simulate financial markets and map uncertainty.
-
-        I am a PhD Candidate in **Artificial Intelligence** within the National PhD Program (SSSA & UniPi). I aim to move beyond static network models to capture how individual strategies create emergent collective behaviors that reshape economic systems over time.
+      text: |
+        My research agenda addresses the **validation gap** in complex socio-economic systems. By integrating **Economic Theory** with **Data-Driven AI**, I aim to overcome the limitations of static equilibrium models and map uncertainty in non-ergodic environments.
+        
+        Current work focuses on three methodological pillars:
+        
+        * **Simulation & Inference:** Developing pipelines for **Automated Parameter Calibration** of Agent-Based Models (ABM) using **Simulation-Based Inference (SBI)** and ABC methods.
+        * **Systemic Risk & Topology:** Leveraging **Graph Neural Networks (GNNs)** and Deep Learning to analyze financial network topologies and predict systemic distress.
+        * **Scalable Computing:** Utilizing **High-Performance Computing (HPC)** to perform rigorous Statistical Model Checking and Ensemble Analysis on high-dimensional systems.
     design:
       columns: '1'
 
-  # 3. NEWS & UPDATES (AGGIUNTO ORA)
-  # Questo blocco legge i file dentro content/blog/ e li mostra come Notizie
+  # 3. NEWS
   - block: collection
     id: news
     content:
@@ -50,10 +52,10 @@ sections:
       text: ''
       filters:
         folders:
-          - blog  # <--- IMPORTANTE: Legge dalla cartella fisica 'blog'
+          - blog
         exclude_featured: false
     design:
-      view: date_title_summary # Visualizza data, titolo e riassunto (ottimo per le news)
+      view: date_title_summary
       columns: 2
 
   # 4. PUBBLICAZIONI
@@ -63,7 +65,7 @@ sections:
       title: Publications
       filters:
         folders:
-          - publications # <--- Assicurati di avere la cartella content/publications
+          - publications
         featured_only: false
     design:
       view: citation
