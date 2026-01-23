@@ -1,6 +1,6 @@
 ---
 title: "Graduation: II Level Master CESMA (110/110 cum laude)"
-date: 2026-02-02
+date: 2026-01-23
 summary: "Graduation ceremony at University of Rome Tor Vergata. Thesis on Systemic Risk Prediction with 110/110 cum laude."
 authors:
   - admin
