@@ -87,13 +87,13 @@ education:
     end: 2017-07-01
     summary: "Foundational studies in Logic and Philosophy of Science."
 
-work:
+experience:
   - title: PhD Researcher
-    company: Scuola Superiore Sant'Anna
-    company_url: 'https://www.santannapisa.it/'
+    organization: Scuola Superiore Sant'Anna
+    organization_url: 'https://www.santannapisa.it/'
     location: Pisa, Italy
-    date_start: 2025-11-01
-    date_end: ''  # Lascia vuoto per il lavoro attuale
+    start: 2023-11-01
+    end: '' 
     description: |
       Conducting research on the validation of complex systems within the National PhD Program in AI.
       * Developing Automated Parameter Calibration methods using Simulation-Based Inference (SBI).
@@ -101,27 +101,23 @@ work:
       * **Teaching Assistant:** Supporting courses in Computational Economics and AI.
 
   - title: Academic Tutor & Teaching Assistant
-    company: University of Rome Tor Vergata
-    company_url: ''
+    organization: University of Rome Tor Vergata
+    organization_url: ''
     location: Rome, Italy
-    date_start: 2020-03-01
-    date_end: 2025-01-31
+    start: 2020-03-01
+    end: 2025-01-31
     description: |
       Provided academic support and statistical consulting to students at the Data Processing Center.
-      * Supported the **Sustainable Supply Chain & Operations Management** course.
-      * Supervised student projects and provided guidance on study planning.
-      * **Awards:** Recipient of two Academic Tutorship Awards for excellence in support.
 
   - title: Secretary General & Team Lead
-    company: Starting Finance Club Tor Vergata
-    company_url: ''
+    organization: Starting Finance Club Tor Vergata
+    organization_url: ''
     location: Rome, Italy
-    date_start: 2023-06-01
-    date_end: 2025-02-01
+    start: 2022-06-01
+    end: 2022-09-30
     description: |
       Coordinated a team of 70+ members and organized 10+ financial workshops and events.
-      * Led macroeconomic and sectoral analysis initiatives.
-      * Facilitated partnerships with financial firms (e.g., Deltahedge) and organized networking visits (Google EMEA HQ).
+
 skills:
   - name: Technical Skills
     items:
