@@ -20,8 +20,11 @@ role: PhD Candidate in Artificial Intelligence
 
 # Bio breve per i widget (sidebar)
 bio: |
-  Stefano Blando is a PhD Candidate in Artificial Intelligence within the National PhD Program (SSSA & UniPi).
-  His research concentrates on complex systems and high-dimensional socio-economic networks, with the goal of developing interpretable models for real-world impact.
+ Stefano Blando is a PhD Researcher within the National PhD Program in AI (SSSA & UniPi), bridging the gap between Economic Theory and Data-Driven AI.
+  
+  Building on a multi-disciplinary foundation in Economics, Statistics, and Machine Learning, he focuses on the rigorous validation of complex systems using High-Performance Computing (HPC).
+  
+  His goal is to overcome the limitations of static equilibrium models by applying Automated Parameter Calibration, Simulation-Based Inference (SBI), and Graph Neural Networks (GNNs) to map uncertainty in non-ergodic socio-economic environments.
 
 affiliations:
   - name: National PhD Program in AI (SSSA & UniPi)
@@ -41,13 +44,13 @@ links:
   #   url: https://twitter.com/
 
 interests:
-  - Dynamic Economic Networks
-  - Machine Learning
   - Agent-Based Modeling (ABM)
-  - Reinforcement Learning
-  - Systemic Risk & Resilience
+  - Simulation-Based Inference (SBI)
+  - Graph Neural Networks (GNNs)
+  - Non-Ergodic Economics
   - Statistical Model Checking
-  - Causal Inference
+  - High-Dimensional Statistics
+  - Systemic Risk & Resilience
 
 education:
   - degree: PhD in Artificial Intelligence
@@ -55,25 +58,38 @@ education:
     start: 2023-11-01
     end: Present
     summary: |
-      Research on "Dynamic Economic Networks for Societal Innovation".
-      Focus on Agent-Based Modeling, Reinforcement Learning, and Complex Systems.
+      Research Focus: "Validation of Complex Dynamical Stochastic Systems".
+      Methodologies: Automated Parameter Calibration (ABC/SBI), Ensemble Analysis, and Deep Learning for Financial Topology.
+
   - degree: Master in AI, ML & Data Science (CESMA)
     institution: University of Rome Tor Vergata
     start: 2025-02-03
     end: 2026-02-02
+    summary: |
+      Thesis: "Network Topology and Machine Learning for Systemic Risk".
+      Focus: Graph Neural Networks (GNNs), Early Warning Systems, and Financial Machine Learning.
+
   - degree: MSc in Economics of Markets & Financial Intermediaries
     institution: University of Rome Tor Vergata
     start: 2022-10-20
     end: 2025-04-04
+    summary: |
+      Thesis: "High-dimensional Robust Portfolio Optimization Under Contamination".
+      Focus: Robust Statistics, Quantitative Finance, and Factor-Analytic Approaches.
+
   - degree: BSc in Governance & International Relations
     institution: University of Rome Tor Vergata
     start: 2019-09-15
     end: 2022-10-19
+    summary: |
+      Focus on Political Economy and International Relations.
+      Thesis on [Inserisci Argomento Tesi se vuoi] or Quantitative Methods for Social Sciences.
+
   - degree: BA in Philosophy (paused for personal reasons)
     institution: University of Rome La Sapienza
     start: 2014-09-01
     end: 2017-07-01
-
+    summary: "Focus on Logic and Philosophy of Science."
 experience: []
 
 skills:
