@@ -24,7 +24,7 @@ My thesis, titled **"Network Topology and Machine Learning for Systemic Risk: Fr
 
 This work is directly connected to my ongoing research. You can explore the technical details and the code in the dedicated sections of this portfolio:
 
-* 👉 **[View the Research Project](../../project/network-crash-prefiction)** * 📄 **[Read the Related Paper](../../publication/systemic-crash-prediction)** The master provided a strong foundation in advanced statistical methods and AI, which I am now applying to my PhD research at Scuola Superiore Sant'Anna.
+* 👉 **[View the Research Project](../../project/network-crash-prediction)** * 📄 **[Read the Related Paper](../../publication/network-crash-prediction)** The master provided a strong foundation in advanced statistical methods and AI, which I am now applying to my PhD research at Scuola Superiore Sant'Anna.
 
 ---
 *(Photo from the ceremony to be added soon)*
