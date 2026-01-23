@@ -10,7 +10,6 @@ publishDate: "2026-01-01T00:00:00Z"
 # "2" indica solitamente "Journal Article" nel tema Academic/Hugo Blox
 publication_types: ["2"] 
 
-featured: true
 ---
 
 # Publication type.
