@@ -139,18 +139,3 @@ awards:
     awarder: "Alpine Convention"
     date: "2025-03-12"
     icon: hero/star
----
-
-Stefano Blando is a **PhD Researcher** within the National PhD Program in Artificial Intelligence (AI for Society), based at the **Scuola Superiore Sant'Anna** and the **University of Pisa**.
-
-His research bridges the gap between **Economic Theory** and **Data-Driven AI**. Building on a solid multi-disciplinary foundation in **Economics & Finance**, **Statistics**, and **Machine Learning**, he focuses on the rigorous validation of complex systems.
-
-His goal is to overcome the limitations of static equilibrium models by applying advanced computational frameworks to socio-economic dynamics.
-
-### Core Research Areas
-
-* **Simulation & Calibration:** Automated Parameter Calibration of Agent-Based Models (ABM) using **Simulation-Based Inference (SBI)** and ABC methods.
-* **Complex Systems:** Statistical Model Checking and **Ensemble Analysis** to map uncertainty in non-ergodic environments.
-* **Machine & Deep Learning:** Developing **Graph Neural Networks (GNNs)** and predictive architectures for Systemic Risk identification and financial topology analysis.
-
-He combines theoretical domain knowledge with advanced technical skills in **High-Dimensional Statistics**, **Python/R** development, and **High-Performance Computing (HPC)**.
