@@ -1,5 +1,5 @@
 ---
-title: "Network Topology and Machine Learning for Systemic Risk: From Early Warning to Trading Strategies"
+title: "Network Topology and Machine Learningfor Systemic Risk:From Early Warning to Trading Strategies"
 authors:
 - me
 date: "2026-01-01T00:00:00Z"
