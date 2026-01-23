@@ -5,22 +5,28 @@
 
 Source code for my personal academic website and research portfolio.
 
-##  About Me
+## 👨‍🔬 About Me
 
 I am a **PhD Candidate in Artificial Intelligence** at the **Scuola Superiore Sant'Anna** and the **University of Pisa**.
 
-My research lies at the intersection of **Network Science** and **Deep Learning** applied to finance. specifically focusing on:
-* **Graph Neural Networks (GNNs)** for financial data.
-* **Systemic Risk Prediction** using network topology analysis.
-* **Complex Systems** in financial markets.
+My research lies at the intersection of **Computational Economics**, **Network Science**, and **Advanced Statistics**. I specialize in modeling complex systems using a multi-disciplinary toolkit that includes **Agent-Based Modeling (ABM)**, **MCMC methods**, **Functional Statistics**, and **Deep Learning**.
 
-## Built With
+### 🔭 Current Research Focus
+
+My research lies at the intersection of **Computational Economics**, **Network Science**, and **Advanced Statistics**. I specialize in the rigorous validation of complex systems using a multi-disciplinary toolkit that includes:
+
+* **Simulation-Based Inference (SBI) & ABC:** For the automated parameter calibration of black-box simulation models.
+* **Statistical Model Checking:** To verify properties of stochastic systems ensuring robustness and reliability.
+* **Functional Data Analysis (FDA):** Applied to the study of transient dynamics and trajectory clustering.
+* **Ensemble Analysis:** To characterize non-ergodic behaviors and map uncertainty beyond standard equilibrium metrics.
+  
+## 🛠️ Built With
 
 * **Framework:** [Hugo](https://gohugo.io/)
 * **Theme:** [Hugo Blox (Academic)](https://hugoblox.com/)
 * **Hosting:** GitHub Pages
 
-## Links
+## 🔗 Links
 
 * **Website:** [stefanoblando.github.io](https://stefanoblando.github.io)
 * **GitHub:** [@stefanoblando](https://github.com/stefanoblando)
