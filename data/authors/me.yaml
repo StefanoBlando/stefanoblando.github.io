@@ -16,7 +16,9 @@ role: PhD Candidate in Artificial Intelligence
 
 # BIO BREVE (Per la sidebar/widget)
 bio: |
-  PhD Researcher in AI bridging Economic Theory and Data-Driven Science via Complex Systems & Simulation.
+  I am a PhD Researcher within the National PhD Program in Artificial Intelligence (AI for Society), based at the Scuola Superiore Sant'Anna and the University of Pisa.
+  My research bridges the gap between Economic Theory and Data-Driven AI. Building on a solid multi-disciplinary foundation in Economics & Finance, Statistics, and Machine Learning, I focus on the rigorous validation of complex systems.
+  My goal is to overcome the limitations of static equilibrium models by applying advanced computational frameworks to socio-economic dynamics.
 
 affiliations:
   - name: National PhD Program in AI (SSSA & UniPi)
@@ -170,16 +172,30 @@ languages:
   - name: Spanish
     level: 2
     label: Basic (A2)
-
 awards:
   - title: PhD Fellowship
     awarder: National PhD Program in AI
     date: "2025-11-01"
     icon: hero/trophy
+  - title: Bertelsmann Next Gen Tech Booster
+    awarder: Udacity & Bertelsmann
+    date: "2024-11-01"
+    summary: "Selected for Generative AI Nanodegree (Top 2% of candidates)."
+    icon: hero/star
+  - title: 1st Place Huawei DigitALL Night
+    awarder: Huawei
+    date: "2024-03-01"
+    summary: "Winner of digital technology and cybersecurity competition."
+    icon: hero/trophy
   - title: 2nd Place AI Data Hackathon
     awarder: ""
     date: "2024-12-12"
     icon: hero/star
+  - title: Academic Tutorship Awards (x2)
+    awarder: University of Rome Tor Vergata
+    date: "2024-01-01"
+    summary: "Awarded twice for excellence in student support and teaching assistance."
+    icon: hero/academic-cap
   - title: Alpine Climate Challenge Finalist
     awarder: "Alpine Convention"
     date: "2025-03-12"
