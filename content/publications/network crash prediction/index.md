@@ -1,5 +1,5 @@
 ---
-title: "Network Topology Analysis for Systemic Risk Prediction"
+title: "Network Topology and Machine Learning for Systemic Risk: From Early Warning to Trading Strategies"
 authors:
 - me
 date: "2026-01-01T00:00:00Z"
@@ -13,8 +13,8 @@ publishDate: "2026-01-01T00:00:00Z"
 publication_types: ["article"]
 
 # Publication name and optional abbreviated publication name.
-publication: "Working Paper (Graph Neural Networks)"
-publication_short: "Working Paper"
+publication: "preprint"
+publication_short: "Working Paper
 
 abstract: "This research presents a novel framework for predicting financial market crashes and volatility spillovers by combining Dynamic Correlation Networks with Graph Neural Networks (GNNs). Specifically, the study employs the GraphSAGE architecture to learn inductive node embeddings from the evolving market topology. By capturing non-linear dependencies and topological shifts in the asset correlation network, the model aims to identify precursors of systemic risk events earlier and more accurately than traditional econometric indicators."
 
