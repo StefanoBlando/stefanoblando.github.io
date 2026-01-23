@@ -10,22 +10,26 @@ design:
 
 # Page sections
 sections:
+  # Questo blocco genera SIA la timeline Lavorativa SIA quella Educativa
   - block: resume-experience
     content:
       username: me
     design:
       # Hugo date format
       date_format: 'January 2006'
-      # Education or Experience section first?
+      # Mettiamo FALSE per mostrare PRIMA l'esperienza lavorativa, poi gli studi
       is_education_first: false
+
   - block: resume-skills
     content:
       title: Skills
       username: me
+      
   - block: resume-awards
     content:
       title: Awards
       username: me
+      
   - block: resume-languages
     content:
       title: Languages
