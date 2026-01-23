@@ -86,14 +86,14 @@ education:
     start: 2014-09-01
     end: 2017-07-01
     summary: "Foundational studies in Logic and Philosophy of Science."
-
+    
 experience:
   - title: PhD Researcher
     company: Scuola Superiore Sant'Anna
     company_url: 'https://www.santannapisa.it/'
     location: Pisa, Italy
-    date_start: 2023-11-01
-    date_end: Present
+    date_start: '2023-11-01'
+    date_end: ''  # Lascia vuoto per far apparire "Present"
     description: |
       Conducting research on the validation of complex systems within the National PhD Program in AI.
       * Developing Automated Parameter Calibration methods using Simulation-Based Inference (SBI).
@@ -104,8 +104,8 @@ experience:
     company: University of Rome Tor Vergata
     company_url: ''
     location: Rome, Italy
-    date_start: 2020-03-01
-    date_end: 2025-01-31
+    date_start: '2020-03-01'
+    date_end: '2025-01-31'
     description: |
       Provided academic support and statistical consulting to students at the Data Processing Center.
       * Supported the **Sustainable Supply Chain & Operations Management** course.
@@ -116,8 +116,8 @@ experience:
     company: Starting Finance Club Tor Vergata
     company_url: ''
     location: Rome, Italy
-    date_start: 2022-06-01
-    date_end: 2022-09-30
+    date_start: '2022-06-01'
+    date_end: '2022-09-30'
     description: |
       Coordinated a team of 70+ members and organized 10+ financial workshops and events.
       * Led macroeconomic and sectoral analysis initiatives.
