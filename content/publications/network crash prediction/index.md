@@ -1,7 +1,7 @@
 ---
 title: "Network Topology and Machine Learning for Systemic Risk: From Early Warning to Trading Strategies"
 authors:
-- admin  # Usa 'admin' se la tua cartella è authors/admin, altrimenti usa 'me'
+- me  
 date: "2026-01-15"
 doi: ""
 
