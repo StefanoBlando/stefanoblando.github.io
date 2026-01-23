@@ -18,7 +18,7 @@ sections:
       # Hugo date format
       date_format: 'January 2006'
       # Mettiamo FALSE per mostrare PRIMA l'esperienza lavorativa, poi gli studi
-      is_education_first: false
+      is_education_first: true
 
   - block: resume-skills
     content:
