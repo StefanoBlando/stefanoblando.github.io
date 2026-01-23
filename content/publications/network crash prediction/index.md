@@ -12,11 +12,11 @@ publishDate: "2026-01-23T00:00:00Z"
 # Legend: 0 = Uncategorized; 1 = Conference paper; 2 = Journal article;
 # 3 = Preprint / Working Paper; 4 = Report; 5 = Book; 6 = Book section;
 # 7 = Thesis; 8 = Patent
-publication_types: ["2"]
+publication_types: ["Master Thesis"]
 
 # Publication name and optional abbreviation (e.g. journal).
-publication: "Scuola Superiore Sant'Anna & University of Pisa"
-publication_short: "Research Paper"
+publication: "University of Rome Tor Vergata - School of Economics and Finance"
+publication_short: "Working Paper"
 
 abstract: "This paper investigates the predictive power of Graph Neural Networks (GNNs) in forecasting systemic risk events. By modelling financial markets as dynamic complex networks, we extract topological features that serve as early warning signals. The study demonstrates how these signals can be integrated into algorithmic trading strategies to mitigate downside risk during market turmoil, outperforming traditional benchmark models."
 
@@ -59,5 +59,5 @@ image:
 # Associated Projects (optional).
 # Associate this publication with one of your projects.
 projects:
-- network-topology # IMPORTANTE: Deve corrispondere al nome della cartella in content/projects/
+- network-crash-prediction # IMPORTANTE: Deve corrispondere al nome della cartella in content/projects/
 ---
