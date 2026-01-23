@@ -9,17 +9,24 @@ Source code for my personal academic website and research portfolio.
 
 I am a **PhD Candidate in Artificial Intelligence** at the **Scuola Superiore Sant'Anna** and the **University of Pisa**.
 
-My research lies at the intersection of **Computational Economics**, **Network Science**, and **Advanced Statistics**. I specialize in modeling complex systems using a multi-disciplinary toolkit that includes **Agent-Based Modeling (ABM)**, **MCMC methods**, **Functional Statistics**, and **Deep Learning**.
+My research integrates **Computational Economics**, **Network Science**, and **Advanced Statistics** to model and validate complex financial systems. I adopt a multi-disciplinary approach to bridge the gap between economic theory and data-driven AI.
+
+### 🧰 Methodological Toolkit
+
+My general expertise covers the full pipeline of modeling and analysis:
+
+* **Complex Systems & Simulation:** Agent-Based Modeling (ABM), Stochastic Simulations, and Complex Network Theory.
+* **Machine & Deep Learning:** Graph Neural Networks (GNNs), Deep Learning architectures, and Reinforcement Learning.
+* **Advanced Statistics:** High-Dimensional Statistics, Markov Chain Monte Carlo (MCMC), and Statistical Model Checking (SMC).
 
 ### 🔭 Current Research Focus
 
-My research lies at the intersection of **Computational Economics**, **Network Science**, and **Advanced Statistics**. I specialize in the rigorous validation of complex systems using a multi-disciplinary toolkit that includes:
+Currently, I am focused on the **rigorous validation of Complex Dynamical Stochastic Systems**, moving beyond standard equilibrium analysis. My work specifically employs:
 
-* **Simulation-Based Inference (SBI) & ABC:** For the automated parameter calibration of black-box simulation models.
-* **Statistical Model Checking:** To verify properties of stochastic systems ensuring robustness and reliability.
-* **Functional Data Analysis (FDA):** Applied to the study of transient dynamics and trajectory clustering.
-* **Ensemble Analysis:** To characterize non-ergodic behaviors and map uncertainty beyond standard equilibrium metrics.
-  
+* **Simulation-Based Inference (SBI) & ABC:** For the automated parameter calibration of black-box simulation models without tractable likelihoods.
+* **Ensemble Analysis:** To characterize **non-ergodic** behaviors and map uncertainty where time averages differ from ensemble averages.
+* **Functional Data Analysis (FDA):** Applied to the study of **Statistical Transients** and trajectory clustering in high-dimensional systems.
+
 ## 🛠️ Built With
 
 * **Framework:** [Hugo](https://gohugo.io/)
