@@ -1,81 +1,63 @@
 ---
 title: "Network Topology and Machine Learning for Systemic Risk: From Early Warning to Trading Strategies"
-
 authors:
-  - me
+- admin  # Usa 'admin' se la tua cartella è authors/admin, altrimenti usa 'me'
+date: "2026-01-23"
+doi: ""
 
-date: "2026-01-01T00:00:00Z"
-publishDate: "2026-01-01T00:00:00Z"
-
-# "2" indica solitamente "Journal Article" nel tema Academic/Hugo Blox
-publication_types: ["2"] 
-
----
+# Schedule page publish date (NOT publication's date).
+publishDate: "2026-01-23T00:00:00Z"
 
 # Publication type.
-# Accepts a single type but formatted as a YAML list (for Hugo requirements).
-# Enter a publication type from the CSL standard.
-publication_types: ["article"]
+# Legend: 0 = Uncategorized; 1 = Conference paper; 2 = Journal article;
+# 3 = Preprint / Working Paper; 4 = Report; 5 = Book; 6 = Book section;
+# 7 = Thesis; 8 = Patent
+publication_types: ["2"]
 
-# Publication name and optional abbreviated publication name.
-publication: "preprint"
-publication_short: "Working Paper
+# Publication name and optional abbreviation (e.g. journal).
+publication: "Scuola Superiore Sant'Anna & University of Pisa"
+publication_short: "Research Paper"
 
-abstract: "This research presents a novel framework for predicting financial market crashes and volatility spillovers by combining Dynamic Correlation Networks with Graph Neural Networks (GNNs). Specifically, the study employs the GraphSAGE architecture to learn inductive node embeddings from the evolving market topology. By capturing non-linear dependencies and topological shifts in the asset correlation network, the model aims to identify precursors of systemic risk events earlier and more accurately than traditional econometric indicators."
+abstract: "This paper investigates the predictive power of Graph Neural Networks (GNNs) in forecasting systemic risk events. By modelling financial markets as dynamic complex networks, we extract topological features that serve as early warning signals. The study demonstrates how these signals can be integrated into algorithmic trading strategies to mitigate downside risk during market turmoil, outperforming traditional benchmark models."
 
 # Summary. An optional shortened abstract.
-summary: "Application of Dynamic Correlation Networks and Graph Neural Networks (GraphSAGE) to predict market crashes and volatility spillovers."
+summary: "Leveraging Graph Neural Networks (GNNs) and complex network theory to detect early warning signals of systemic risk in financial markets."
 
 tags:
 - Systemic Risk
 - Graph Neural Networks
-- GraphSAGE
-- Financial Markets
-- Deep Learning
+- Network Science
+- Financial Machine Learning
+- Python
 
+# Display this page in the Featured widget?
 featured: true
 
-# hugoblox:
-#   ids:
-#     arxiv: 
-
+# Custom links (optional).
 links:
-- type: code
-  url: https://github.com/stefanoblando/systemic-risk-prediction
-- type: project
-  url: project/systemic-risk-prediction/
- # type: dataset
-   # url: ""
-  # type: poster
-   # url: ""
-  # type: slides
-   # url: ""
-  # type: source
-  # url: ""
- # type: video
-  # url: ""
+# - name: Follow
+#   url: https://twitter.com/
+- name: Code
+  url: https://github.com/stefanoblando/ # Inserisci qui il link alla repo se esiste
+
+url_pdf: ''
+url_code: ''
+url_dataset: ''
+url_poster: ''
+url_project: ''
+url_slides: ''
+url_source: ''
+url_video: ''
 
 # Featured image
-# To use, add an image named `featured.jpg/png` to your page's folder. 
+# To use, add an image named `featured.jpg/png` to your page's folder.
 image:
-  caption: 'Dynamic Correlation Network'
+  caption: 'Network Topology Visualization'
   focal_point: ""
   preview_only: false
 
 # Associated Projects (optional).
-#   Associate this publication with one or more of your projects.
-#   Simply enter your project's folder or file name without extension.
-#   E.g. `internal-project` references `content/project/internal-project/index.md`.
-#   Otherwise, set `projects: []`.
+# Associate this publication with one of your projects.
 projects:
-- systemic-risk-prediction-networks
-
-# Slides (optional).
-#   Associate this publication with Markdown slides.
-#   Simply enter your slide deck's filename without extension.
-#   E.g. `slides: "example"` references `content/slides/example/index.md`.
-#   Otherwise, set `slides: ""`.
-slides: ""
+- network-topology # IMPORTANTE: Deve corrispondere al nome della cartella in content/projects/
 ---
-
-This work represents a methodological application of **Graph Neural Networks** to financial time series, derived from my Master Thesis research.
