@@ -1,6 +1,8 @@
-schema: hugoblox/author/v1
+---
+# Schema: hugoblox/author/v1
 slug: me
 is_owner: true
+
 name:
   display: Stefano Blando
   given: Stefano
@@ -8,10 +10,15 @@ name:
   alternate: ''
   pronunciation: ''
   pronouns: he/him
-postnominals: [] # Lascia vuoto se non vuoi mettere titoli dopo il nome per ora
+
+postnominals: []
+
 status:
   icon: "🎓"
+
 role: PhD Candidate in Artificial Intelligence
+
+# Bio breve per i widget (sidebar)
 bio: |
   Stefano Blando is a PhD Candidate in Artificial Intelligence within the National PhD Program (SSSA & UniPi).
   His research concentrates on complex systems and high-dimensional socio-economic networks, with the goal of developing interpretable models for real-world impact.
@@ -27,10 +34,10 @@ links:
   - icon: brands/github
     url: https://github.com/stefanoblando
   - icon: brands/linkedin
-    url: https://www.linkedin.com/in/stefanoblando/
+    url: https://www.linkedin.com/in/stefano-blando/
   - icon: academicons/google-scholar
-    url: https://scholar.google.com/ # Inserisci il link esatto se ce l'hai
-  # - icon: brands/x  # Decommenta se vuoi mettere Twitter
+    url: https://scholar.google.com/
+  # - icon: brands/x
   #   url: https://twitter.com/
 
 interests:
@@ -45,7 +52,7 @@ interests:
 education:
   - degree: PhD in Artificial Intelligence
     institution: Scuola Superiore Sant'Anna & University of Pisa
-    start: 2023-11-01 # Data indicativa, puoi cambiarla
+    start: 2023-11-01
     end: Present
     summary: |
       Research on "Dynamic Economic Networks for Societal Innovation".
@@ -62,20 +69,18 @@ education:
     institution: University of Rome Tor Vergata
     start: 2019-09-15
     end: 2022-10-19
-  - degree: BA in Philosophy (unconcluded)
+  - degree: BA in Philosophy (paused for personal reasons)
     institution: University of Rome La Sapienza
     start: 2014-09-01
     end: 2017-07-01
 
-# Sezione Esperienze Lavorative (Lascia vuota o metti le tue se ne hai)
 experience: []
 
-# Skills (Diviso in due gruppi per creare due colonne)
 skills:
-  - name: Skilss
+  - name: Technical Skills
     items:
       - label: Python
-        level: 5 # Puoi usare "percent: 100" se preferisci la barra
+        level: 5
       - label: R
         level: 5
       - label: SQL
@@ -112,12 +117,12 @@ languages:
     level: 5
     label: Fluent (C2)
   - name: French
-    level: 3 
+    level: 3
     label: Intermediate Proficiency (B1)
-  - name: German 
-    level: 2 
+  - name: German
+    level: 2
     label: Basic Proficiency (A2)
-  - name: Spanish 
+  - name: Spanish
     level: 2
     label: Basic Proficiency (A2)
 
@@ -131,6 +136,21 @@ awards:
     date: "2024-12-12"
     icon: hero/star
   - title: Alpine Climate Challenge Finalist
-    awarder: "2025-03-12"
-    date: ""
+    awarder: "Alpine Convention"
+    date: "2025-03-12"
     icon: hero/star
+---
+
+Stefano Blando is a **PhD Researcher** within the National PhD Program in Artificial Intelligence (AI for Society), based at the **Scuola Superiore Sant'Anna** and the **University of Pisa**.
+
+His research bridges the gap between **Economic Theory** and **Data-Driven AI**. Building on a solid multi-disciplinary foundation in **Economics & Finance**, **Statistics**, and **Machine Learning**, he focuses on the rigorous validation of complex systems.
+
+His goal is to overcome the limitations of static equilibrium models by applying advanced computational frameworks to socio-economic dynamics.
+
+### Core Research Areas
+
+* **Simulation & Calibration:** Automated Parameter Calibration of Agent-Based Models (ABM) using **Simulation-Based Inference (SBI)** and ABC methods.
+* **Complex Systems:** Statistical Model Checking and **Ensemble Analysis** to map uncertainty in non-ergodic environments.
+* **Machine & Deep Learning:** Developing **Graph Neural Networks (GNNs)** and predictive architectures for Systemic Risk identification and financial topology analysis.
+
+He combines theoretical domain knowledge with advanced technical skills in **High-Dimensional Statistics**, **Python/R** development, and **High-Performance Computing (HPC)**.
