@@ -173,10 +173,6 @@ languages:
     level: 2
     label: Basic (A2)
 awards:
-  - title: PhD Fellowship
-    awarder: National PhD Program in AI
-    date: "2025-11-01"
-    icon: hero/trophy
   - title: Bertelsmann Next Gen Tech Booster
     awarder: Udacity & Bertelsmann
     date: "2024-11-01"
