@@ -11,14 +11,13 @@ design:
 
 sections:
   # 1. LA TUA BIOGRAFIA
-  # Questo blocco prende la foto e i social dal file dati (che modificheremo dopo)
   - block: resume-biography-3
     content:
-      username: me  # IMPORTANTE: Corrisponde al nome della tua foto (me.png)
+      username: me  
       text: ''
       button:
         text: Download CV
-        url: uploads/resume.pdf
+        url: uploads/resume.pdf 
     design:
       background:
         gradient_mesh:
@@ -29,7 +28,7 @@ sections:
         size: large
         shape: circle
 
-  # 2. LA TUA RICERCA (Sostituisce il testo di DeepMind)
+  # 2. LA TUA RICERCA
   - block: markdown
     content:
       title: '📚 Research Overview'
@@ -41,16 +40,32 @@ sections:
     design:
       columns: '1'
 
-  # 3. PUBBLICAZIONI (Mostra la lista pulita dei paper)
+  # 3. NEWS & UPDATES (AGGIUNTO ORA)
+  # Questo blocco legge i file dentro content/blog/ e li mostra come Notizie
+  - block: collection
+    id: news
+    content:
+      title: Latest News
+      subtitle: ''
+      text: ''
+      filters:
+        folders:
+          - blog  # <--- IMPORTANTE: Legge dalla cartella fisica 'blog'
+        exclude_featured: false
+    design:
+      view: date_title_summary # Visualizza data, titolo e riassunto (ottimo per le news)
+      columns: 2
+
+  # 4. PUBBLICAZIONI
   - block: collection
     id: papers
     content:
       title: Publications
       filters:
         folders:
-          - publications
-        featured_only: false # Metti 'false' per mostrare tutto quello che caricherai
+          - publications # <--- Assicurati di avere la cartella content/publications
+        featured_only: false
     design:
-      view: citation # Visualizza come lista bibliografica classica
+      view: citation
       columns: 1
 ---
