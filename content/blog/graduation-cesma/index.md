@@ -3,7 +3,7 @@ title: "Master Graduation"
 date: 2026-01-23
 summary: "Graduation ceremony at University of Rome Tor Vergata. Thesis on Topological Systemic Risk Prediction ."
 authors:
-  - admin
+  - me
 tags:
   - Education
   - Machine Learning
