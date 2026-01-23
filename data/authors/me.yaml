@@ -1,0 +1,369 @@
+---
+
+# Schema: hugoblox/author/v1
+
+slug: me
+
+is_owner: true
+
+
+name:
+
+  display: Stefano Blando
+
+  given: Stefano
+
+  family: Blando
+
+  pronouns: he/him
+
+
+status:
+
+  icon: "🎓"
+
+
+role: PhD Candidate in Artificial Intelligence
+
+
+# BIO BREVE (Per la sidebar/widget)
+
+bio: |
+
+  Stefano Blando is a PhD Researcher within the National PhD Program in Artificial Intelligence (AI for Society), based at the Scuola Superiore Sant'Anna and the University of Pisa.
+
+  His research bridges the gap between Economic Theory and Data-Driven AI. Building on a solid multi-disciplinary foundation in Economics & Finance, Statistics, and Machine Learning, he focuses on the rigorous validation of complex systems.
+
+  His goal is to overcome the limitations of static equilibrium models by applying advanced computational frameworks to socio-economic dynamics.
+
+
+affiliations:
+
+  - name: National PhD Program in AI (SSSA & UniPi)
+
+    url: ''
+
+  - name: Scuola Superiore Sant'Anna
+
+    url: 'https://www.santannapisa.it/'
+
+  - name: University of Pisa
+
+    url: 'https://www.unipi.it/'
+
+
+links:
+
+  - icon: at-symbol
+
+    url: mailto:stefano.blando@santannapisa.it
+
+    label: E-mail Me
+
+  - icon: brands/github
+
+    url: https://github.com/stefanoblando
+
+  - icon: brands/linkedin
+
+    url: https://www.linkedin.com/in/stefano-blando/
+
+  - icon: academicons/google-scholar
+
+    url: https://scholar.google.com/
+
+
+interests:
+
+  - Agent-Based Modeling (ABM)
+
+  - Simulation-Based Inference (SBI)
+
+  - Graph Neural Networks (GNNs)
+
+  - Non-Ergodic Economics
+
+  - Statistical Model Checking
+
+  - High-Dimensional Statistics
+
+  - Systemic Risk & Resilience
+
+
+education:
+
+  - degree: PhD in Artificial Intelligence
+
+    institution: Scuola Superiore Sant'Anna & University of Pisa
+
+    start: 2025-11-01
+
+    end: Present
+
+    summary: |
+
+      Research Focus: "Validation of Complex Dynamical Stochastic Systems".
+
+      Methodologies: Automated Parameter Calibration (ABC/SBI), Ensemble Analysis, and Deep Learning for Financial Topology.
+
+
+  - degree: Master in AI, ML & Data Science (CESMA)
+
+    institution: University of Rome Tor Vergata
+
+    start: 2025-02-03
+
+    end: 2026-02-02
+
+    summary: |
+
+      Thesis: "Network Topology and Machine Learning for Systemic Risk".
+
+      Focus: Graph Neural Networks (GNNs), Early Warning Systems, and Financial Machine Learning.
+
+
+  - degree: MSc in Economics of Markets & Financial Intermediaries
+
+    institution: University of Rome Tor Vergata
+
+    start: 2022-10-20
+
+    end: 2025-04-04
+
+    summary: |
+
+      Thesis: "High-dimensional Robust Portfolio Optimization Under Contamination".
+
+      Focus: Robust Statistics, Quantitative Finance, and Factor-Analytic Approaches.
+
+
+  - degree: BSc in Governance & International Relations
+
+    institution: University of Rome Tor Vergata
+
+    start: 2019-09-15
+
+    end: 2022-10-19
+
+    summary: |
+
+      Focus on Political Economy and International Relations.
+
+      Thesis: "Consumer Choice Under Uncertainty: From Homo Oeconomicus to Homo Temperatus".
+
+
+  - degree: BA in Philosophy (paused for personal reasons)
+
+    institution: University of Rome La Sapienza
+
+    start: 2014-09-01
+
+    end: 2017-07-01
+
+    summary: "Foundational studies in Logic and Philosophy of Science."
+
+
+experience:
+
+  - title: PhD Researcher
+
+    organization: Scuola Superiore Sant'Anna
+
+    organization_url: 'https://www.santannapisa.it/'
+
+    location: Pisa, Italy
+
+    start: 2023-11-01
+
+    end: '' 
+
+    description: |
+
+      Conducting research on the validation of complex systems within the National PhD Program in AI.
+
+      * Developing Automated Parameter Calibration methods using Simulation-Based Inference (SBI).
+
+      * Applying Graph Neural Networks (GNNs) for Systemic Risk prediction.
+
+      * **Teaching Assistant:** Supporting courses in Computational Economics and AI.
+
+
+  - title: Academic Tutor & Teaching Assistant
+
+    organization: University of Rome Tor Vergata
+
+    organization_url: ''
+
+    location: Rome, Italy
+
+    start: 2020-03-01
+
+    end: 2025-01-31
+
+    description: |
+
+      Provided academic support and statistical consulting to students at the Data Processing Center.
+
+
+  - title: Secretary General & Team Lead
+
+    organization: Starting Finance Club Tor Vergata
+
+    organization_url: ''
+
+    location: Rome, Italy
+
+    start: 2022-06-01
+
+    end: 2022-09-30
+
+    description: |
+
+      Coordinated a team of 70+ members and organized 10+ financial workshops and events.
+
+
+skills:
+
+  - name: Technical Skills
+
+    items:
+
+      - label: Python (PyTorch, PyG)
+
+        level: 5
+
+      - label: R
+
+        level: 5
+
+      - label: SQL
+
+        level: 5
+
+      - label: MATLAB
+
+        level: 5
+
+      - label: Git & GitHub
+
+        level: 4
+
+      - label: LaTeX
+
+        level: 5
+
+      - label: HPC Computing
+
+        level: 3
+
+
+  - name: Research Methods
+
+    items:
+
+      - label: Machine Learning
+
+        level: 5
+
+      - label: Agent-Based Modeling (ABM)
+
+        level: 5
+
+      - label: Simulation-Based Inference
+
+        level: 5
+
+      - label: Network Science
+
+        level: 4
+
+      - label: Systemic Risk Analysis
+
+        level: 4
+
+      - label: Causal Inference
+
+        level: 4
+
+
+languages:
+
+  - name: Italian
+
+    level: 5
+
+    label: Native
+
+  - name: English
+
+    level: 5
+
+    label: Fluent (C1/C2)
+
+  - name: French
+
+    level: 3
+
+    label: Intermediate (B1)
+
+  - name: German
+
+    level: 2
+
+    label: Basic (A1)
+
+  - name: Spanish
+
+    level: 2
+
+    label: Basic (A2)
+
+awards:
+
+  - title: Bertelsmann Next Gen Tech Booster
+
+    awarder: Udacity & Bertelsmann
+
+    date: "2024-11-01"
+
+    summary: "Selected for Generative AI Nanodegree (Top 2% of candidates)."
+
+    icon: hero/star
+
+  - title: 1st Place Huawei DigitALL Night
+
+    awarder: Huawei
+
+    date: "2024-03-01"
+
+    summary: "Winner of digital technology and cybersecurity competition."
+
+    icon: hero/trophy
+
+  - title: 2nd Place AI Data Hackathon
+
+    awarder: ""
+
+    date: "2024-12-12"
+
+    icon: hero/star
+
+  - title: Academic Tutorship Awards (x2)
+
+    awarder: University of Rome Tor Vergata
+
+    date: "2024-01-01"
+
+    summary: "Awarded twice for excellence in student support and teaching assistance."
+
+    icon: hero/academic-cap
+
+  - title: Alpine Climate Data Challenge Finalist
+
+    awarder: "Alpine Climate Data Challenge"
+
+    date: "2025-03-12"
+
+    icon: hero/star
+
+
