@@ -28,12 +28,13 @@ role: PhD Candidate in Artificial Intelligence
 
 # BIO BREVE (Per la sidebar/widget)
 bio: |
-  PhD Researcher within the National PhD Program in AI, based at Scuola Superiore Sant'Anna and University of Pisa.
+  Stefano Blando is a PhD Researcher within the National PhD Program in AI (SSSA & UniPi).
 
-  My research targets the **validation gap** in complex adaptive systems, bridging **Economic Theory** with **Scientific Machine Learning**.
+  Bridging Scientific Machine Learning (SciML) and Agent-Based Modeling (ABM), his research addresses the validation gap in complex adaptive systems.
 
-  Moving beyond static equilibrium, I leverage **Amortized Inference** and **Geometric Deep Learning** to model heterogeneous agents with bounded rationality interacting within evolving, stochastic financial networks.
-affiliations:
+  He analyzes evolving financial networks through the lens of Statistical Model Checking (SMC), grounding theoretical dynamics in empirical reality to map systemic risk in non-ergodic environments.a
+  
+  afiliations:
 
   - name: National PhD Program in AI (SSSA & UniPi)
 
