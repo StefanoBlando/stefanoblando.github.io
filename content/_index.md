@@ -27,22 +27,21 @@ sections:
         size: large
         shape: circle
 
-  # 2. RESEARCH OVERVIEW (Dettagliata e strutturata)
+# 2. RESEARCH OVERVIEW
   - block: markdown
     content:
       title: '📚 Research Overview'
       subtitle: ''
       text: |
-        My research agenda addresses the **validation gap** in complex socio-economic systems. By integrating **Economic Theory** with **Data-Driven AI**, I aim to overcome the limitations of static equilibrium models and map uncertainty in non-ergodic environments.
-        
-        Current work focuses on three methodological pillars:
-        
-        * **Simulation & Inference:** Developing pipelines for **Automated Parameter Calibration** of Agent-Based Models (ABM) using **Simulation-Based Inference (SBI)** and ABC methods.
-        * **Systemic Risk & Topology:** Leveraging **Graph Neural Networks (GNNs)** and Deep Learning to analyze financial network topologies and predict systemic distress.
-        * **Scalable Computing:** Utilizing **High-Performance Computing (HPC)** to perform rigorous Statistical Model Checking and Ensemble Analysis on high-dimensional systems.
+        My research addresses the **validation gap** in complex economic models. By fusing **Economic Theory** with **Simulation-Based Inference (SBI)**, I aim to ground theoretical models in empirical reality, moving beyond static equilibrium to map the dynamics of non-ergodic systems.
+
+        ### Core Research Pillars:
+
+        * **Generative Modeling & Calibration:** Developing automated pipelines to calibrate Agent-Based Models (ABM) against real-world data using Neural Density Estimators and SBI.
+        * **Network Topology & Risk:** Leveraging **Graph Neural Networks (GNNs)** to detect early warning signals of systemic distress and analyze the evolving topology of financial markets.
+        * **Computational Robustness:** Performing rigorous **Statistical Model Checking** and Ensemble Analysis (via HPC) to quantify uncertainty and ensure model resilience against structural shocks.
     design:
       columns: '1'
-
   # 3. NEWS
   - block: collection
     id: news
