@@ -1,6 +1,6 @@
 ---
 title: NLP & Semantic Network Analysis
-date: 2024-01-10
+date: 2025-01-10
 summary: A hybrid text mining framework combining Correspondence Analysis and Network Science to decode latent semantic structures in unstructured corpora.
 tags:
   - Text Mining
