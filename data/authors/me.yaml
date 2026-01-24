@@ -23,7 +23,7 @@ status:
   icon: "🎓"
 
 
-role: PhD Candidate in Artificial Intelligence
+role: PhD Researcher in Artificial Intelligence
 
 
 # BIO BREVE (Per la sidebar/widget)
@@ -39,6 +39,8 @@ affiliations:
     url: https://www.santannapisa.it
   - name: University of Pisa
     url: https://www.unipi.it/
+  - name: University of Rome Tor Vergata
+    url: https://web.uniroma2.it/
 
 links:
 
