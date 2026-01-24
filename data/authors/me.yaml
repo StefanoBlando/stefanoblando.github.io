@@ -30,11 +30,11 @@ role: PhD Candidate in Artificial Intelligence
 
 bio: |
 
-  Stefano Blando is a PhD Researcher within the National PhD Program in Artificial Intelligence (AI for Society), based at the Scuola Superiore Sant'Anna and the University of Pisa.
+  i am a PhD Researcher within the National PhD Program in Artificial Intelligence (AI for Society), based at the Scuola Superiore Sant'Anna and the University of Pisa.
 
-  His research bridges the gap between Economic Theory and Data-Driven AI. Building on a solid multi-disciplinary foundation in Economics & Finance, Statistics, and Machine Learning, he focuses on the rigorous validation of complex systems.
+  My research bridges the gap between Economic Theory and Data-Driven AI. Building on a solid multi-disciplinary foundation in Economics & Finance, Statistics, and Machine Learning, my focus is on the rigorous validation of complex systems.
 
-  His goal is to overcome the limitations of static equilibrium models by applying advanced computational frameworks to socio-economic dynamics.
+  My goal is to overcome the limitations of static equilibrium models by applying advanced computational frameworks to socio-economic dynamics.
 
 
 affiliations:
@@ -178,6 +178,7 @@ experience:
 
   - role: Academic Tutor
     org: University of Rome Tor Vergata
+    company_url: 'https://web.uniroma2.it/'
     location: Rome, Italy
     start: '2020-03-01'
     end: '2025-01-31'
@@ -301,7 +302,7 @@ awards:
 
     date: "2024-11-01"
 
-    summary: "Selected for Generative AI Nanodegree (Top 2% of candidates)."
+    summary: "Selected for Generative AI Nanodegree (Top 1% of candidates)."
 
     icon: hero/star
 
@@ -311,7 +312,7 @@ awards:
 
     date: "2024-03-01"
 
-    summary: "Winner of digital technology and cybersecurity competition."
+    summary: "Winner of digital technology and networks competition."
 
     icon: hero/trophy
 
