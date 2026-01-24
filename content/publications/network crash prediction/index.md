@@ -38,7 +38,7 @@ links:
 # - name: Follow
 #   url: https://twitter.com/
 - name: Code
-  url: https://github.com/stefanoblando/ # Inserisci qui il link alla repo se esiste
+  url: https://github.com/StefanoBlando/network-stock-prediction
 
 url_pdf: ''
 url_code: ''
