@@ -34,7 +34,11 @@ bio: |
 
   He analyzes evolving financial networks through the lens of Statistical Model Checking (SMC), grounding theoretical dynamics in empirical reality to map systemic risk in non-ergodic environments.a
   
-
+affiliations:
+  - name: Scuola Superiore Sant'Anna
+    url: https://www.santannapisa.it
+  - name: University of Pisa
+    url: https://www.unipi.it/
 
 links:
 
