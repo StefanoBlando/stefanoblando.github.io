@@ -164,38 +164,40 @@ education:
     summary: "Foundational studies in Logic and Philosophy of Science."
 
 # --- EXPERIENCE (Struttura Originale) ---
+# --- EXPERIENCE ---
 experience:
   - role: PhD Researcher
     org: Scuola Superiore Sant'Anna
     company_url: 'https://www.santannapisa.it/'
     location: Pisa, Italy
     start: '2023-11-01'
-    # Per il lavoro attuale, NON mettere 'end'. Il template capirà che è "Present".
+    # Lascia vuoto end per "Present"
     summary: |
       Conducting research on the validation of complex systems within the National PhD Program in AI.
       * Developing Automated Parameter Calibration methods using Simulation-Based Inference (SBI).
       * Applying Graph Neural Networks (GNNs) for Systemic Risk prediction.
       * **Teaching Assistant:** Supporting courses in Computational Economics and AI.
 
-  - role: Academic Tutor & Teaching Assistant
+  - role: Academic Tutor
     org: University of Rome Tor Vergata
     location: Rome, Italy
     start: '2020-03-01'
     end: '2025-01-31'
     summary: |
-      Provided academic support and statistical consulting to students at the Data Processing Center.
-      * Supported the **Sustainable Supply Chain & Operations Management** course.
-      * Supervised student projects and provided guidance on study planning.
-      * **Awards:** Recipient of two Academic Tutorship Awards.
+      Held 5 academic tutorship positions across university faculties:
+      * **Faculty of Economics & Finance (x2):** Statistical consulting at the **Data Processing Center** and support for Supply Chain Management courses.
+      * **Faculty of Law (x3):** Management and research support at the Faculty Library.
+      * **Awards:** Recipient of Academic Tutorship Awards for excellence.
 
   - role: Secretary General & Team Lead
     org: Starting Finance Club Tor Vergata
     location: Rome, Italy
-    start: '2022-06-01'
-    end: '2022-09-30'
+    start: '2024-10-01'
+    end: '2025-02-01'
     summary: |
-      Coordinated a team of 70+ members and organized 10+ financial workshops and events.
+      Coordinated a team of 70+ members and organized financial workshops and events.
       * Led macroeconomic and sectoral analysis initiatives.
+      * Facilitated partnerships with financial firms and organized networking visits.
 
 skills:
 
