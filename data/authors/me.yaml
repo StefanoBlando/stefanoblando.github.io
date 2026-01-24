@@ -27,14 +27,12 @@ role: PhD Candidate in Artificial Intelligence
 
 
 # BIO BREVE (Per la sidebar/widget)
-
 bio: |
-  PhD Researcher in AI (SSSA & UniPi), bridging Economic Theory and Computational Science.
+  PhD Researcher within the National PhD Program in AI, based at Scuola Superiore Sant'Anna and University of Pisa.
 
-  My work targets the rigorous validation of complex systems. I leverage Simulation-Based Inference and Graph Neural Networks to ground Agent-Based Models in empirical reality.
+  My research targets the **validation gap** in complex adaptive systems, bridging **Economic Theory** with **Scientific Machine Learning**.
 
-  I strive to replace static equilibrium frameworks with dynamic, data-driven models capable of capturing emergent socio-economic behaviors.
-
+  Moving beyond static equilibrium, I leverage **Amortized Inference** and **Geometric Deep Learning** to model heterogeneous agents with bounded rationality interacting within evolving, stochastic financial networks.
 affiliations:
 
   - name: National PhD Program in AI (SSSA & UniPi)
