@@ -1,7 +1,7 @@
 
 ---
 title: Real Estate AI Agent
-date: 2023-12-05
+date: 2024-12-05
 summary: An autonomous AI agent designed to analyze property markets, predict pricing trends, and automate interactions using LLM orchestration.
 tags:
   - AI Agents
