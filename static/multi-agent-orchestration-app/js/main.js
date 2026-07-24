@@ -396,13 +396,13 @@ ready(() => {
       {
         margin: { l: 45, r: 50, t: 10, b: 40 },
         barmode: "overlay",
-        paper_bgcolor: "#111827",
-        plot_bgcolor: "#111827",
-        font: { color: "#cbd5e1", family: "Inter, sans-serif", size: 12 },
-        legend: { orientation: "h", y: 1.16, x: 0 },
-        xaxis: { title: "Turn", tickmode: "array", tickvals: turns, gridcolor: "#1f2937" },
-        yaxis: { title: "Clients / Revenue", gridcolor: "#1f2937", zerolinecolor: "#1f2937" },
-        yaxis2: { title: "Bid Spend", overlaying: "y", side: "right", showgrid: false },
+        paper_bgcolor: "transparent",
+        plot_bgcolor: "#07090e",
+        font: { color: "#94a3b8", family: "Instrument Sans, sans-serif", size: 12 },
+        legend: { orientation: "h", y: 1.16, x: 0, font: { family: "JetBrains Mono, monospace", color: "#e2e8f0", size: 11 } },
+        xaxis: { title: "Turn", tickmode: "array", tickvals: turns, gridcolor: "rgba(255,255,255,0.06)", color: "#64748b" },
+        yaxis: { title: "Clients / Revenue", gridcolor: "rgba(255,255,255,0.06)", zerolinecolor: "rgba(255,255,255,0.08)", color: "#64748b" },
+        yaxis2: { title: "Bid Spend", overlaying: "y", side: "right", showgrid: false, color: "#64748b" },
         yaxis3: { overlaying: "y", side: "right", visible: false }
       },
       { displayModeBar: false, responsive: true }
@@ -419,20 +419,20 @@ ready(() => {
         x: surf.tools.map((tool) => CAPABILITY_LABELS[tool] || tool),
         y: surf.phases,
         colorscale: [
-          [0, "#050810"],
-          [0.01, "#050810"],
-          [1, "#4f8ef7"]
+          [0, "#07090e"],
+          [0.01, "#07090e"],
+          [1, "#3b82f6"]
         ],
         hovertemplate: "Phase: %{y}<br>Tool: %{x}<br>Enabled: %{z}<extra></extra>",
         showscale: false
       }],
       {
         margin: { l: 90, r: 12, t: 10, b: 110 },
-        paper_bgcolor: "#111827",
-        plot_bgcolor: "#111827",
-        font: { color: "#cbd5e1", family: "Inter, sans-serif", size: 12 },
-        xaxis: { tickangle: -30, gridcolor: "#1f2937" },
-        yaxis: { gridcolor: "#1f2937" }
+        paper_bgcolor: "transparent",
+        plot_bgcolor: "#07090e",
+        font: { color: "#94a3b8", family: "Instrument Sans, sans-serif", size: 12 },
+        xaxis: { tickangle: -30, gridcolor: "rgba(255,255,255,0.06)", color: "#64748b" },
+        yaxis: { gridcolor: "rgba(255,255,255,0.06)", color: "#64748b" }
       },
       { displayModeBar: false, responsive: true }
     );
