@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showTab(id) {
     navLinks.forEach(l => l.classList.toggle('active', l.dataset.tab === id));
     tabPanes.forEach(p => p.classList.toggle('hidden', p.id !== `tab-${id}`));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     onTabVisible(id);
   }
 
