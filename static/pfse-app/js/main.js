@@ -1,6 +1,6 @@
 /**
- * main.js — App bootstrap, tab routing, event handlers
- * Tabs: paper | method | explorer | backtest | stress
+ * main.js — App bootstrap, scroll spy, event handlers
+ * Sections: paper | method | explorer | backtest | stress
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,21 +21,18 @@ document.addEventListener('DOMContentLoaded', () => {
   buildExplorerToggle();
   resetSimulation('pfse-terminal');
 
-  // ── Tab routing ────────────────────────────────────────────────────────────
-  const navLinks = document.querySelectorAll('.nav-link');
-  const tabPanes = document.querySelectorAll('.tab-pane');
+  // ── Render all section charts ──────────────────────────────────────────────
+  refreshExplorer();
+  refreshBacktest();
+  refreshRegime();
+  refreshStress();
+  renderStressHeatmap('stress-heatmap', D);
+  renderEconomicChart('econ-chart', D);
 
-  function showTab(id) {
-    navLinks.forEach(l => l.classList.toggle('active', l.dataset.tab === id));
-    tabPanes.forEach(p => p.classList.toggle('hidden', p.id !== `tab-${id}`));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    onTabVisible(id);
-  }
+  // ── Scroll Spy ─────────────────────────────────────────────────────────────
+  initScrollSpy();
 
-  navLinks.forEach(l => l.addEventListener('click', e => { e.preventDefault(); showTab(l.dataset.tab); }));
-  showTab('paper');
-
-  // ── Run button (Method tab) ────────────────────────────────────────────────
+  // ── Run button (Method section) ────────────────────────────────────────────
   const runBtn = document.getElementById('run-btn');
   if (runBtn) {
     runBtn.addEventListener('click', () => {
@@ -77,24 +74,18 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
 });
 
-// ── Tab visibility: lazy-render charts ───────────────────────────────────────
-function onTabVisible(id) {
-  const D = window.PFSE_DATA;
-  if (id === 'explorer' && !window._explorerDone) {
-    window._explorerDone = true;
-    refreshExplorer();
-  }
-  if (id === 'backtest' && !window._backtestDone) {
-    window._backtestDone = true;
-    refreshBacktest();
-    refreshRegime();
-  }
-  if (id === 'stress' && !window._stressDone) {
-    window._stressDone = true;
-    refreshStress();
-    renderStressHeatmap('stress-heatmap', D);
-    renderEconomicChart('econ-chart', D);
-  }
+function initScrollSpy() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      const link = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (link) link.classList.toggle('active', e.isIntersecting);
+    });
+  }, { rootMargin: '-35% 0px -45% 0px' });
+
+  ['paper', 'method', 'explorer', 'backtest', 'stress'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) obs.observe(el);
+  });
 }
 
 // ── Refresh functions ─────────────────────────────────────────────────────────

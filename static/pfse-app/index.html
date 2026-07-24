@@ -138,19 +138,19 @@
       </div>
     </div>
     <nav style="display:flex;gap:28px;align-items:center;">
-      <a class="nav-link active" data-tab="paper">Paper</a>
-      <a class="nav-link" data-tab="method">Method</a>
-      <a class="nav-link" data-tab="explorer">Explorer</a>
-      <a class="nav-link" data-tab="backtest">S&amp;P Backtest</a>
-      <a class="nav-link" data-tab="stress">Stress &amp; Value</a>
+      <a class="nav-link active" href="#paper">Paper</a>
+      <a class="nav-link" href="#method">Method</a>
+      <a class="nav-link" href="#explorer">Explorer</a>
+      <a class="nav-link" href="#backtest">Backtest</a>
+      <a class="nav-link" href="#stress">Stress &amp; Value</a>
     </nav>
   </div>
 </header>
 
 <main style="max-width:1480px;margin:0 auto;padding:40px 32px 96px;">
 
-<!-- ═══════ TAB: PAPER ═══════════════════════════════════════════════════════ -->
-<div id="tab-paper" class="tab-pane">
+<!-- ═══════ SECTION: PAPER ══════════════════════════════════════════════════ -->
+<section id="paper">
 
   <!-- Hero -->
   <div style="text-align:center;margin-bottom:44px;">
@@ -255,11 +255,12 @@
     </div>
   </div>
 
-</div><!-- /tab-paper -->
+</section>
 
 
-<!-- ═══════ TAB: METHOD ══════════════════════════════════════════════════════ -->
-<div id="tab-method" class="tab-pane hidden">
+<!-- ═══════ SECTION: METHOD ══════════════════════════════════════════════════ -->
+<section id="method">
+  <hr class="section-divider" />
 
   <div style="margin-bottom:28px;">
     <h2 class="font-serif-title" style="font-size:1.8rem;font-weight:600;color:#f8fafc;margin-bottom:8px;">The Parallel Factor Space Estimator</h2>
@@ -355,11 +356,12 @@
     </table>
   </div>
 
-</div><!-- /tab-method -->
+</section>
 
 
-<!-- ═══════ TAB: EXPLORER ════════════════════════════════════════════════════ -->
-<div id="tab-explorer" class="tab-pane hidden">
+<!-- ═══════ SECTION: EXPLORER ════════════════════════════════════════════════ -->
+<section id="explorer">
+  <hr class="section-divider" />
 
   <div style="margin-bottom:24px;">
     <h2 class="font-serif-title" style="font-size:1.8rem;font-weight:600;color:#f8fafc;margin-bottom:8px;">Performance Explorer</h2>
@@ -448,11 +450,12 @@
     </div>
   </div>
 
-</div><!-- /tab-explorer -->
+</section>
 
 
-<!-- ═══════ TAB: S&P BACKTEST ════════════════════════════════════════════════ -->
-<div id="tab-backtest" class="tab-pane hidden">
+<!-- ═══════ SECTION: S&P BACKTEST ════════════════════════════════════════════ -->
+<section id="backtest">
+  <hr class="section-divider" />
 
   <div style="margin-bottom:24px;">
     <h2 class="font-serif-title" style="font-size:1.8rem;font-weight:600;color:#f8fafc;margin-bottom:8px;">S&amp;P 500 Out-of-Sample Backtest</h2>
@@ -510,11 +513,12 @@
     </div>
   </div>
 
-</div><!-- /tab-backtest -->
+</section>
 
 
-<!-- ═══════ TAB: STRESS & VALUE ══════════════════════════════════════════════ -->
-<div id="tab-stress" class="tab-pane hidden">
+<!-- ═══════ SECTION: STRESS & VALUE ══════════════════════════════════════════ -->
+<section id="stress">
+  <hr class="section-divider" />
 
   <div style="margin-bottom:24px;">
     <h2 class="font-serif-title" style="font-size:1.8rem;font-weight:600;color:#f8fafc;margin-bottom:8px;">Stress Testing &amp; Economic Value</h2>
@@ -629,14 +633,12 @@
 
   </div>
 
-</div><!-- /tab-stress -->
+</section>
 
 </main>
 
-<footer style="border-top:1px solid #1f2937;padding:18px;text-align:center;">
-  <span style="font-size:11px;color:#374151;font-family:'JetBrains Mono',monospace;">
-    PFSE · Blando &amp; Farcomeni · Computational Economics · 2026
-  </span>
+<footer style="border-top:1px solid rgba(255,255,255,0.08);padding:32px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:#64748b;background:rgba(7,9,14,0.6);">
+  PFSE · Blando &amp; Farcomeni · Computational Economics · 2026
 </footer>
 
 <script src="js/simulation.js"></script>
