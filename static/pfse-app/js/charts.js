@@ -5,13 +5,13 @@
 // ── Shared layout base ────────────────────────────────────────────────────────
 const BASE = {
   paper_bgcolor: 'transparent',
-  plot_bgcolor:  '#050810',
-  font:   { family:'Inter, sans-serif', color:'#94a3b8', size:12 },
-  legend: { bgcolor:'transparent', bordercolor:'#1f2937', font:{ color:'#94a3b8', size:12 } },
+  plot_bgcolor:  '#07090e',
+  font:   { family:'Instrument Sans, sans-serif', color:'#94a3b8', size:12 },
+  legend: { bgcolor:'rgba(18,22,34,0.85)', bordercolor:'rgba(255,255,255,0.08)', borderwidth:1, font:{ color:'#e2e8f0', family:'JetBrains Mono, monospace', size:11 } },
   margin: { t:24, r:24, b:58, l:68 },
   hovermode: 'x unified',
 };
-const AXIS = { gridcolor:'#1f2937', linecolor:'#1f2937', color:'#6b7280', zeroline:false };
+const AXIS = { gridcolor:'rgba(255,255,255,0.06)', linecolor:'rgba(255,255,255,0.08)', color:'#64748b', zeroline:false };
 const CFG  = { responsive:true, displayModeBar:false };
 
 // ── Helper: build a line trace ───────────────────────────────────────────────
