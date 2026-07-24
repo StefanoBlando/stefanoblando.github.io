@@ -151,7 +151,7 @@ const SIM = {
   imitations: [],      // { from, to, ttl } — arc animations
 };
 
-const AGENT_COLORS = { miner:'#4f8ef7', imitator:'#22c55e', explorer:'#f59e0b' };
+const AGENT_COLORS = { miner:'#60a5fa', imitator:'#10b981', explorer:'#f59e0b' };
 
 function startIslandAnimation() {
   SIM.canvas = document.getElementById('island-canvas');
@@ -309,7 +309,7 @@ function drawFrame() {
   const toScreen = (gx, gy) => [gx * cellW + cellW/2, gy * cellH + cellH/2];
 
   ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#050810'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#07090e'; ctx.fillRect(0, 0, W, H);
 
   // ── Grid lines (faint) ──
   ctx.strokeStyle = 'rgba(255,255,255,0.025)'; ctx.lineWidth = 0.5;
