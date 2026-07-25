@@ -122,6 +122,57 @@
   box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
 }
 
+.featured-pub-card__btn--bibtex {
+  color: #a78bfa;
+  border-color: rgba(167, 139, 250, 0.3);
+  background: rgba(167, 139, 250, 0.08);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.featured-pub-card__btn--bibtex:hover {
+  background: rgba(167, 139, 250, 0.22);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(167, 139, 250, 0.25);
+}
+
+.featured-pub-card__btn--app {
+  color: #60a5fa;
+  border-color: rgba(96, 165, 250, 0.35);
+  background: rgba(96, 165, 250, 0.12);
+  font-weight: 700;
+}
+
+.featured-pub-card__btn--app:hover {
+  background: rgba(96, 165, 250, 0.25);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+}
+
+.featured-pub-card__btn--code {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.3);
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.featured-pub-card__btn--code:hover {
+  background: rgba(52, 211, 153, 0.22);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.2);
+}
+
+.featured-pub-card__btn--pdf {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.featured-pub-card__btn--pdf:hover {
+  background: rgba(248, 113, 113, 0.22);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(248, 113, 113, 0.2);
+}
+
 .featured-publications__footer {
   margin-top: 2rem;
 }

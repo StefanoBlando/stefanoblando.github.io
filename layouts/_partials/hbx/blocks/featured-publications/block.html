@@ -34,14 +34,35 @@
             <p class="featured-pub-card__summary">{{ . }}</p>
           {{ end }}
 
+          {{ $bibContent := "" }}
+          {{ $bibFile := $pub.Resources.GetMatch "cite.bib" }}
+          {{ if $bibFile }}
+            {{ $bibContent = $bibFile.Content }}
+          {{ else }}
+            {{ $authors := $pub.Params.authors | default (slice "Stefano Blando") }}
+            {{ $authorStr := delimit $authors " and " }}
+            {{ $firstAuthor := index $authors 0 }}
+            {{ $lastName := last 1 (split $firstAuthor " ") | index 0 }}
+            {{ $bibKey := printf "%s%s" (lower $lastName) ($pub.Date.Format "2006") }}
+            {{ $bibContent = printf "@article{%s,\n  title={%s},\n  author={%s},\n  journal={%s},\n  year={%s}\n}" $bibKey $pub.Title $authorStr ($pub.Params.publication | default "Preprint") ($pub.Date.Format "2006") }}
+          {{ end }}
+
           <div class="featured-pub-card__actions">
             <a class="featured-pub-card__btn featured-pub-card__btn--primary" href="{{ $pub.RelPermalink }}">{{ $block.content.view_entry | default "Details" }}</a>
             {{ with $pub.Params.url_pdf }}
-              <a class="featured-pub-card__btn" href="{{ . }}" target="_blank" rel="noopener">{{ $block.content.view_pdf | default "PDF" }}</a>
+              <a class="featured-pub-card__btn featured-pub-card__btn--pdf" href="{{ . }}" target="_blank" rel="noopener">📄 PDF</a>
             {{ end }}
             {{ range $pub.Params.links }}
-              <a class="featured-pub-card__btn" href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a>
+              {{ $name := .name }}
+              {{ if or (in $name "Interactive") (in $name "Explorer") (in $name "App") }}
+                <a class="featured-pub-card__btn featured-pub-card__btn--app" href="{{ .url }}" target="_blank" rel="noopener">⚡ {{ .name }}</a>
+              {{ else if or (in $name "Code") (in $name "GitHub") }}
+                <a class="featured-pub-card__btn featured-pub-card__btn--code" href="{{ .url }}" target="_blank" rel="noopener">💻 {{ .name }}</a>
+              {{ else }}
+                <a class="featured-pub-card__btn" href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a>
+              {{ end }}
             {{ end }}
+            <button type="button" class="featured-pub-card__btn featured-pub-card__btn--bibtex" data-bibtex="{{ $bibContent }}" onclick="copyBibtex(this)">📋 Copy BibTeX</button>
           </div>
         </article>
       {{ end }}
@@ -52,3 +73,21 @@
     </div>
   </div>
 </section>
+
+<script>
+function copyBibtex(btn) {
+  const text = btn.getAttribute('data-bibtex');
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied!';
+    btn.style.borderColor = '#10b981';
+    btn.style.color = '#10b981';
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 2000);
+  });
+}
+</script>
