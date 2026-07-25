@@ -47,6 +47,7 @@ ready(() => {
   drawFlow();
   drawKpiChart();
   drawToolHeatmap();
+  draw3DCoordinationSurface();
   initScrollSpy();
   revealNow();
 
@@ -507,6 +508,53 @@ ready(() => {
         link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
       });
     });
+  }
+
+  function draw3DCoordinationSurface() {
+    const el = document.getElementById("runtime-3d-chart");
+    if (!el) return;
+
+    const turns = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const phases = ["Policy Update", "Procurement", "Reconciliation", "Fulfillment"];
+
+    const z_activity = [
+      [20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
+      [50, 70, 95, 120, 150, 180, 210, 240, 260, 280],
+      [40, 60, 85, 110, 135, 160, 190, 215, 235, 255],
+      [30, 55, 90, 130, 175, 215, 250, 285, 310, 340]
+    ];
+
+    Plotly.newPlot(
+      el,
+      [{
+        type: "surface",
+        x: turns,
+        y: phases,
+        z: z_activity,
+        colorscale: [
+          [0, "#0b0d12"],
+          [0.35, "#2563eb"],
+          [0.7, "#38bdf8"],
+          [1, "#a855f7"]
+        ],
+        showscale: false,
+        opacity: 0.92,
+        hovertemplate: "Phase: %{y}<br>Turn: %{x}<br>Throughput: $%{z}<extra></extra>"
+      }],
+      {
+        paper_bgcolor: "transparent",
+        plot_bgcolor: "#07090e",
+        margin: { l: 0, r: 0, b: 0, t: 25 },
+        scene: {
+          xaxis: { title: "Turn", gridcolor: "rgba(255,255,255,0.08)", color: "#94a3b8" },
+          yaxis: { title: "Phase", gridcolor: "rgba(255,255,255,0.08)", color: "#94a3b8" },
+          zaxis: { title: "Revenue ($)", gridcolor: "rgba(255,255,255,0.08)", color: "#94a3b8" },
+          camera: { eye: { x: 1.6, y: -1.6, z: 1.2 } },
+          bgcolor: "#07090e"
+        }
+      },
+      { displayModeBar: false, responsive: true }
+    );
   }
 
   function revealNow() {

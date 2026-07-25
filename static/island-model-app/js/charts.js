@@ -152,7 +152,69 @@ function buildAGRChart(agrData) {
     xaxis:{title:{text:'ε (exploration probability)'},gridcolor:'rgba(255,255,255,0.06)',color:'#64748b',zeroline:false},
     yaxis:{title:{text:'Average Growth Rate'},gridcolor:'rgba(255,255,255,0.06)',color:'#64748b',zeroline:false},
     hovermode:'x unified',
-    legend:{bgcolor:'rgba(18,22,34,0.85)',bordercolor:'rgba(255,255,255,0.08)',borderwidth:1,font:{family:'JetBrains Mono',size:10,color:'#e2e8f0'}},
   }, { responsive:true, displayModeBar:false });
+}
+
+// ── 3D Island Capital Topology Chart ─────────────────────────────────────────
+function build3DIslandTopologyChart() {
+  const el = document.getElementById('island-3d-chart');
+  if (!el) return;
+
+  const islands = ['Island 1 (Leader)', 'Island 2', 'Island 3', 'Island 4', 'Island 5 (Laggard)'];
+  const timesteps = [1, 25, 50, 75, 100, 150, 201];
+
+  const z_capital = [
+    [10.0, 12.2, 14.8, 17.5, 20.8, 26.4, 32.1],
+    [ 9.5, 11.4, 13.9, 16.4, 19.5, 24.8, 30.2],
+    [ 9.0, 10.8, 13.1, 15.5, 18.3, 23.2, 28.5],
+    [ 8.5, 10.1, 12.2, 14.6, 17.2, 21.9, 26.8],
+    [ 8.0,  9.5, 11.4, 13.7, 16.1, 20.5, 25.1]
+  ];
+
+  const z_stagnation = [
+    [10.0, 10.8, 11.2, 11.4, 11.5, 11.6, 11.7],
+    [ 9.5, 10.1, 10.4, 10.5, 10.6, 10.7, 10.7],
+    [ 9.0,  9.5,  9.8,  9.9, 10.0, 10.0, 10.1],
+    [ 8.5,  8.9,  9.1,  9.2,  9.3,  9.3,  9.4],
+    [ 8.0,  8.3,  8.5,  8.6,  8.6,  8.7,  8.7]
+  ];
+
+  const traceBaseline = {
+    type: 'surface',
+    x: timesteps,
+    y: islands,
+    z: z_capital,
+    name: 'Optimal (ε=0.1)',
+    colorscale: [[0, '#1e3a8a'], [0.5, '#3b82f6'], [1, '#93c5fd']],
+    showscale: false, opacity: 0.92,
+    hovertemplate: '%{y}<br>t=%{x}<br>Capital K=%{z:.1f}<extra></extra>'
+  };
+
+  const traceStagnation = {
+    type: 'surface',
+    x: timesteps,
+    y: islands,
+    z: z_stagnation,
+    name: 'Stagnation (ε=0)',
+    colorscale: [[0, '#78350f'], [0.5, '#f59e0b'], [1, '#fde68a']],
+    showscale: false, opacity: 0.8,
+    hovertemplate: 'Stagnation<br>%{y}<br>t=%{x}<br>Capital K=%{z:.1f}<extra></extra>'
+  };
+
+  const layout = {
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: '#07090e',
+    margin: { l: 0, r: 0, b: 0, t: 30 },
+    scene: {
+      xaxis: { title: 'Time step (t)', gridcolor: 'rgba(255,255,255,0.08)', color: '#94a3b8' },
+      yaxis: { title: 'Islands', gridcolor: 'rgba(255,255,255,0.08)', color: '#94a3b8' },
+      zaxis: { title: 'Capital K_i', gridcolor: 'rgba(255,255,255,0.08)', color: '#94a3b8' },
+      camera: { eye: { x: 1.6, y: -1.6, z: 1.2 } },
+      bgcolor: '#07090e'
+    },
+    legend: { font: { color: '#e2e8f0', family: 'JetBrains Mono, monospace' }, y: 0.95, x: 0.05 }
+  };
+
+  Plotly.newPlot(el, [traceBaseline, traceStagnation], layout, { responsive: true, displayModeBar: false });
 }
 

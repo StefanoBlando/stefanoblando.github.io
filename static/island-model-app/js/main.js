@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildConvergenceCards(D);
   buildAGRChart(D.agr_eps);
   buildStylizedFactsChart(D);
+  build3DIslandTopologyChart();
   startIslandAnimation();
   initScrollReveal();
   initNavHighlight();
