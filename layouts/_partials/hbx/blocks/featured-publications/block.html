@@ -41,9 +41,15 @@
           {{ else }}
             {{ $authors := $pub.Params.authors | default (slice "Stefano Blando") }}
             {{ $authorStr := delimit $authors " and " }}
-            {{ $firstAuthor := index $authors 0 }}
-            {{ $lastName := last 1 (split $firstAuthor " ") | index 0 }}
-            {{ $bibKey := printf "%s%s" (lower $lastName) ($pub.Date.Format "2006") }}
+            {{ $lastName := "blando" }}
+            {{ with $authors }}
+              {{ $firstAuthor := index . 0 }}
+              {{ if ne $firstAuthor "me" }}
+                {{ $parts := split $firstAuthor " " }}
+                {{ $lastName = lower (index $parts (sub (len $parts) 1)) }}
+              {{ end }}
+            {{ end }}
+            {{ $bibKey := printf "%s%s" $lastName ($pub.Date.Format "2006") }}
             {{ $bibContent = printf "@article{%s,\n  title={%s},\n  author={%s},\n  journal={%s},\n  year={%s}\n}" $bibKey $pub.Title $authorStr ($pub.Params.publication | default "Preprint") ($pub.Date.Format "2006") }}
           {{ end }}
 
