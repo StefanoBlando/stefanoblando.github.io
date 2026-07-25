@@ -96,6 +96,8 @@ function refreshExplorer() {
     const methods = getChecked('method-checks');
     const metric  = document.getElementById('metric-sel')?.value || 'sharpe';
     renderContaminationChart('contamination-chart', D, methods, metric);
+  } else if (view === 'surface3d') {
+    render3DContaminationSurface('surface3d-chart', D);
   } else {
     const methods = getChecked('comp-checks');
     renderComputationChart('computation-chart', D, methods);
@@ -118,7 +120,7 @@ function refreshStress() {
   renderRadarChart('radar-chart', D, getChecked('radar-checks'));
 }
 
-// ── Explorer toggle (contamination / computation) ─────────────────────────────
+// ── Explorer toggle (contamination / computation / 3D surface) ────────────────
 function buildExplorerToggle() {
   document.querySelectorAll('.explorer-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -128,6 +130,7 @@ function buildExplorerToggle() {
       window._explorerView = v;
       document.getElementById('contamination-panel').classList.toggle('hidden', v !== 'contamination');
       document.getElementById('computation-panel').classList.toggle('hidden', v !== 'computation');
+      document.getElementById('surface3d-panel')?.classList.toggle('hidden', v !== 'surface3d');
       document.getElementById('method-controls').classList.toggle('hidden', v !== 'contamination');
       document.getElementById('comp-controls').classList.toggle('hidden', v !== 'computation');
       refreshExplorer();

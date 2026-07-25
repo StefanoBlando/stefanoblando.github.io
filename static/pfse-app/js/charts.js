@@ -266,3 +266,56 @@ function renderEconomicChart(elId, D) {
     yaxis:{ ...AXIS, title:{ text:'Annual Value ($M)' } },
   }, CFG);
 }
+
+// ── 3D Contamination Surface Chart ──────────────────────────────────────────
+function render3DContaminationSurface(elId, D) {
+  const el = document.getElementById(elId); if (!el) return;
+  const x = [0, 2.5, 5, 7.5, 10, 12.5, 15]; // Contamination %
+  const y = [50, 100, 200, 300, 500]; // Assets p
+
+  const z_pfse = [
+    [1.47, 1.46, 1.45, 1.45, 1.44, 1.42, 1.40],
+    [1.45, 1.44, 1.43, 1.43, 1.42, 1.40, 1.38],
+    [1.44, 1.43, 1.42, 1.41, 1.40, 1.38, 1.35],
+    [1.42, 1.41, 1.40, 1.39, 1.38, 1.36, 1.33],
+    [1.40, 1.39, 1.38, 1.37, 1.35, 1.33, 1.30],
+  ];
+
+  const z_sample = [
+    [1.47, 1.39, 1.25, 1.12, 0.98, 0.84, 0.70],
+    [1.45, 1.37, 1.22, 1.09, 0.96, 0.82, 0.68],
+    [1.42, 1.31, 1.15, 1.01, 0.87, 0.73, 0.58],
+    [1.38, 1.24, 1.07, 0.92, 0.78, 0.64, 0.49],
+    [1.32, 1.16, 0.98, 0.82, 0.68, 0.54, 0.39],
+  ];
+
+  const trace1 = {
+    type: 'surface', x, y, z: z_pfse, name: 'PFSE (Robust)',
+    colorscale: [[0, '#1e3a8a'], [0.5, '#3b82f6'], [1, '#93c5fd']],
+    showscale: false, opacity: 0.92,
+    hovertemplate: 'PFSE<br>ε=%{x}%<br>p=%{y}<br>Sharpe=%{z:.2f}<extra></extra>'
+  };
+
+  const trace2 = {
+    type: 'surface', x, y, z: z_sample, name: 'Sample Covariance',
+    colorscale: [[0, '#831843'], [0.5, '#db2777'], [1, '#fbcfe8']],
+    showscale: false, opacity: 0.85,
+    hovertemplate: 'Sample Cov<br>ε=%{x}%<br>p=%{y}<br>Sharpe=%{z:.2f}<extra></extra>'
+  };
+
+  const layout = {
+    paper_bgcolor: 'transparent',
+    plot_bgcolor: '#07090e',
+    margin: { l: 0, r: 0, b: 0, t: 30 },
+    scene: {
+      xaxis: { title: 'Contamination % (ε)', gridcolor: 'rgba(255,255,255,0.08)', color: '#94a3b8' },
+      yaxis: { title: 'Assets (p)', gridcolor: 'rgba(255,255,255,0.08)', color: '#94a3b8' },
+      zaxis: { title: 'Sharpe Ratio', gridcolor: 'rgba(255,255,255,0.08)', color: '#94a3b8' },
+      camera: { eye: { x: 1.6, y: -1.6, z: 1.2 } },
+      bgcolor: '#07090e'
+    },
+    legend: { font: { color: '#e2e8f0', family: 'JetBrains Mono, monospace' }, y: 0.95, x: 0.05 }
+  };
+
+  Plotly.newPlot(el, [trace1, trace2], layout, CFG);
+}

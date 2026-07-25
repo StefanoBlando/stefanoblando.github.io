@@ -381,6 +381,7 @@
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
           <button class="tog-btn explorer-toggle tog-active" data-view="contamination">Contamination</button>
           <button class="tog-btn explorer-toggle" data-view="computation">Scalability</button>
+          <button class="tog-btn explorer-toggle" data-view="surface3d">3D Manifold</button>
         </div>
       </div>
 
@@ -444,6 +445,20 @@
         <div style="font-size:12px;color:#6b7280;line-height:1.65;">
           PFSE: 2.4s at p=100 (32× faster than MCD). Remains feasible up to p≈1000 within the 300s
           institutional daily rebalancing window. Full MCD becomes infeasible beyond p≈75.
+        </div>
+      </div>
+
+      <!-- 3D Surface chart -->
+      <div id="surface3d-panel" class="hidden">
+        <div style="margin-bottom:10px;">
+          <div class="section-label">3D Risk-Contamination Surface</div>
+          <div style="font-size:11px;color:#6b7280;">Interactive 3D Manifold · Click &amp; drag to rotate · Contamination (ε) × Assets (p) × Sharpe Ratio</div>
+        </div>
+        <div class="card p-4" style="margin-bottom:10px;">
+          <div id="surface3d-chart" style="height:400px;"></div>
+        </div>
+        <div style="font-size:12px;color:#6b7280;line-height:1.65;">
+          Click and drag to rotate in 3D. PFSE (blue top surface) maintains Sharpe ratio near ~1.40 across dimensions p up to 500 and contamination ε up to 15%, while Sample Covariance (pink lower surface) collapses sharply.
         </div>
       </div>
 
