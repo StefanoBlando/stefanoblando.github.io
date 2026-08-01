@@ -5,9 +5,13 @@
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
 <meta property="og:url" content="{{ .Permalink }}" />
 
-<meta property="og:image" content="{{ "images/icon_hu_df533726aa146522.png" | absURL }}" />
+{{- $ogImage := "media/icon.png" | absURL -}}
+{{- with .Resources.GetMatch "featured*" -}}
+  {{- $ogImage = .RelPermalink | absURL -}}
+{{- end -}}
 
+<meta property="og:image" content="{{ $ogImage }}" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="{{ with .Title }}{{ . }} | Stefano Blando{{ else }}Stefano Blando — PhD Researcher in AI & Economics{{ end }}" />
 <meta name="twitter:description" content="{{ with .Params.summary }}{{ . }}{{ else }}Stefano Blando is a PhD student in Artificial Intelligence at Scuola Superiore Sant'Anna & University of Pisa.{{ end }}" />
-<meta name="twitter:image" content="{{ "images/icon_hu_df533726aa146522.png" | absURL }}" />
+<meta name="twitter:image" content="{{ $ogImage }}" />
