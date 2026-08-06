@@ -18,7 +18,7 @@ links:
     url: /en/publications/multi-method-validation-framework/
 ---
 
-This project is the technical implementation behind the publication **“A Multi-Method Validation Framework for Large-Scale Multilingual Text Analytics”** (JADT 2026, in review). It operationalizes the full analytical workflow used in the paper, from data preparation to cross-method validation and result comparison.
+This project is the technical implementation behind the publication **“A Multi-Method Validation Framework for Large-Scale Multilingual Text Analytics”** (JADT 2026, Palermo, 8–10 July 2026; Proceedings ISBN 978-88-5509-883-0). It operationalizes the full analytical workflow used in the paper, from data preparation to cross-method validation and result comparison.
 
 The pipeline combines **R and Python** modules over a large multilingual review corpus, including: preprocessing and TF-IDF, **LDA topic modeling**, **LSA and Correspondence Analysis**, lexicon- and model-based sentiment analysis, clustering, and **co-occurrence network analysis**. The repository also includes cross-platform validation scripts to compare method outputs and check structural stability across implementations.
 
