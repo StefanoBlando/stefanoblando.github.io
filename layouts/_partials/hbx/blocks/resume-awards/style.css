@@ -1,20 +1,19 @@
 .award-card {
-  background: rgba(16, 22, 33, 0.6) !important;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(158, 183, 219, 0.1) !important;
+  background: var(--portfolio-surface);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.1);
   border-radius: 16px;
   transition: border-color 300ms ease, transform 300ms ease, box-shadow 300ms ease;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .award-card:hover {
-  border-color: rgba(158, 183, 219, 0.35) !important;
+  border-color: rgba(var(--portfolio-accent-rgb), 0.35);
   transform: translateY(-3px);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55), 0 0 20px 1px rgba(158, 183, 219, 0.04);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55), 0 0 20px 1px rgba(var(--portfolio-accent-rgb), 0.04);
 }
 
 .award-card__title {
-  color: var(--portfolio-text) !important;
+  color: var(--portfolio-text);
   font-family: var(--portfolio-serif);
   font-style: italic;
   font-size: 1.4rem;
@@ -22,30 +21,30 @@
 }
 
 .award-card__icon {
-  color: var(--portfolio-accent) !important;
+  color: var(--portfolio-accent);
 }
 
 .award-card__meta {
-  color: var(--portfolio-faint) !important;
+  color: var(--portfolio-faint);
 }
 
 .award-card__summary {
-  color: var(--portfolio-muted) !important;
+  color: var(--portfolio-muted);
   line-height: 1.6;
 }
 
 .award-card__summary p {
-  color: var(--portfolio-muted) !important;
+  color: var(--portfolio-muted);
 }
 
 .award-card__link {
-  color: var(--portfolio-accent) !important;
+  color: var(--portfolio-accent);
   font-weight: 600;
   transition: color 200ms ease;
 }
 
 .award-card__link:hover {
-  color: var(--portfolio-text) !important;
+  color: var(--portfolio-text);
   text-decoration: underline;
   text-underline-offset: 4px;
 }

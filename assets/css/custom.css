@@ -28,6 +28,10 @@
   --portfolio-muted: #a5adba;
   --portfolio-faint: #657fa8;
   --portfolio-accent: #9eb7db;
+  --portfolio-accent-rgb: 158, 183, 219;
+  --portfolio-accent-strong: #526fa8;
+  --portfolio-accent-strong-rgb: 82, 111, 168;
+  --portfolio-accent-deep: #3f5580;
   --portfolio-line: rgba(158, 183, 219, 0.14);
   --portfolio-focus: #9eb7db;
   --portfolio-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -35,7 +39,7 @@
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: var(--portfolio-sans); background: radial-gradient(circle at 80% 10%, rgb(55 73 116 / 14%), transparent 28%), var(--portfolio-bg); color: var(--portfolio-text); }
+body { font-family: var(--portfolio-sans); background: var(--portfolio-bg); color: var(--portfolio-text); }
 main, .page-body { position: relative; z-index: 1; }
 section[id] { scroll-margin-top: 5rem; }
 
@@ -43,7 +47,9 @@ section[id] { scroll-margin-top: 5rem; }
 .portfolio-section__inner { width: min(1120px, calc(100% - 2.5rem)); margin-inline: auto; }
 .portfolio-section h2 { margin: 0; color: var(--portfolio-text); font-family: var(--portfolio-sans); font-style: normal; font-size: clamp(2rem, 3.5vw, 2.75rem); letter-spacing: -0.025em; font-weight: 600; }
 .portfolio-section__intro { max-width: 62ch; margin-top: 1.2rem; color: var(--portfolio-muted); line-height: 1.75; font-size: 1.05rem; }
-.portfolio-eyebrow { margin: 0 0 1.2rem; color: var(--portfolio-accent); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; }
+/* Eyebrow editoriale: serif italico invece del maiuscoletto spaziato.
+   Usa Fraunces, che sul sito esiste solo in italico. */
+.portfolio-eyebrow { margin: 0 0 0.9rem; color: var(--portfolio-accent); font-family: var(--portfolio-serif); font-style: italic; font-weight: 400; font-size: 1.05rem; letter-spacing: 0; text-transform: none; }
 .portfolio-serif-accent { font-family: var(--portfolio-serif); font-style: italic; font-weight: 400; color: var(--portfolio-accent); }
 
 ::-webkit-scrollbar { width: 8px; }
@@ -84,51 +90,21 @@ section[id] { scroll-margin-top: 5rem; }
 }
 
 /* ==========================================================================
-   PREMIUM EDITORIAL & UX ENHANCEMENTS
+   EDITORIAL & UX
    ========================================================================== */
 
-/* Global Typographic Polish for Section, Project, and Paper Titles */
+/* Titoli in sans. custom.css carica dopo _entry.css del tema, quindi non
+   serve !important: a parita' di specificita' vince l'ultimo. I titoli
+   definiti nei blocchi restano gestiti dai rispettivi style.css. */
 h2, h3,
-.page-header-title, 
+.page-header-title,
 .project-title,
 .article-title,
 .pub-list-item-title,
-.publication-title,
-.publication-row h3,
-.featured-pub-card__title,
-.featured-pub-card__title a,
-.featured-case__body h3,
-.featured-case__body h3 a {
-  font-family: var(--portfolio-sans) !important;
-  font-style: normal !important;
-  font-weight: 600 !important;
-}
-
-/* Explicitly preserve Hero H1's technical mixed layout */
-.portfolio-hero h1 {
-  font-family: var(--portfolio-sans) !important;
-  font-style: normal !important;
-  font-weight: 600 !important;
-}
-
-/* Ambient Background Glow (Subtle Animation) */
-body::before {
-  content: "";
-  position: fixed;
-  top: -10%;
-  right: -10%;
-  width: 60vw;
-  height: 60vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(82, 111, 168, 0.07) 0%, transparent 70%);
-  z-index: -1;
-  pointer-events: none;
-  animation: ambient-glow 18s ease-in-out infinite alternate;
-}
-
-@keyframes ambient-glow {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-8%, 8%) scale(1.15); }
+.publication-title {
+  font-family: var(--portfolio-sans);
+  font-style: normal;
+  font-weight: 600;
 }
 
 /* Fade-out Gradient Section Separators */
@@ -151,7 +127,7 @@ body::before {
 }
 
 #site-header a:hover {
-  color: var(--portfolio-text) !important;
+  color: var(--portfolio-text);
 }
 
 #site-header a:not([href*="contact"])::after {
@@ -176,34 +152,16 @@ body::before {
 
 #site-header a[aria-current="location"],
 #site-header a.active {
-  color: var(--portfolio-text) !important;
+  color: var(--portfolio-text);
   font-weight: 600;
 }
 
-/* Glassmorphism & Hover Glow Enhancements */
-.featured-case,
-.featured-pub-card,
-.featured-news-card,
-.research-list__row {
-  border: 1px solid var(--portfolio-line) !important;
-  background: rgba(16, 22, 33, 0.55) !important;
-  backdrop-filter: blur(12px) !important;
-  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 280ms ease,
-              box-shadow 280ms ease,
-              background 280ms ease !important;
-}
+/* Le card (.featured-case, .featured-pub-card, .featured-news-card,
+   .research-list__row) sono definite nei rispettivi block style.css, che
+   caricano dopo questo file. Le regole duplicate che stavano qui servivano
+   solo a vincere con !important: rimosse, si modificano alla fonte. */
 
-.featured-case:hover,
-.featured-pub-card:hover,
-.featured-news-card:hover,
-.research-list__row:hover {
-  border-color: rgba(99, 179, 237, 0.35) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 25px rgba(99, 179, 237, 0.06) !important;
-  background: rgba(20, 28, 42, 0.7) !important;
-}
-
-/* Experience & Resume Timeline Enhancements */
+/* Experience & Resume Timeline */
 .wg-resume-experience,
 .experience-timeline {
   padding-block: clamp(2.5rem, 5vw, 4rem);
@@ -211,15 +169,14 @@ body::before {
 
 .wg-resume-experience .card,
 .experience-card {
-  background: rgba(16, 22, 33, 0.5) !important;
-  border: 1px solid var(--portfolio-line) !important;
-  border-radius: 12px !important;
-  backdrop-filter: blur(10px) !important;
-  color: var(--portfolio-text) !important;
+  background: var(--portfolio-surface);
+  border: 1px solid var(--portfolio-line);
+  border-radius: 12px;
+  color: var(--portfolio-text);
 }
 
 .wg-resume-experience .card:hover {
-  border-color: rgba(99, 179, 237, 0.3) !important;
+  border-color: rgba(var(--portfolio-accent-rgb), 0.32);
 }
 
 

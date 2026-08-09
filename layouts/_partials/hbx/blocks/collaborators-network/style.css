@@ -17,11 +17,10 @@
 .network-tabs {
   display: inline-flex;
   gap: 4px;
-  background: rgba(12, 17, 27, 0.8);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  background: var(--portfolio-surface);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.2);
   padding: 4px;
   border-radius: 99px;
-  backdrop-filter: blur(10px);
 }
 
 .cat-tab {
@@ -37,21 +36,20 @@
 }
 
 .cat-tab:hover {
-  color: #ffffff;
+  color: var(--portfolio-text);
 }
 
 .cat-tab.active {
-  background: linear-gradient(135deg, #0284c7, #4f46e5);
-  color: #ffffff;
-  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+  background: var(--portfolio-accent-strong);
+  color: var(--portfolio-text);
 }
 
 .network-search {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(12, 17, 27, 0.8);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  background: var(--portfolio-surface);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.2);
   border-radius: 99px;
   padding: 0.35rem 0.9rem;
   color: var(--portfolio-muted);
@@ -61,7 +59,7 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #ffffff;
+  color: var(--portfolio-text);
   font-size: 0.8rem;
   width: 140px;
 }
@@ -74,10 +72,9 @@
   position: relative;
   width: 100%;
   border-radius: 24px;
-  background: radial-gradient(circle at 50% 50%, rgba(14, 25, 45, 0.65), rgba(8, 12, 20, 0.96)) !important;
-  border: 1px solid rgba(56, 189, 248, 0.25) !important;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: var(--portfolio-bg);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   overflow: hidden;
   padding: 1rem;
 }
@@ -100,12 +97,11 @@
   top: 1.5rem;
   right: 1.5rem;
   width: min(320px, calc(100% - 3rem));
-  background: rgba(12, 17, 27, 0.96);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: var(--portfolio-surface);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.35);
   border-radius: 18px;
   padding: 1.25rem;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   z-index: 10;
   transition: opacity 250ms ease, transform 250ms ease;
   pointer-events: none; /* Prevents card from intercepting mouse hover on underlying SVG nodes! */
@@ -134,7 +130,7 @@
 }
 
 .network-detail-card__close:hover {
-  color: #ffffff;
+  color: var(--portfolio-text);
 }
 
 .network-detail-card__header {
@@ -150,8 +146,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0284c7, #4f46e5);
-  color: #ffffff;
+  background: var(--portfolio-accent-strong);
+  color: var(--portfolio-text);
   font-weight: 700;
   font-size: 0.9rem;
   flex-shrink: 0;
@@ -160,13 +156,13 @@
 .network-detail-card__header h3 {
   margin: 0;
   font-size: 1.05rem;
-  color: #ffffff;
+  color: var(--portfolio-text);
 }
 
 .network-detail-card__role {
   margin: 0.15rem 0 0;
   font-size: 0.78rem;
-  color: #38bdf8;
+  color: var(--portfolio-accent);
   font-weight: 600;
 }
 
@@ -187,16 +183,16 @@
   font-size: 0.72rem;
   padding: 0.15rem 0.55rem;
   border-radius: 6px;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  color: #7dd3fc;
+  background: rgba(var(--portfolio-accent-rgb), 0.1);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.25);
+  color: var(--portfolio-accent);
   font-weight: 500;
 }
 
 .network-detail-card__papers h4 {
   margin: 0 0 0.4rem;
   font-size: 0.78rem;
-  color: #ffffff;
+  color: var(--portfolio-text);
   font-weight: 600;
 }
 

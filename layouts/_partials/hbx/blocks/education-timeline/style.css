@@ -9,7 +9,7 @@
 .education-milestone summary strong, .education-milestone summary span { display: block; }
 .education-milestone summary strong { margin-top: 0.45rem; color: #eceff3; line-height: 1.35; }
 .education-milestone summary > span:last-child { margin-top: 0.45rem; color: #909aa8; font-size: 0.83rem; }
-.education-milestone__dates { display: flex !important; gap: 0.3rem; color: #9eb7db; font-size: 0.76rem; }
+.education-milestone__dates { display: flex; gap: 0.3rem; color: #9eb7db; font-size: 0.76rem; }
 .education-milestone__details { padding: 0 1rem 1rem; color: #a3acba; font-size: 0.9rem; line-height: 1.6; }
 .education-milestone details[open] { border-color: rgb(143 164 198 / 38%); }
 @media (max-width: 800px) {

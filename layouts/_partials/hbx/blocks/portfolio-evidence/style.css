@@ -3,7 +3,7 @@
 .publication-list, .news-list { margin-top: 1.5rem; border: 1px solid rgb(179 192 211 / 12%); border-radius: 1rem; background: linear-gradient(145deg, rgb(20 25 35 / 94%), rgb(10 14 21 / 96%)); }
 .publication-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.2rem; border-bottom: 1px solid rgb(179 192 211 / 10%); }
 .publication-row:last-child, .news-row:last-child { border-bottom: 0; }
-.publication-row h3, .news-row h3 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 1rem; line-height: 1.4; }
+.publication-row h3, .news-row h3 { margin: 0; font-family: var(--portfolio-serif); font-size: 1rem; line-height: 1.4; }
 .publication-row h3 a, .news-row h3 a { color: #e7e5e1; text-decoration: none; }
 .publication-row p, .news-row time { margin: 0.35rem 0 0; color: #858e9d; font-size: 0.78rem; }
 .publication-row__actions { display: flex; gap: 0.5rem; }
