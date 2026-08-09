@@ -17,8 +17,8 @@
     Stefano Blando is a PhD student in the National PhD Program in Artificial Intelligence at
     Scuola Superiore Sant'Anna and the University of Pisa. His research lies at the intersection
     of AI, agent-based modeling, and economics. He studies adaptive multi-agent systems,
-    statistical verification of economic simulations, and robust quantitative methods for
-    financial and socio-economic data.
+    differentiable agent-based models, LLM-based generative agents, and robust quantitative
+    methods for financial and socio-economic data.
 
   affiliations:
     - name: Scuola Superiore Sant'Anna
@@ -54,8 +54,8 @@
       start: 2025-11-01
       summary: |
         Research focus: "Learning How to Learn: Adaptive Cognitive Architectures for Economic
-        Network Formation". Methods include agent-based modeling, multi-agent learning,
-        statistical model checking, network dynamics, and robust statistics.
+        Network Formation". Methods include differentiable agent-based models, LLM-based
+        generative agents, multi-agent learning, network dynamics, and robust statistics.
 
     - degree: Second-Level Master in Customer Experience, Statistics, ML and AI
       institution: University of Rome Tor Vergata
@@ -86,10 +86,10 @@
         Supervisor: Prof. Gustavo Piga.
         Erasmus+ Exchange: University of Paris Est-Creteil (Aug 2021 - Feb 2022).
 
-    - degree: BA in Philosophy
+    - degree: Philosophy Studies (not completed)
       institution: University of Rome La Sapienza
-      start: 2014-09-01
-      end: 2017-07-01
+      start: 2015-09-01
+      end: 2017-09-01
       summary: "Coursework in logic, epistemology, and analytical philosophy."
 
   experience:
@@ -148,6 +148,15 @@
         - label: Graph Neural Networks
           level: 4
 
+    - name: HPC & Scientific Computing
+      items:
+        - label: JAX / Differentiable Programming
+          level: 4
+        - label: GPU Computing
+          level: 4
+        - label: SLURM / HPC Clusters
+          level: 4
+
     - name: Statistics & Economic Modeling
       items:
         - label: Robust Statistics
@@ -187,6 +196,17 @@
       summary: "Awarded for the paper 'A Multi-Method Validation Framework for Large-Scale Multilingual Text Analytics' (developed with Prof. D. Fioredistella Iezzi) at the 18th International Conference JADT 2026 in Palermo."
       icon: hero/academic-cap
       url: /blog/vadistat-award-2026/
+    - title: CINECA ISCRA C Grant
+      awarder: CINECA - Italian National Supercomputing Infrastructure
+      date: "2026-07-01"
+      summary: "Awarded compute resources on the Leonardo supercomputer for a project on differentiable, tensor-native simulative models."
+      icon: hero/cpu-chip
+    - title: University of Pisa Doctoral Grant for Student-Led Scientific Events
+      awarder: University of Pisa
+      date: "2026-04-01"
+      summary: "Funding to co-organize COMPASS, an interdisciplinary workshop on complexity, markets, policy, and AI in social systems."
+      icon: hero/academic-cap
+      url: /blog/compass-workshop-2026/
     - title: 2nd Place AI Data Hackathon
       awarder: ""
       date: "2024-12-12"

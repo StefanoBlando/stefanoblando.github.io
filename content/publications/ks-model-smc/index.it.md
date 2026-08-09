@@ -13,7 +13,7 @@ publishDate: "2026-06-01T00:00:00Z"
 
 publication_types: ["Article"]
 
-publication: "Preprint arXiv"
+publication: "Preprint arXiv:2605.10447 (versione journal in preparazione)"
 publication_short: "Preprint arXiv (2026)"
 
 abstract: "I modelli macroeconomici agent-based, come il framework Keynes+Schumpeter (K+S), integrano la crescita Schumpeteriana guidata dall'innovazione con le dinamiche Keynesiane di domanda aggregata. Tuttavia, la ricerca di analisi di sensibilità formale in tali sistemi stocastici ad alta dimensione rimane metodologicamente complessa. In questo lavoro, applichiamo il Statistical Model Checking (SMC) tramite MultiVeStA per condurre un'analisi di sensibilità transitoria sistematica del modello K+S, stabilendo intervalli di confidenza statistici per le principali osservabili macroeconomiche come la crescita del PIL e le traiettorie di disoccupazione."
@@ -31,8 +31,8 @@ tags:
 featured: true
 
 links:
-- name: Preprint arXiv
-  url: https://arxiv.org/
+- name: arXiv:2605.10447
+  url: https://arxiv.org/abs/2605.10447
 
 url_pdf: ''
 url_code: ''

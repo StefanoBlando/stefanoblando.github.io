@@ -14,8 +14,8 @@ publishDate: "2026-07-18T00:00:00Z"
 
 publication_types: ["Article"]
 
-publication: "Preprint arXiv:2607.17948"
-publication_short: "Preprint arXiv (2026)"
+publication: "Sottomesso ad AISoLA 2026 (arXiv:2607.17948)"
+publication_short: "Sottomesso ad AISoLA 2026"
 
 abstract: "L'integrazione dei Large Language Models (LLM) nei modelli agent-based tradizionali consente agli agenti di utilizzare tool calling, ragionamento semantico e decisioni adattive. In questo articolo, valutiamo la fattibilità, le prestazioni e il comportamento emergente dei modelli agent-based agentici utilizzando la libreria Mesa e il Statistical Model Checking via MultiVeStA. Attraverso specifiche verifiche statistiche, quantifichiamo l'impatto delle decisioni basate su LLM sulla dinamica di simulazione."
 

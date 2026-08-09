@@ -19,7 +19,7 @@ publication_short: "JADT 2026"
 
 abstract: "Per distinguere risultati sostanziali da artefatti metodologici, questo paper propone un framework di validazione basato su pattern method-invariant. Analizzando 999.152 recensioni multilingui attraverso 18 tecniche indipendenti, dal clustering classico ai Transformers, mostriamo che il contenuto sostanziale spiega il 95,4% della varianza, mentre la scelta metodologica ne spiega meno del 3%. Lo studio conferma che i pattern robusti trascendono algoritmi e implementazioni specifiche. Inoltre, mentre BERT raggiunge la massima accuratezza (91,3%), approcci classici come SVM offrono performance comparabili (89,1%) con un costo computazionale 29 volte inferiore."
 # Summary.
-summary: "Accettato a JADT 2026, questo paper valida 18 approcci analitici su oltre 1 milione di testi per identificare risultati method-invariant."
+summary: "Presentato a JADT 2026 e premiato con il Premio VADISTAT per giovani ricercatori, questo paper valida 18 approcci analitici su oltre 1 milione di testi per identificare risultati method-invariant."
 
 tags:
 - NLP

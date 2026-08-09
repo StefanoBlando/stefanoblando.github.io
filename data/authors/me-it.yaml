@@ -17,8 +17,8 @@
     Stefano Blando e dottorando nel Programma Nazionale di Dottorato in Intelligenza
     Artificiale presso la Scuola Superiore Sant'Anna e l'Universita di Pisa. La sua ricerca si
     colloca all'intersezione tra AI, agent-based modeling ed economia. Studia sistemi
-    multi-agente adattivi, verifica statistica di simulazioni economiche e metodi quantitativi
-    robusti per dati finanziari e socio-economici.
+    multi-agente adattivi, modelli agent-based differenziabili, agenti generativi basati su LLM
+    e metodi quantitativi robusti per dati finanziari e socio-economici.
 
   affiliations:
     - name: Scuola Superiore Sant'Anna
@@ -54,8 +54,9 @@
       start: 2025-11-01
       summary: |
         Focus di ricerca: "Learning How to Learn: Adaptive Cognitive Architectures for Economic
-        Network Formation". I metodi includono agent-based modeling, apprendimento
-        multi-agente, statistical model checking, dinamiche di rete e statistica robusta.
+        Network Formation". I metodi includono modelli agent-based differenziabili, agenti
+        generativi basati su LLM, apprendimento multi-agente, dinamiche di rete e statistica
+        robusta.
 
     - degree: Master di II livello in Customer Experience, Statistics, ML and AI
       institution: University of Rome Tor Vergata
@@ -86,11 +87,11 @@
         Relatore: Prof. Gustavo Piga.
         Scambio Erasmus+: University of Paris Est-Creteil (Ago 2021 - Feb 2022).
 
-    - degree: Laurea in Filosofia
+    - degree: Studi in Filosofia (non completati)
       institution: University of Rome La Sapienza
-      start: 2014-09-01
-      end: 2017-07-01
-      summary: "Formazione in logica, epistemologia e filosofia analitica."
+      start: 2015-09-01
+      end: 2017-09-01
+      summary: "Corsi di logica, epistemologia e filosofia analitica."
 
   experience:
     - role: Ricercatore PhD
@@ -148,6 +149,15 @@
         - label: Graph Neural Networks
           level: 4
 
+    - name: HPC e Calcolo Scientifico
+      items:
+        - label: JAX / Differentiable Programming
+          level: 4
+        - label: GPU Computing
+          level: 4
+        - label: SLURM / HPC Clusters
+          level: 4
+
     - name: Statistica e Modellazione Economica
       items:
         - label: Robust Statistics
@@ -187,6 +197,17 @@
       summary: "Assegnato alla 18ª Conferenza Internazionale JADT 2026 a Palermo, per l'articolo 'A Multi-Method Validation Framework for Large-Scale Multilingual Text Analytics' (sviluppato insieme alla Prof.ssa D. Fioredistella Iezzi)."
       icon: hero/academic-cap
       url: /blog/vadistat-award-2026/
+    - title: Grant CINECA ISCRA C
+      awarder: CINECA - Infrastruttura Nazionale Italiana di Supercalcolo
+      date: "2026-07-01"
+      summary: "Assegnate risorse di calcolo sul supercomputer Leonardo per un progetto su modelli simulativi differenziabili e tensor-native."
+      icon: hero/cpu-chip
+    - title: Grant di Ateneo UniPi per eventi scientifici organizzati da dottorandi
+      awarder: Università di Pisa
+      date: "2026-04-01"
+      summary: "Finanziamento per la co-organizzazione di COMPASS, workshop interdisciplinare su complessità, mercati, policy e AI nei sistemi sociali."
+      icon: hero/academic-cap
+      url: /blog/compass-workshop-2026/
     - title: 2 posto AI Data Hackathon
       awarder: ""
       date: "2024-12-12"
