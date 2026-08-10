@@ -28,7 +28,7 @@ tags:
 - MultiVeStA
 - Sensitivity Analysis
 
-featured: true
+featured: false
 
 links:
 - name: arXiv:2605.10447

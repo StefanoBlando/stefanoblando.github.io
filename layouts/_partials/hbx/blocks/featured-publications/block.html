@@ -1,5 +1,9 @@
 {{ $block := .wcBlock }}
+{{/* Solo le pubblicazioni marcate featured: true nel frontmatter. Se nessuna
+     lo e', ricade su tutte per data, cosi' la sezione non resta mai vuota. */}}
 {{ $publications := where site.RegularPages "Section" "publications" }}
+{{ $selected := where $publications "Params.featured" true }}
+{{ if not $selected }}{{ $selected = $publications }}{{ end }}
 <section id="publications" class="featured-publications portfolio-section" aria-labelledby="publications-title">
   <div class="portfolio-section__inner">
     <p class="portfolio-eyebrow">{{ $block.content.eyebrow }}</p>
@@ -7,7 +11,7 @@
     <p class="portfolio-section__intro">{{ $block.content.text }}</p>
     
     <div class="featured-publications__list">
-      {{ range $pub := first 4 $publications.ByDate.Reverse }}
+      {{ range $pub := first 4 $selected.ByDate.Reverse }}
         <article class="featured-pub-card" data-reveal>
           <div class="featured-pub-card__header">
             <span class="featured-pub-card__year">{{ $pub.Date.Format "2006" }}</span>

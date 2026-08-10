@@ -31,7 +31,7 @@ tags:
 - Python
 
 # Display this page in the Featured widget?
-featured: true
+featured: false
 
 # Custom links (optional).
 links:
