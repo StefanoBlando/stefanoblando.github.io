@@ -99,10 +99,10 @@
       location: Pisa, Italy
       start: "2025-11-01"
       summary: |
-        Conducting research at the intersection of AI, agent-based modeling, and economics.
-        * Developing adaptive multi-agent systems for economic simulation.
-        * Applying statistical model checking to agent-based models.
-        * Studying robust quantitative methods for financial and socio-economic data.
+        Research at the intersection of AI, agent-based modeling, and economics, within the National PhD Program in AI (Scuola Superiore Sant'Anna & University of Pisa).
+        * Differentiable agent-based models and LLM-based generative agents for economic simulation.
+        * Statistical model checking of agent-based models - work published at MARS @ ETAPS 2026.
+        * Robust and high-dimensional methods for financial, socio-economic, and textual data.
 
     - role: Academic Tutor
       org: University of Rome Tor Vergata
