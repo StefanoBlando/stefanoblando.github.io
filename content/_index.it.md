@@ -22,8 +22,8 @@ sections:
   - block: research-pillars
     content:
       eyebrow: Profilo di ricerca
-      title: Tre linee di ricerca connesse
-      text: Il mio lavoro combina agenti adattivi, verifica statistica e metodi quantitativi robusti per studiare sistemi economici complessi, dal disegno delle simulazioni alla validazione empirica.
+      title: Quattro linee di ricerca connesse
+      text: Il mio lavoro combina agenti adattivi, verifica statistica, metodi quantitativi robusti e analisi testuale su larga scala per studiare sistemi economici e sociali complessi, dal disegno delle simulazioni alla validazione empirica.
       expand_label: Approfondisci e vedi progetti
       projects_label: Progetti Correlati
       items:
@@ -49,6 +49,12 @@ sections:
             - robust-portfolio-optimization
             - network-crash-prediction
             - gas-network-risk-forecasting
+        - name: Analisi Testuale e Reti Semantiche
+          description: Studio grandi corpora multilingui come reti di significato, e verifico se i pattern che emergono sopravvivono al cambio di metodo.
+          detailed_text: L'analisi quantitativa del testo ha lo stesso problema di validità delle simulazioni, perché raramente è chiaro se un risultato rifletta i dati o la tecnica usata per estrarlo. Insieme alla Prof.ssa Domenica Fioredistella Iezzi dell'Università di Roma Tor Vergata affronto la questione misurando direttamente l'invarianza rispetto al metodo. Su 999.152 recensioni multilingui analizzate con 18 tecniche indipendenti, dal clustering classico ai modelli Transformer, il contenuto sostanziale spiega il 95,4% della varianza mentre la scelta metodologica ne spiega meno del 3%. Lo stesso lavoro mostra che approcci classici come SVM raggiungono l'89,1% di accuratezza contro il 91,3% di BERT, con un costo computazionale 29 volte inferiore. Questa linea applica ai dati linguistici la logica di verifica del mio lavoro sulle simulazioni, e tratta la struttura semantica come qualcosa da misurare invece che da affermare.
+          topics: [NLP, Reti Semantiche, Validazione dei Metodi]
+          projects:
+            - nlp-semantic-network-analysis
   - block: featured-projects
     content:
       eyebrow: Progetti selezionati

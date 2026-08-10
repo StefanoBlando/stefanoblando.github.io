@@ -27,8 +27,8 @@ sections:
   - block: research-pillars
     content:
       eyebrow: Research profile
-      title: Three connected research pillars
-      text: My work combines adaptive agents, statistical verification, and robust quantitative methods to study complex economic systems, from simulation design to empirical validation.
+      title: Four connected research pillars
+      text: My work combines adaptive agents, statistical verification, robust quantitative methods, and large-scale text analysis to study complex economic and social systems, from simulation design to empirical validation.
       expand_label: Expand details & projects
       projects_label: Relevant Projects
       items:
@@ -54,6 +54,12 @@ sections:
             - robust-portfolio-optimization
             - network-crash-prediction
             - gas-network-risk-forecasting
+        - name: Text as Data & Semantic Networks
+          description: I study large multilingual corpora as networks of meaning, and test whether the patterns they reveal survive a change of method.
+          detailed_text: Quantitative text analysis faces the same validity problem as simulation, since it is rarely clear whether a finding reflects the data or the technique used to extract it. Working with Prof. Domenica Fioredistella Iezzi at the University of Rome Tor Vergata, I address this by measuring method-invariance directly. Across 999,152 multilingual reviews analysed with 18 independent techniques, from classical clustering to Transformer models, substantive content accounted for 95.4% of the variance while methodological choice explained less than 3%. The same work showed that classical approaches such as SVM reach 89.1% accuracy against BERT's 91.3%, at a 29-fold lower computational cost. This line applies the verification logic of my simulation work to language data, treating semantic structure as something to be measured rather than asserted.
+          topics: [NLP, Semantic Networks, Method Validation]
+          projects:
+            - nlp-semantic-network-analysis
 
   - block: featured-projects
     content:
