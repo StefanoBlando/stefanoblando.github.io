@@ -49,12 +49,14 @@ sections:
             - robust-portfolio-optimization
             - network-crash-prediction
             - gas-network-risk-forecasting
-        - name: Analisi Testuale e Reti Semantiche
-          description: Studio grandi corpora multilingui come reti di significato, e verifico se i pattern che emergono sopravvivono al cambio di metodo.
-          detailed_text: L'analisi quantitativa del testo ha lo stesso problema di validità delle simulazioni, perché raramente è chiaro se un risultato rifletta i dati o la tecnica usata per estrarlo. Insieme alla Prof.ssa Domenica Fioredistella Iezzi dell'Università di Roma Tor Vergata affronto la questione misurando direttamente l'invarianza rispetto al metodo. Su 999.152 recensioni multilingui analizzate con 18 tecniche indipendenti, dal clustering classico ai modelli Transformer, il contenuto sostanziale spiega il 95,4% della varianza mentre la scelta metodologica ne spiega meno del 3%. Lo stesso lavoro mostra che approcci classici come SVM raggiungono l'89,1% di accuratezza contro il 91,3% di BERT, con un costo computazionale 29 volte inferiore. Questa linea applica ai dati linguistici la logica di verifica del mio lavoro sulle simulazioni, e tratta la struttura semantica come qualcosa da misurare invece che da affermare.
-          topics: [NLP, Reti Semantiche, Validazione dei Metodi]
+        - name: Analisi Testuale e Modelli del Linguaggio
+          description: Applico analisi testuale e modelli del linguaggio a corpora multilingui, sentiment e dinamiche narrative, e a sistemi basati su retrieval ed embedding.
+          detailed_text: Applico metodi di analisi testuale e modelli del linguaggio allo studio di dati non strutturati. Il lavoro comprende l'analisi della struttura semantica di corpora multilingui, l'estrazione di sentiment e dinamiche narrative, e la costruzione di sistemi basati su retrieval, embedding costruiti su misura e adattamento parameter-efficient di modelli pre-addestrati. Uso tecniche classiche di text analytics accanto ad architetture transformer, modelli a spazio di stato e foundation model, con attenzione a verificare che i risultati dipendano dai dati e non dalla tecnica impiegata.
+          topics: [NLP, Narrative Economics, Foundation Models]
           projects:
             - nlp-semantic-network-analysis
+            - peft-finetuning
+            - rag-chatbot
   - block: featured-projects
     content:
       eyebrow: Progetti selezionati

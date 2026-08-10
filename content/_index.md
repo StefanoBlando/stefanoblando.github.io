@@ -54,12 +54,14 @@ sections:
             - robust-portfolio-optimization
             - network-crash-prediction
             - gas-network-risk-forecasting
-        - name: Text as Data & Semantic Networks
-          description: I study large multilingual corpora as networks of meaning, and test whether the patterns they reveal survive a change of method.
-          detailed_text: Quantitative text analysis faces the same validity problem as simulation, since it is rarely clear whether a finding reflects the data or the technique used to extract it. Working with Prof. Domenica Fioredistella Iezzi at the University of Rome Tor Vergata, I address this by measuring method-invariance directly. Across 999,152 multilingual reviews analysed with 18 independent techniques, from classical clustering to Transformer models, substantive content accounted for 95.4% of the variance while methodological choice explained less than 3%. The same work showed that classical approaches such as SVM reach 89.1% accuracy against BERT's 91.3%, at a 29-fold lower computational cost. This line applies the verification logic of my simulation work to language data, treating semantic structure as something to be measured rather than asserted.
-          topics: [NLP, Semantic Networks, Method Validation]
+        - name: Text Analytics and Language Models
+          description: I apply text analytics and language models to multilingual corpora, sentiment and narrative dynamics, and to systems based on retrieval and embeddings.
+          detailed_text: I apply text analytics methods and language models to the study of unstructured data. The work covers the semantic structure of multilingual corpora, the extraction of sentiment and narrative dynamics, and the construction of systems based on retrieval, custom embeddings, and parameter-efficient adaptation of pretrained models. I use classical text analytics alongside transformer architectures, state-space models, and foundation models, with attention to verifying that results depend on the data rather than on the technique employed.
+          topics: [NLP, Narrative Economics, Foundation Models]
           projects:
             - nlp-semantic-network-analysis
+            - peft-finetuning
+            - rag-chatbot
 
   - block: featured-projects
     content:
