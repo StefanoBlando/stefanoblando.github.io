@@ -65,6 +65,7 @@
         Final Grade: 110/110 cum laude.
         Thesis: "Network Topology Analysis and Machine Learning Techniques for Systemic Risk Prediction in U.S. Equity Markets".
         Advanced program in statistics, machine learning, and artificial intelligence with SAS Academic Specialization in Advanced Data Analytics and Machine Learning Engineering.
+        Selected as one of the top 3 best-performing graduates by SAS Global Academic Management for the SAS/DDI Data Lovers talent initiative.
 
     - degree: MSc in Financial Markets and Financial Intermediaries
       institution: University of Rome Tor Vergata
@@ -86,11 +87,18 @@
         Supervisor: Prof. Gustavo Piga.
         Erasmus+ Exchange: University of Paris Est-Creteil (Aug 2021 - Feb 2022).
 
+    - degree: YUFE Student Journey
+      institution: Young Universities for the Future of Europe (European University Alliance)
+      start: 2021-09-01
+      end: 2023-06-30
+      summary: |
+        Selected for the competitive Tor Vergata cohort (top 30 students university-wide) in the European University Alliance. Completed German coursework (A1/A2, University of Bremen) and cross-institutional academic training across partner universities.
+
     - degree: Philosophy Studies (not completed)
       institution: University of Rome La Sapienza
       start: 2015-09-01
       end: 2017-09-01
-      summary: "Coursework in logic, epistemology, and analytical philosophy."
+      summary: "Coursework in logic, epistemology, philosophy of science, philosophy of language, semiotics, theoretical philosophy, ethics, political philosophy, aesthetics, and history of philosophy."
 
   experience:
     - role: PhD Researcher
@@ -184,7 +192,7 @@
       label: Intermediate (B1)
     - name: German
       level: 2
-      label: Basic (A1)
+      label: Basic (A1/A2)
     - name: Spanish
       level: 2
       label: Basic (A2)
@@ -207,16 +215,32 @@
       summary: "Funding to co-organize COMPASS, an interdisciplinary workshop on complexity, markets, policy, and AI in social systems."
       icon: hero/academic-cap
       url: /blog/compass-workshop-2026/
-    - title: 2nd Place AI Data Hackathon
-      awarder: ""
-      date: "2024-12-12"
-      icon: hero/star
-    - title: Academic Tutorship Awards (x2)
-      awarder: University of Rome Tor Vergata
-      date: "2024-01-01"
-      summary: "Awarded twice for excellence in student support and teaching assistance."
+    - title: SAS Top Talent Selection --- Master CESMA
+      awarder: SAS Institute & University of Rome Tor Vergata
+      date: "2026-02-02"
+      summary: "Selected as one of the top 3 best-performing graduates of Master CESMA by SAS Global Academic Management for the SAS/DDI Data Lovers talent initiative."
       icon: hero/academic-cap
     - title: Alpine Climate Data Challenge Finalist
       awarder: Alpine Climate Data Challenge
       date: "2025-03-12"
       icon: hero/star
+    - title: 2nd Place AI Data Hackathon
+      awarder: Hera Group, BTO Research & Digitiamo
+      date: "2024-12-12"
+      summary: "Second place in national hackathon on predictive gas network risk modeling under class imbalance and rare events."
+      icon: hero/star
+    - title: 1st Place --- Huawei DigitALL Night
+      awarder: Huawei Technologies
+      date: "2024-11-06"
+      summary: "Winner in national competition on digital technology, networking, and ICT innovation."
+      icon: hero/star
+    - title: Bertelsmann Next Generation Tech Booster Selection
+      awarder: Bertelsmann & Udacity
+      date: "2024-03-01"
+      summary: "Selected from 17,000+ global applicants for advanced training in Generative AI and deep learning."
+      icon: hero/academic-cap
+    - title: Academic Tutorship Awards (x2)
+      awarder: University of Rome Tor Vergata
+      date: "2024-01-01"
+      summary: "Awarded twice for excellence in student support and teaching assistance."
+      icon: hero/academic-cap

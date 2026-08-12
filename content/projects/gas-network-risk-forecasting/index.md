@@ -16,7 +16,7 @@ links:
     url: https://github.com/stefano-blando/gas-networks-risk-forecasting
 ---
 
-This project was developed for the **Hera Group Hackathon**, where it earned **2nd place**. The task was to detect gas leak risk in a setting dominated by imbalance, sparse events, and operational uncertainty.
+This project was developed for the **AI Data Hackathon (Hera Group, BTO Research & Digitiamo)**, where it earned **2nd place**. The task was to detect gas leak risk in a setting dominated by imbalance, sparse events, and operational uncertainty.
 
 The pipeline combines geospatial-temporal feature engineering with synthetic data augmentation through **CTGAN** and **TimeGAN**, then uses **SHAP** to keep the final model interpretable rather than purely predictive.
 

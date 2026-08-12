@@ -16,7 +16,7 @@ links:
     url: https://github.com/stefano-blando/gas-networks-risk-forecasting
 ---
 
-Questo progetto e stato sviluppato per l'**Hera Group Hackathon**, dove ha ottenuto il **2 posto**. Il compito era rilevare il rischio di perdite gas in un contesto dominato da forte sbilanciamento, eventi rari e incertezza operativa.
+Questo progetto e stato sviluppato per l'**AI Data Hackathon (Hera Group, BTO Research & Digitiamo)**, dove ha ottenuto il **2° posto**. Il compito era rilevare il rischio di perdite gas in un contesto dominato da forte sbilanciamento, eventi rari e incertezza operativa.
 
 La pipeline combina feature engineering geospaziale-temporale con data augmentation sintetica tramite **CTGAN** e **TimeGAN**, e usa poi **SHAP** per mantenere il modello finale interpretabile e non soltanto predittivo.
 
