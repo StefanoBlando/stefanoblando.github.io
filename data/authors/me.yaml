@@ -124,61 +124,103 @@
         * Assisted teaching and supervised student project work.
 
   skills:
-    - name: Programming
+    - name: Programming & Scientific Computing
       items:
         - label: Python
+          level: 5
+        - label: PyTorch & JAX
           level: 5
         - label: R
           level: 5
         - label: MATLAB
           level: 4
-        - label: SQL
-          level: 3
-        - label: SAS
-          level: 3
-        - label: Bash
-          level: 3
-        - label: LaTeX
+        - label: SQL & SAS
+          level: 4
+        - label: LaTeX & Git
           level: 5
-        - label: Git
+
+    - name: Machine Learning & AI
+      items:
+        - label: Agentic Systems & Multi-Agent Orchestration
+          level: 5
+        - label: Deep Learning & Transformers
+          level: 5
+        - label: Graph Neural Networks (GNN)
+          level: 4
+        - label: LLM Fine-Tuning & RAG
+          level: 4
+        - label: Differentiable Programming
+          level: 4
+        - label: Explainable AI (XAI)
           level: 4
 
-    - name: AI Systems & Machine Learning
+    - name: Simulation & Agent-Based Modeling
       items:
-        - label: Machine Learning
+        - label: Agent-Based Modeling (ABM)
           level: 5
-        - label: Deep Learning
+        - label: Statistical Model Checking (SMC)
+          level: 5
+        - label: Differentiable Simulation
           level: 4
-        - label: LLM Applications
+        - label: Multi-Agent Reinforcement Learning
           level: 4
-        - label: Agentic Systems
-          level: 4
-        - label: Graph Neural Networks
+        - label: Counterfactual & Scenario Analysis
           level: 4
 
-    - name: HPC & Scientific Computing
+    - name: Statistical Methods & Econometrics
       items:
-        - label: JAX / Differentiable Programming
+        - label: Robust Statistics & Factor Models
+          level: 5
+        - label: High-Dimensional Inference
+          level: 4
+        - label: Time-Series Econometrics
+          level: 4
+        - label: Universal & Causal Inference
+          level: 4
+        - label: Monte Carlo Methods
+          level: 4
+
+    - name: Complex Systems & Networks
+      items:
+        - label: Network Science & Topology
+          level: 5
+        - label: Financial & Economic Networks
+          level: 4
+        - label: Contagion & Cascading Dynamics
+          level: 4
+        - label: Community Detection
+          level: 4
+
+    - name: NLP & Text Analytics
+      items:
+        - label: Text Mining & NLP
+          level: 5
+        - label: Semantic Network Analysis
+          level: 5
+        - label: Topic Modeling & Sentiment Analysis
+          level: 4
+        - label: Multilingual Validation Frameworks
+          level: 4
+
+    - name: Quantitative Finance & Risk
+      items:
+        - label: Portfolio Optimization
+          level: 5
+        - label: Systemic Risk Modeling
+          level: 4
+        - label: Stress Testing & Scenario Analysis
+          level: 4
+        - label: Bloomberg Terminal & LSEG Workspace
+          level: 4
+
+    - name: HPC & Infrastructure
+      items:
+        - label: HPC Clusters & SLURM (CINECA Leonardo)
           level: 4
         - label: GPU Computing
           level: 4
-        - label: SLURM / HPC Clusters
+        - label: MLOps / LLMOps
           level: 4
-
-    - name: Statistics & Economic Modeling
-      items:
-        - label: Robust Statistics
-          level: 4
-        - label: Financial Econometrics
-          level: 4
-        - label: Agent-Based Modeling
-          level: 5
-        - label: Statistical Model Checking
-          level: 4
-        - label: Network Science
-          level: 4
-        - label: Contagion Simulation
-          level: 3
 
   languages:
     - name: Italian

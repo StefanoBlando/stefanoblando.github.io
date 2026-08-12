@@ -125,61 +125,103 @@
         * Ho affiancato la didattica e supervisionato i progetti degli studenti.
 
   skills:
-    - name: Programmazione
+    - name: Programmazione e Calcolo Scientifico
       items:
         - label: Python
+          level: 5
+        - label: PyTorch e JAX
           level: 5
         - label: R
           level: 5
         - label: MATLAB
           level: 4
-        - label: SQL
-          level: 3
-        - label: SAS
-          level: 3
-        - label: Bash
-          level: 3
-        - label: LaTeX
+        - label: SQL e SAS
+          level: 4
+        - label: LaTeX e Git
           level: 5
-        - label: Git
+
+    - name: Machine Learning e Intelligenza Artificiale
+      items:
+        - label: Sistemi Agentici e Orchestrazione Multi-Agente
+          level: 5
+        - label: Deep Learning e Transformer
+          level: 5
+        - label: Graph Neural Networks (GNN)
+          level: 4
+        - label: Fine-Tuning LLM e RAG
+          level: 4
+        - label: Programmazione Differenziabile
+          level: 4
+        - label: Explainable AI (XAI)
           level: 4
 
-    - name: Sistemi di AI e Machine Learning
+    - name: Simulazione e Agent-Based Modeling
       items:
-        - label: Machine Learning
+        - label: Agent-Based Modeling (ABM)
           level: 5
-        - label: Deep Learning
+        - label: Statistical Model Checking (SMC)
+          level: 5
+        - label: Simulazione Differenziabile
           level: 4
-        - label: LLM Applications
+        - label: Apprendimento per Rinforzo Multi-Agente
           level: 4
-        - label: Agentic Systems
-          level: 4
-        - label: Graph Neural Networks
+        - label: Analisi Controfattuale e di Scenario
           level: 4
 
-    - name: HPC e Calcolo Scientifico
+    - name: Metodi Statistici ed Econometria
       items:
-        - label: JAX / Differentiable Programming
+        - label: Statistica Robusta e Modelli Fattoriali
+          level: 5
+        - label: Inferenza ad Alta Dimensionalità
           level: 4
-        - label: GPU Computing
+        - label: Econometria delle Serie Storiche
           level: 4
-        - label: SLURM / HPC Clusters
+        - label: Inferenza Universale e Causale
+          level: 4
+        - label: Metodi Monte Carlo
           level: 4
 
-    - name: Statistica e Modellazione Economica
+    - name: Sistemi Complessi e Reti
       items:
-        - label: Robust Statistics
-          level: 4
-        - label: Financial Econometrics
-          level: 4
-        - label: Agent-Based Modeling
+        - label: Network Science e Topologia di Rete
           level: 5
-        - label: Statistical Model Checking
+        - label: Reti Finanziarie ed Economiche
           level: 4
-        - label: Network Science
+        - label: Dinamiche di Contagio e Cascata
           level: 4
-        - label: Contagion Simulation
-          level: 3
+        - label: Community Detection
+          level: 4
+
+    - name: NLP e Text Analytics
+      items:
+        - label: Text Mining e NLP
+          level: 5
+        - label: Analisi di Reti Semantiche
+          level: 5
+        - label: Topic Modeling e Sentiment Analysis
+          level: 4
+        - label: Framework di Validazione Multilingua
+          level: 4
+
+    - name: Finanza Quantitativa e Rischio
+      items:
+        - label: Ottimizzazione di Portafoglio
+          level: 5
+        - label: Modellazione del Rischio Sistemico
+          level: 4
+        - label: Stress Testing e Analisi di Scenario
+          level: 4
+        - label: Bloomberg Terminal e LSEG Workspace
+          level: 4
+
+    - name: HPC e Infrastruttura
+      items:
+        - label: Cluster HPC e SLURM (CINECA Leonardo)
+          level: 4
+        - label: Calcolo su GPU
+          level: 4
+        - label: MLOps / LLMOps
+          level: 4
 
   languages:
     - name: Italian
