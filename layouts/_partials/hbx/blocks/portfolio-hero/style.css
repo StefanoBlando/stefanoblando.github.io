@@ -219,6 +219,12 @@
   height: 18px;
 }
 
+.portfolio-hero__email-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .portfolio-hero__email {
   color: var(--portfolio-muted);
   font-size: 0.85rem;

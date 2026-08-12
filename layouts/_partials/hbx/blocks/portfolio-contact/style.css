@@ -1,8 +1,14 @@
 .portfolio-contact__inner { width: min(720px, calc(100% - 2.5rem)); margin-inline: auto; text-align: center; }
 .portfolio-contact__text { margin: 1rem auto 0; max-width: 48ch; color: var(--portfolio-muted); line-height: 1.7; }
+.portfolio-contact__email-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  margin-top: 1.75rem;
+}
 .portfolio-contact__email {
   display: inline-block;
-  margin-top: 1.75rem;
   color: var(--portfolio-accent);
   font-family: var(--portfolio-serif);
   font-style: italic;

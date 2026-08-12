@@ -121,6 +121,37 @@ function initializePortfolioInteractions() {
       row.classList.toggle('is-expanded', !isExpanded);
     });
   });
+
+  // Animated Copy to Clipboard micro-interaction
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const text = btn.getAttribute('data-copy');
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.classList.add('is-copied');
+
+        const label = btn.querySelector('.portfolio-copy-btn__label, .portfolio-copy-btn__text');
+        if (label && !label.dataset.origText) {
+          label.dataset.origText = label.textContent;
+          label.textContent = 'Copied!';
+        }
+
+        setTimeout(() => {
+          btn.classList.remove('is-copied');
+          if (label && label.dataset.origText) {
+            label.textContent = label.dataset.origText;
+            delete label.dataset.origText;
+          }
+        }, 2000);
+      } catch (err) {
+        console.warn('Clipboard write failed:', err);
+      }
+    });
+  });
 }
 
 if (typeof document !== 'undefined') {
