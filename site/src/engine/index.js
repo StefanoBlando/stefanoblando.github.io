@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { AmbientLayer } from './ambient-layer.js';
 import { Swarm } from './swarm.js';
 import { createPostFX } from './postfx.js';
-import { pickActiveShape, readSections } from './sections.js';
+import { pickActiveBlend, readSections } from './sections.js';
 import { clampDelta, damp } from './damping.js';
 
 
@@ -100,6 +100,10 @@ export class UniverseEngine {
     this.cursorLocal = new THREE.Vector3();
     this.cursorNdc = new THREE.Vector2(-10, -10);
 
+    // Scratch colours for the per-scroll tint interpolation.
+    this.tintA = new THREE.Color();
+    this.tintB = new THREE.Color();
+
     this.ambient.resize(width / height);
     this.swarm.resize(pixelRatio);
 
@@ -169,25 +173,50 @@ export class UniverseEngine {
 
   readShape() {
     const elements = document.querySelectorAll(this.sectionSelector);
-    const { shape, weight } = pickActiveShape(readSections(elements), window.innerHeight);
+    const { from, to, t, weight } = pickActiveBlend(readSections(elements), window.innerHeight);
 
     // Total progress through the document, which drives the camera orbit.
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     this.scroll = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0;
 
     this.targetWeight = weight;
-    if (shape !== this.shape) {
-      this.shape = shape;
-      this.swarm.setShape(shape);
-      const tint = palette.tints?.[shape];
-      if (tint) {
-        this.swarm.setTint(tint.primary, tint.accent);
-        this.ambient.setTint(tint.smoke, tint.accent, tint.primary);
-        this.scrimTarget = tint.scrim;
-        this.washTarget = tint.smoke;
-      }
-      this.onShape({ type: 'shape', shape });
+    this.swarm.setBlend(from, to, t);
+    this.applyTint(from, to, t);
+
+    if (from !== this.shape) {
+      this.shape = from;
+      this.onShape({ type: 'shape', shape: from });
     }
+  }
+
+  /**
+   * Colour rides the same blend as the topology. Snapping it on a section
+   * change while the shape interpolates reads as a cut in a scene that is
+   * otherwise continuous.
+   */
+  applyTint(from, to, t) {
+    const tints = palette.tints;
+    if (!tints) return;
+
+    const A = tints[from] ?? tints[tints.length - 1];
+    const B = tints[to] ?? tints[tints.length - 1];
+    if (!A || !B) return;
+
+    const mix = (key) =>
+      `#${this.tintA.set(A[key]).lerp(this.tintB.set(B[key]), t).getHexString()}`;
+
+    const primary = mix('primary');
+    const accent = mix('accent');
+    const smoke = mix('smoke');
+
+    this.swarm.setTint(primary, accent);
+    this.ambient.setTint(smoke, accent, primary);
+    this.washTarget = smoke;
+
+    // The scrim is an "r, g, b" string consumed by updateScrim, not a hex.
+    const a = A.scrim.split(',').map(Number);
+    const b = B.scrim.split(',').map(Number);
+    this.scrimTarget = a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(', ');
   }
 
   loop() {
@@ -201,8 +230,10 @@ export class UniverseEngine {
     // a section edge crosses the centre line.
     this.weight = damp(this.weight, this.targetWeight, 1.4, dt);
 
-    // Radial breathing tied to scroll, as in the reference.
-    this.swarm.setBreath(1 + Math.sin((window.scrollY / window.innerHeight) * 0.9) * 0.22);
+    // Radial breathing tied to scroll. Normalised, not counted in screens:
+    // driving this from scrollY/innerHeight made the breath rate a function of
+    // how tall the page happens to be, so a longer page read as a tremor.
+    this.swarm.setBreath(1 + Math.sin(this.scroll * Math.PI * 2) * 0.22);
 
     this.parallax.x = damp(this.parallax.x, this.parallaxTarget.x, 3, dt);
     this.parallax.y = damp(this.parallax.y, this.parallaxTarget.y, 3, dt);

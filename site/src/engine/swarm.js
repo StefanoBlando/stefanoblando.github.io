@@ -20,6 +20,14 @@ import { buildStructure } from './structure.js';
  */
 
 /**
+ * The morph damping is only a jitter filter now. The target itself is driven
+ * by scroll position, so a slow rate here would reintroduce exactly the lag
+ * the blend was written to remove — the cloud would trail the page instead of
+ * moving with it.
+ */
+const MORPH_RATE = 8;
+
+/**
  * Low spatial frequencies on purpose: neighbours receive nearly the same phase,
  * so a region swells and subsides as one body. High frequencies here read as
  * incoherent shimmer — mechanical rather than alive.
@@ -155,7 +163,6 @@ export class Swarm {
 
     this.structure = buildStructure(universe, count);
     this.layouts = this.structure.layouts;
-    this.shapeIndex = 0;
 
     this.current = Float32Array.from(this.layouts[0]);
     this.target = Float32Array.from(this.layouts[0]);
@@ -239,12 +246,24 @@ export class Swarm {
     this.segmentCount = edgeCount;
   }
 
-  /** Selects the layout the cloud damps toward. */
-  setShape(index) {
-    const clamped = Math.max(0, Math.min(this.layouts.length - 1, index));
-    if (clamped === this.shapeIndex) return;
-    this.shapeIndex = clamped;
-    this.target.set(this.layouts[clamped]);
+  /**
+   * Positions the cloud between two layouts. `t` is where the document sits
+   * between them, so the morph is driven by scroll rather than by a timer.
+   */
+  setBlend(from, to, t) {
+    const last = this.layouts.length - 1;
+    const A = this.layouts[Math.max(0, Math.min(last, from))];
+    const B = this.layouts[Math.max(0, Math.min(last, to))];
+
+    // Consecutive bands sharing a shape land here, and the topology holds
+    // perfectly still for the length of both.
+    if (A === B) {
+      this.target.set(A);
+      return;
+    }
+    for (let i = 0; i < this.target.length; i += 1) {
+      this.target[i] = A[i] + (B[i] - A[i]) * t;
+    }
   }
 
   /** Pointer speed, 0..1: how restless the fine noise becomes. */
@@ -284,8 +303,6 @@ export class Swarm {
     this.pointMaterial.uniforms.uTime.value = time;
     this.lineMaterial.uniforms.uTime.value = time;
 
-    // Morph. Slow on purpose: the topology should assemble as you arrive,
-    // not snap into place before you have registered the previous one.
     // Colour damps like everything else, so a fast scroll glides through the
     // shift instead of cutting between two palettes.
     const k = 1 - Math.exp(-1.6 * dt);
@@ -297,7 +314,7 @@ export class Swarm {
 
     this.breath = damp(this.breath, this.breathTarget, 1.2, dt);
     for (let i = 0; i < this.current.length; i += 1) {
-      this.current[i] = damp(this.current[i], this.target[i] * this.breath, 1.6, dt);
+      this.current[i] = damp(this.current[i], this.target[i] * this.breath, MORPH_RATE, dt);
     }
     this.pointAttribute.needsUpdate = true;
 
