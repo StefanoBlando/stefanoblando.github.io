@@ -10,7 +10,9 @@
 
 **Spec:** `docs/superpowers/specs/2026-08-15-homepage-sections-and-index-pages-design.md`
 
-**Two stages.** Stage A (Tasks 1–8) ends with a complete, working homepage. Stage B (Tasks 9–13) adds the index pages and the seven-item nav. Stage A is shippable on its own.
+**Two stages.** Stage A (Tasks 1–8, including 4b) ends with a complete, working homepage. Stage B (Tasks 9–13) adds the index pages and the seven-item nav. Stage A is shippable on its own.
+
+**Amended 2026-08-15, mid-execution.** Tasks 1 and 2 ran as written. The content pipeline was then changed at the user's direction: the Hugo tree is copied into `site/src/content/` and normalised rather than read in place, and Hugo is set aside. Tasks 3 and 4 were rewritten and Task 4b added; Tasks 5–13 are unaffected. See spec §7.
 
 ---
 
@@ -165,27 +167,421 @@ into the content it describes."
 
 ---
 
-## Task 3: Read `pillar` from frontmatter and emit experience
+## Task 3: Migrate the content into the Astro repo
+
+The Hugo tree is copied into `site/src/content/` and normalised on the way, by a script so the transform is reproducible and a mistake is fixed by editing a rule rather than by re-editing 62 files.
+
+**Files:**
+- Create: `site/scripts/migrate-content.mjs`
+- Create: `site/src/content/{publications,projects,blog,events}/<slug>/index.md` (+ `index.it.md`, + co-located assets)
+- Create: `site/src/data/pillars.yaml`
+
+- [ ] **Step 1: Write the migration script**
+
+`site/scripts/migrate-content.mjs`:
+
+```js
+/**
+ * Copies the Hugo content tree into src/content/, normalising Hugo Blox
+ * frontmatter into the shape the new site wants.
+ *
+ * A script rather than 62 hand edits: the transform is reproducible, and a
+ * wrong rule is fixed by editing the rule and re-running rather than by
+ * editing every file again.
+ *
+ * Nothing is lost by omission. Keys the script does not recognise are carried
+ * through untouched; the only keys removed are removed by an explicit rule and
+ * reported on stdout.
+ */
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import yaml from 'js-yaml';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const FROM = join(here, '../../content');
+const TO = join(here, '../src/content');
+
+const COLLECTIONS = ['publications', 'projects', 'blog', 'events'];
+
+/** The Hugo author-file reference. It means nothing outside Hugo. */
+const ME = 'Stefano Blando';
+
+/** url_* fields, and the name each becomes when folded into links[]. */
+const URL_FIELDS = {
+  url_pdf: 'PDF',
+  url_code: 'Code',
+  url_dataset: 'Dataset',
+  url_slides: 'Slides',
+  url_poster: 'Poster',
+  url_video: 'Video',
+  url_source: 'Source',
+  url_project: 'Project',
+};
+
+const RENAMES = {
+  publication: 'venue',
+  publication_short: 'venue_short',
+};
+
+const isEmpty = (v) =>
+  v === '' || v === null || v === undefined || (Array.isArray(v) && v.length === 0);
+
+const report = { dropped: [], folded: [], renamed: [], repaired: [] };
+
+function splitFrontmatter(raw, label) {
+  // real-estate-ai-agent opens with a blank line before its `---`, which no
+  // standard parser accepts. Repair it here rather than carrying it forward.
+  const text = raw.replace(/^\s*\n/, '');
+  if (text !== raw) report.repaired.push(label);
+
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if (!match) throw new Error(`no frontmatter in ${label}`);
+  return { data: yaml.load(match[1]) ?? {}, body: match[2] };
+}
+
+function normalise(data, label) {
+  const out = {};
+  const links = Array.isArray(data.links) ? [...data.links] : [];
+
+  for (const [key, value] of Object.entries(data)) {
+    if (key === 'links') continue;
+
+    if (isEmpty(value)) {
+      report.dropped.push(`${label}: ${key}`);
+      continue;
+    }
+
+    if (key in URL_FIELDS) {
+      links.push({ name: URL_FIELDS[key], url: value });
+      report.folded.push(`${label}: ${key} -> links[]`);
+      continue;
+    }
+
+    if (key === 'publication_types') {
+      const types = Array.isArray(value) ? value : [value];
+      if (types.length !== 1) throw new Error(`${label}: expected one publication_type, got ${types.length}`);
+      out.type = types[0];
+      report.renamed.push(`${label}: publication_types -> type`);
+      continue;
+    }
+
+    if (key === 'authors') {
+      out.authors = value.map((a) => (a === 'me' ? ME : a));
+      continue;
+    }
+
+    if (key in RENAMES) {
+      out[RENAMES[key]] = value;
+      report.renamed.push(`${label}: ${key} -> ${RENAMES[key]}`);
+      continue;
+    }
+
+    out[key] = value;
+  }
+
+  if (links.length > 0) out.links = links;
+  return out;
+}
+
+rmSync(TO, { recursive: true, force: true });
+
+let files = 0;
+for (const collection of COLLECTIONS) {
+  const entries = readdirSync(join(FROM, collection), { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort();
+
+  for (const slug of entries) {
+    const src = join(FROM, collection, slug);
+    const dst = join(TO, collection, slug);
+    mkdirSync(dst, { recursive: true });
+
+    for (const file of readdirSync(src)) {
+      if (!file.endsWith('.md')) {
+        copyFileSync(join(src, file), join(dst, file));
+        continue;
+      }
+      const label = `${collection}/${slug}/${file}`;
+      const { data, body } = splitFrontmatter(readFileSync(join(src, file), 'utf8'), label);
+      const front = yaml.dump(normalise(data, label), { lineWidth: 100, noRefs: true });
+      writeFileSync(join(dst, file), `---\n${front}---\n${body}`);
+      files += 1;
+    }
+  }
+}
+
+for (const [kind, items] of Object.entries(report)) {
+  if (items.length === 0) continue;
+  console.log(`\n${kind} (${items.length}):`);
+  for (const item of items) console.log(`  ${item}`);
+}
+console.log(`\n${files} markdown files migrated into src/content/`);
+```
+
+- [ ] **Step 2: Add js-yaml as a real dependency**
+
+It is currently present only transitively.
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE/site && npm install --save-dev js-yaml
+```
+
+- [ ] **Step 3: Run the migration and read the report**
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE/site && node scripts/migrate-content.mjs
+```
+
+Expected: 56 markdown files (28 English + 28 Italian); `repaired` lists `projects/real-estate-ai-agent/index.md`; `dropped` lists only the always-empty fields measured in the spec §7 — `doi`, `url_pdf`, `url_dataset`, `url_poster`, `url_slides`, `url_source`, `url_video`. **Read the dropped list.** Anything on it that is not an empty Hugo Blox placeholder is a bug in a rule, not an acceptable loss.
+
+- [ ] **Step 4: Verify nothing was lost**
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE
+echo "source:"; find content -name "*.md" ! -name "_index*" | wc -l
+echo "copy:  "; find site/src/content -name "*.md" | wc -l
+echo "assets source:"; find content -type f ! -name "*.md" | wc -l
+echo "assets copy:  "; find site/src/content -type f ! -name "*.md" | wc -l
+```
+
+Expected: the two markdown counts match, and the two asset counts match at 25.
+
+- [ ] **Step 5: Read one migrated file end to end**
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE && sed -n '1,40p' site/src/content/publications/island-model-smc/index.md
+```
+
+Expected: `venue`, `venue_short`, `type`, `authors` with `Stefano Blando` in place of `me`, `links` carrying the `Code` entry folded from `url_code`, and no empty fields. Compare against the original by eye — this is the one file read in full, and it is what catches a rule that is subtly wrong.
+
+- [ ] **Step 6: Extract the pillars**
+
+`site/src/data/pillars.yaml`, holding the four pillars from the `research-pillars` block of `content/_index.md`: `id`, `title`, `description`, `detailed_text`, `topics`, `projects`. Copy the text verbatim — this is a transcription, not a rewrite.
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE && sed -n '27,65p' content/_index.md
+```
+
+Verify the result parses and carries everything:
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE/site
+node -e "
+const y=require('js-yaml'), fs=require('fs');
+const p=y.load(fs.readFileSync('src/data/pillars.yaml','utf8'));
+console.log(p.length, 'pillars');
+for (const x of p) console.log(' ', x.id, '| topics', x.topics.length, '| projects', x.projects.length, '| detail', x.detailed_text.length, 'chars');
+"
+```
+
+Expected: 4 pillars, each with topics, projects and several hundred characters of `detailed_text`.
+
+- [ ] **Step 7: Commit**
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE
+git add site/scripts/migrate-content.mjs site/src/content site/src/data/pillars.yaml site/package.json site/package-lock.json
+git commit -m "feat(content): copy the Hugo tree into the Astro repo, normalised
+
+A script rather than 62 hand edits, so the transform is reproducible and a
+wrong rule is fixed by re-running. url_* fields fold into links[], Hugo Blox
+names give way to plain ones, empty placeholders are dropped by measurement,
+and anything unrecognised is carried through untouched. Also repairs the
+leading blank line that left real-estate-ai-agent without frontmatter.
+
+From here the Hugo tree is legacy."
+```
+
+---
+
+## Task 4: Collections over the migrated content
+
+**Files:**
+- Create: `site/src/content.config.ts`
+
+- [ ] **Step 1: Write the collection config**
+
+```ts
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+/**
+ * The content now lives here. Page bundles rather than flat files because 25
+ * assets are co-located with their entries.
+ *
+ * `generateId` matters: without it the id of `island-model-smc/index.md` keeps
+ * its `/index` suffix and every generated href gains a path segment that does
+ * not exist.
+ */
+const bundleId = ({ entry }) => entry.replace(/\/index\.md$/, '');
+
+const link = z.object({
+  name: z.string().optional(),
+  url: z.string(),
+  icon: z.string().optional(),
+});
+
+const publications = defineCollection({
+  loader: glob({ base: './src/content/publications', pattern: '*/index.md', generateId: bundleId }),
+  schema: z.object({
+    title: z.string(),
+    authors: z.array(z.string()),
+    date: z.coerce.date(),
+    publishDate: z.coerce.date().optional(),
+    type: z.string(),
+    venue: z.string(),
+    venue_short: z.string().optional(),
+    abstract: z.string(),
+    summary: z.string(),
+    tags: z.array(z.string()),
+    featured: z.boolean().default(false),
+    pillar: z.enum(['multi-agent', 'statistical-verification', 'robust-quant', 'text-analytics']),
+    projects: z.array(z.string()).optional(),
+    links: z.array(link).default([]),
+    image: z.record(z.any()).optional(),
+  }),
+});
+
+const projects = defineCollection({
+  loader: glob({ base: './src/content/projects', pattern: '*/index.md', generateId: bundleId }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    summary: z.string(),
+    tags: z.array(z.string()),
+    links: z.array(link).default([]),
+    image: z.record(z.any()).optional(),
+  }),
+});
+
+const blog = defineCollection({
+  loader: glob({ base: './src/content/blog', pattern: '*/index.md', generateId: bundleId }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    summary: z.string(),
+    authors: z.array(z.string()),
+    tags: z.array(z.string()),
+    image: z.record(z.any()).optional(),
+  }),
+});
+
+export const collections = { publications, projects, blog };
+```
+
+The schemas are strict on purpose: `type`, `venue`, `abstract` and `pillar` are required, and `pillar` is an enum rather than a string, so a typo fails the build instead of producing an empty cluster.
+
+- [ ] **Step 2: Prove the collections load**
+
+Create `site/src/pages/__collections-smoke.astro`:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+
+const publications = await getCollection('publications');
+const projects = await getCollection('projects');
+const blog = await getCollection('blog');
+---
+<pre>{JSON.stringify({
+  publications: publications.length,
+  projects: projects.length,
+  blog: blog.length,
+  ids: projects.map((p) => p.id).slice(0, 3),
+  featured: publications.filter((p) => p.data.featured).map((p) => p.id),
+}, null, 2)}</pre>
+```
+
+- [ ] **Step 3: Build and read the counts**
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE/site && npm run build && cat dist/__collections-smoke/index.html
+```
+
+Expected: `publications: 6`, `projects: 13`, `blog: 7`, four featured ids, and `ids` showing bare slugs with no `/index` suffix. A Zod failure names the file and field — fix the schema or the migration rule, whichever is actually wrong, and re-run Task 3 if it is the rule.
+
+- [ ] **Step 4: Delete the smoke page**
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE/site && rm src/pages/__collections-smoke.astro
+```
+
+- [ ] **Step 5: Commit**
+
+```bash
+cd /home/stefano/Scrivania/WEBSITE
+git add site/src/content.config.ts
+git commit -m "feat(site): typed collections over the migrated content
+
+Strict schemas: pillar is an enum, so a typo fails the build rather than
+emptying a cluster."
+```
+
+---
+
+## Task 4b: Repoint build-universe at the migrated content
+
+Two sources of truth is the failure mode this task exists to prevent: if the pages read the Astro copy while the universe reads the Hugo tree, they diverge at the first edit.
 
 **Files:**
 - Modify: `site/scripts/build-universe.mjs`
 
-- [ ] **Step 1: Read the script's existing helpers**
+- [ ] **Step 1: Read what the script does today**
 
 ```bash
-cd /home/stefano/Scrivania/WEBSITE/site && sed -n '1,100p' scripts/build-universe.mjs
+cd /home/stefano/Scrivania/WEBSITE/site && sed -n '1,40p' scripts/build-universe.mjs && sed -n '96,150p' scripts/build-universe.mjs
 ```
 
-Note `readItem(dir, slug)` and how it parses frontmatter, and how `education` is read from `data/authors/me.yaml`. Reuse both; do not write new parsing.
+Note `CONTENT`, `AUTHOR`, `readPillars()`, `readItem()` and `PUBLICATION_PILLARS`.
 
-- [ ] **Step 2: Replace the hardcoded map with a frontmatter scan**
+- [ ] **Step 2: Point `CONTENT` at the migrated tree and parse frontmatter properly**
 
-Delete the `PUBLICATION_PILLARS` constant. Replace the loop that iterates it (around line 175) with one that reads every publication directory and takes the pillar from the item itself:
+The hand-rolled `frontmatter`/`scalar`/`list` helpers exist because the script had no parser. It now has one:
 
 ```js
-import { readdirSync } from 'node:fs';
+import yaml from 'js-yaml';
 
-const publicationDirs = readdirSync(join(ROOT, 'content/publications'), { withFileTypes: true })
+const CONTENT = join(here, '../src/content');
+
+function readItem(section, dir) {
+  const file = join(CONTENT, section, dir, 'index.md');
+  if (!existsSync(file)) return null;
+  const raw = readFileSync(file, 'utf8');
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) throw new Error(`no frontmatter in ${section}/${dir}`);
+  const fm = yaml.load(match[1]);
+  return {
+    title: fm.title,
+    summary: fm.summary ?? fm.abstract,
+    tags: fm.tags ?? [],
+    pillar: fm.pillar,
+  };
+}
+```
+
+Delete the `frontmatter`, `scalar` and `list` helpers once nothing calls them.
+
+- [ ] **Step 3: Replace `readPillars()` with a read of `pillars.yaml`**
+
+```js
+const PILLARS = join(here, '../src/data/pillars.yaml');
+
+/** The four research pillars. Data, not a landing page parsed with regexes. */
+function readPillars() {
+  return yaml.load(readFileSync(PILLARS, 'utf8'));
+}
+```
+
+Delete `PILLAR_SLUGS` if the yaml already carries `id` on each pillar, and delete the old regex body entirely.
+
+- [ ] **Step 4: Replace the hardcoded pillar map with a frontmatter scan**
+
+Delete `PUBLICATION_PILLARS`. Replace the loop that iterates it with:
+
+```js
+const publicationDirs = readdirSync(join(CONTENT, 'publications'), { withFileTypes: true })
   .filter((e) => e.isDirectory())
   .map((e) => e.name)
   .sort();
@@ -193,46 +589,35 @@ const publicationDirs = readdirSync(join(ROOT, 'content/publications'), { withFi
 for (const dir of publicationDirs) {
   const item = readItem('publications', dir);
   if (!item) throw new Error(`publication "${dir}" could not be read`);
-  if (!item.pillar) throw new Error(`publication "${dir}" has no pillar: field`);
   if (!CLUSTER_ORDER.includes(item.pillar)) {
     throw new Error(`publication "${dir}" has unknown pillar "${item.pillar}"`);
   }
   nodes.push({
-    id: `publication/${slugify(dir)}`,
+    id: `publication/${dir}`,
     cluster: item.pillar,
     kind: 'publication',
     title: item.title,
     summary: item.summary,
     tags: item.tags,
-    href: `/publications/${slugify(dir)}/`,
+    href: `/publications/${dir}/`,
   });
 }
 ```
 
-Note the change from `console.warn` to `throw`: the spec (parent §8) requires a broken build over a silently half-empty cluster. Match the property names already used by the neighbouring project loop — check them before writing.
+`slugify()` is no longer needed: the migrated directory names are already slugs. Delete it once nothing calls it.
 
-- [ ] **Step 3: Teach `readItem` to return the pillar**
+- [ ] **Step 5: Carry `detailed_text` onto the clusters**
 
-`readItem` (around line 133) currently returns only `title`, `summary` and `tags`, so `item.pillar` in the loop above would be `undefined` for every publication. Add the field:
+In the `CLUSTER_ORDER.map(...)` block where `title`, `description` and `topics` are copied from the pillar, add `detailed_text: pillar.detailed_text`.
 
-```js
-  return {
-    title,
-    summary,
-    tags: list(fm, 'tags'),
-    pillar: scalar(fm, 'pillar'),
-  };
-```
+- [ ] **Step 6: Add the experience reader**
 
-- [ ] **Step 4: Emit experience alongside education**
-
-`data/authors/me.yaml` has `experience:` at line 103 in the same indented style as `education:`, but with different field names: `role`, `org`, `start`, `end`. Add a reader beside `readEducation`, normalising to the same `from`/`to` shape so the templates can treat both timelines alike:
+`data/authors/me.yaml` stays where it is — it is author data, not page content, and nothing else reads it. Add beside `readEducation`:
 
 ```js
 /**
- * Work history from the author data file, normalised to the same shape as
- * education so one timeline component renders both. The YAML calls them
- * `role` and `org`; education calls them `degree` and `institution`.
+ * Work history, normalised to the same from/to shape as education so one
+ * timeline component renders both. The YAML calls them `role` and `org`.
  */
 function readExperience() {
   const raw = readFileSync(AUTHOR, 'utf8');
@@ -258,174 +643,51 @@ function readExperience() {
 }
 ```
 
-Call it beside `const education = readEducation();` (line 278) and add `experience` to the written object (line 285) and to the closing log line (line 292).
+Call it beside `const education = readEducation();` and add `experience` to the written object and the closing log line.
 
-- [ ] **Step 5: Run the build and confirm the universe is unchanged in shape**
+- [ ] **Step 7: Run it and compare against the previous universe**
 
 ```bash
-cd /home/stefano/Scrivania/WEBSITE/site && npm run universe
+cd /home/stefano/Scrivania/WEBSITE/site
+cp src/data/universe.json /tmp/universe-before.json
+npm run universe
 node -e "
-const u=require('./src/data/universe.json');
-console.log('nodes', u.nodes.length, 'clusters', u.clusters.length);
-console.log('pubs', u.nodes.filter(n=>n.kind==='publication').length);
-console.log('experience', (u.experience||[]).length);
-for (const c of u.clusters) console.log(c.id, u.nodes.filter(n=>n.cluster===c.id).length);
+const a=require('/tmp/universe-before.json'), b=require('./src/data/universe.json');
+const key=(u)=>u.nodes.map(n=>n.id+' '+n.cluster+' '+n.href).sort();
+const A=key(a), B=key(b);
+console.log('nodes before', A.length, 'after', B.length);
+for (const x of B) if (!A.includes(x)) console.log('  + ' + x);
+for (const x of A) if (!B.includes(x)) console.log('  - ' + x);
+console.log('experience', (b.experience||[]).length, 'education', b.education.length);
+console.log('detailed_text', b.clusters.map(c=>(c.detailed_text||'').length).join(', '));
 "
 ```
 
-Expected: 16 nodes, 4 clusters, 6 publications, a non-zero experience count, and every cluster non-empty.
+Expected: 16 nodes before and after, **no `+` or `-` lines** — the repoint must not change a single node — plus a non-zero experience count and four non-zero `detailed_text` lengths.
 
-- [ ] **Step 6: Prove the build fails loudly on a missing pillar**
+- [ ] **Step 8: Prove the build still fails loudly on a bad pillar**
 
 ```bash
-cd /home/stefano/Scrivania/WEBSITE
-sed -i.bak 's/^pillar: /pillarX: /' content/publications/island-model-smc/index.md
-cd site && npm run universe; echo "exit=$?"
-cd /home/stefano/Scrivania/WEBSITE
-mv content/publications/island-model-smc/index.md.bak content/publications/island-model-smc/index.md
-cd site && npm run universe
+cd /home/stefano/Scrivania/WEBSITE/site
+sed -i.bak 's/^pillar: .*/pillar: nonsense/' src/content/publications/island-model-smc/index.md
+npm run universe; echo "exit=$?"
+mv src/content/publications/island-model-smc/index.md.bak src/content/publications/island-model-smc/index.md
+npm run universe
 ```
 
-Expected: a non-zero exit and the message `publication "island-model-smc" has no pillar: field` on the first run, then a clean build after the restore.
+Expected: non-zero exit with `unknown pillar "nonsense"`, then a clean build after the restore.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 9: Commit**
 
 ```bash
 cd /home/stefano/Scrivania/WEBSITE
 git add site/scripts/build-universe.mjs site/src/data/universe.json
-git commit -m "feat(universe): derive pillars from frontmatter and emit experience
+git commit -m "refactor(universe): read the migrated content and pillars.yaml
 
-Deletes the hardcoded publication-to-pillar map and fails the build on a
-missing or unknown pillar instead of warning and dropping the node."
-```
-
----
-
-## Task 4: Content collections over the Hugo tree
-
-**Files:**
-- Create: `site/src/content.config.ts`
-
-- [ ] **Step 1: Write the collection config**
-
-```ts
-import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
-
-/**
- * The Hugo tree stays the single source of truth. Loading it in place rather
- * than copying it into src/ keeps Hugo building in parallel, which is the
- * safety net until the Netlify cutover.
- *
- * `*/index.md` matches page bundles only, so the `_index.md` and `_index.it.md`
- * section pages at each collection root are excluded without a filter.
- */
-
-const link = z.object({
-  name: z.string().optional(),
-  url: z.string(),
-  icon: z.string().optional(),
-});
-
-/**
- * Without this the id of `island-model-smc/index.md` keeps its `/index`
- * suffix and every generated href gains a path segment that does not exist.
- * The slug must be the directory name and nothing else.
- */
-const bundleId = ({ entry }) => entry.replace(/\/index\.md$/, '');
-
-const publications = defineCollection({
-  loader: glob({ base: '../content/publications', pattern: '*/index.md', generateId: bundleId }),
-  schema: z.object({
-    title: z.string(),
-    authors: z.array(z.string()).default([]),
-    date: z.coerce.date(),
-    publishDate: z.coerce.date().optional(),
-    publication: z.string().optional(),
-    publication_short: z.string().optional(),
-    publication_types: z.array(z.string()).default([]),
-    abstract: z.string().optional(),
-    summary: z.string(),
-    tags: z.array(z.string()).default([]),
-    featured: z.boolean().default(false),
-    pillar: z.string(),
-    doi: z.string().optional(),
-    links: z.array(link).default([]),
-    url_pdf: z.string().optional(),
-    url_code: z.string().optional(),
-  }),
-});
-
-const projects = defineCollection({
-  loader: glob({ base: '../content/projects', pattern: '*/index.md', generateId: bundleId }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    summary: z.string(),
-    tags: z.array(z.string()).default([]),
-    links: z.array(link).default([]),
-  }),
-});
-
-const blog = defineCollection({
-  loader: glob({ base: '../content/blog', pattern: '*/index.md', generateId: bundleId }),
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    summary: z.string(),
-    authors: z.array(z.string()).default([]),
-    tags: z.array(z.string()).default([]),
-  }),
-});
-
-export const collections = { publications, projects, blog };
-```
-
-Astro strips unknown frontmatter keys rather than rejecting them, so fields not listed here (`image`, `url_dataset`, `publication_short`) pass through harmlessly.
-
-- [ ] **Step 2: Prove the loader actually reaches outside `src/`**
-
-This is the one stated risk in the spec. Test it before building anything on top. Create `site/src/pages/__collections-smoke.astro`:
-
-```astro
----
-import { getCollection } from 'astro:content';
-
-const publications = await getCollection('publications');
-const projects = await getCollection('projects');
-const blog = await getCollection('blog');
----
-<pre>{JSON.stringify({
-  publications: publications.length,
-  projects: projects.length,
-  blog: blog.length,
-  featured: publications.filter((p) => p.data.featured).map((p) => p.id),
-}, null, 2)}</pre>
-```
-
-- [ ] **Step 3: Run the build and read the counts**
-
-```bash
-cd /home/stefano/Scrivania/WEBSITE/site && npm run build && cat dist/__collections-smoke/index.html
-```
-
-Expected: `publications: 6`, `projects: 13`, `blog: 8`, and four ids under `featured`. A Zod failure prints the offending file and field — fix the schema or the content, whichever is actually wrong.
-
-- [ ] **Step 4: Delete the smoke page**
-
-```bash
-cd /home/stefano/Scrivania/WEBSITE/site && rm src/pages/__collections-smoke.astro
-```
-
-- [ ] **Step 5: Commit**
-
-```bash
-cd /home/stefano/Scrivania/WEBSITE
-git add site/src/content.config.ts
-git commit -m "feat(site): typed collections over the Hugo content tree
-
-glob() loaders read ../content in place, so the Markdown has one home and
-Hugo keeps building until cutover."
+Repointed at src/content so the universe and the pages cannot diverge. The
+hand-rolled frontmatter helpers and the indentation-keyed regexes that pulled
+the pillars out of a Hugo landing page are gone, replaced by js-yaml and a
+data file. Fails loudly on an unknown pillar."
 ```
 
 ---
