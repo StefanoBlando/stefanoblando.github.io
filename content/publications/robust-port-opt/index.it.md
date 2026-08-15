@@ -34,6 +34,8 @@ tags:
 # Display this page in the Featured widget?
 featured: true
 
+pillar: robust-quant
+
 # Custom links (optional).
 links:
 - name: Interactive Explorer

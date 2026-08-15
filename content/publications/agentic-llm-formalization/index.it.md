@@ -31,6 +31,8 @@ tags:
 
 featured: true
 
+pillar: statistical-verification
+
 links:
 - name: Preprint arXiv:2607.17948
   url: https://arxiv.org/abs/2607.17948

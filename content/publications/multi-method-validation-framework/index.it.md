@@ -32,6 +32,8 @@ tags:
 # Display this page in the Featured widget?
 featured: true
 
+pillar: text-analytics
+
 # Custom links.
 links:
 - name: Coautrice (Prof.ssa Iezzi)

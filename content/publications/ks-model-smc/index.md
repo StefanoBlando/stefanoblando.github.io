@@ -30,6 +30,8 @@ tags:
 
 featured: false
 
+pillar: statistical-verification
+
 links:
 - name: arXiv:2605.10447
   url: https://arxiv.org/abs/2605.10447

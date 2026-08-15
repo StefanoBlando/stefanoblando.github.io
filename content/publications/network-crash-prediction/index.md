@@ -33,6 +33,8 @@ tags:
 # Display this page in the Featured widget?
 featured: false
 
+pillar: robust-quant
+
 # Custom links (optional).
 links:
 # - name: Follow

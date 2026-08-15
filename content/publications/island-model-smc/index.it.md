@@ -30,6 +30,8 @@ tags:
 
 featured: true
 
+pillar: statistical-verification
+
 links:
 - name: Proceedings
   url: https://cgi.cse.unsw.edu.au/~eptcs/paper.cgi?MARS2026.2
