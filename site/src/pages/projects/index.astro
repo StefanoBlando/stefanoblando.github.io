@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => b.data.date - a.data.date);
+---
+
+<Base
+  title="Projects — Stefano Blando"
+  description="Research translated into working simulations, interfaces, and agentic systems."
+  scene={false}
+>
+  <main class="page">
+    <h1>Projects</h1>
+    <p class="page-lede">
+      Simulations, interfaces and agentic systems built around the research questions — some from
+      the work itself, some from hackathons, some from curiosity.
+    </p>
+
+    <ul class="index-list">
+      {
+        projects.map((project) => (
+          <li>
+            <a href={`/projects/${project.id}/`}>
+              <span class="index-title">{project.data.title}</span>
+              <span class="index-summary">{project.data.summary}</span>
+            </a>
+            <ul class="tag-row">
+              {project.data.tags.slice(0, 5).map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Base>

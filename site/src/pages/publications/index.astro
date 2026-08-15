@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const publications = (await getCollection('publications')).sort(
+  (a, b) => b.data.date - a.data.date,
+);
+
+const years = [...new Set(publications.map((p) => p.data.date.getFullYear()))];
+
+/**
+ * Only links that point somewhere. The migration folded url_* into links[] and
+ * dropped the empty ones, but `links` is author-supplied and a blank url would
+ * render an href="" that silently reloads the page.
+ */
+const linksOf = (data) => data.links.filter((link) => link.url);
+---
+
+<Base
+  title="Publications — Stefano Blando"
+  description="Peer-reviewed papers, conference proceedings, and working papers in computational economics, agent-based modeling, and quantitative finance."
+  scene={false}
+>
+  <main class="page">
+    <h1>Publications</h1>
+    <p class="page-lede">
+      Peer-reviewed papers, conference proceedings, and working papers in computational economics,
+      agent-based modeling, and quantitative finance.
+    </p>
+
+    {
+      years.map((year) => (
+        <>
+          <h2 class="year-heading">{year}</h2>
+          <ul class="index-list">
+            {publications
+              .filter((p) => p.data.date.getFullYear() === year)
+              .map((entry) => (
+                <li>
+                  <a href={`/publications/${entry.id}/`}>
+                    <span class="index-title">{entry.data.title}</span>
+                    <span class="index-summary">{entry.data.summary}</span>
+                  </a>
+                  <span class="index-meta">
+                    {[entry.data.type, entry.data.venue].filter(Boolean).join(' · ')}
+                  </span>
+                  {linksOf(entry.data).length > 0 && (
+                    <ul class="index-links">
+                      {linksOf(entry.data).map((link) => (
+                        <li>
+                          <a href={link.url}>{link.name ?? 'Link'}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+          </ul>
+        </>
+      ))
+    }
+  </main>
+</Base>
