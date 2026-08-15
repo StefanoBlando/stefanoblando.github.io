@@ -1,0 +1,866 @@
+---
+import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
+
+/**
+ * The co-author graph, migrated from
+ * layouts/_partials/hbx/blocks/collaborators-network/block.html.
+ *
+ * Three things changed and nothing else. The data moved to src/data/people.js
+ * so the homepage can count from it. The CDN <script src="d3@7"> became scoped
+ * npm imports, which is the reason Astro was chosen in the first place. And
+ * the category tab counts are derived rather than typed — the Hugo template
+ * claimed 8 faculty and 3 PhD candidates against 9 and 2 in its own data.
+ *
+ * The rendering code below is unchanged.
+ */
+---
+
+<section id="collaborators-network-section" class="collaborators-network portfolio-section" aria-labelledby="collaborators-title">
+  <div class="portfolio-section__inner">
+    <div class="collaborators-header">
+      <div>
+        <p class="portfolio-eyebrow">Research Network</p>
+        <h2 id="collaborators-title">Co-authors & L'EMbeDS Lab Network</h2>
+        <p class="portfolio-section__intro">Faithful CSH Vienna radial network visualization connecting co-authors, PhD supervisors, lab colleagues, and research topics.</p>
+      </div>
+
+      <div class="network-controls">
+        <div class="network-tabs" role="tablist">
+          <button class="cat-tab active" data-cat="all">All ({PEOPLE.length})</button>
+          <button class="cat-tab" data-cat="faculty">Faculty ({COUNT_BY_CATEGORY.faculty})</button>
+          <button class="cat-tab" data-cat="postdoc">PostDoc &amp; Staff ({COUNT_BY_CATEGORY.postdoc})</button>
+          <button class="cat-tab" data-cat="phd">PhD Candidates ({COUNT_BY_CATEGORY.phd})</button>
+        </div>
+        <div class="network-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" class="network-search-input" placeholder="Search collaborator..." aria-label="Search collaborator">
+        </div>
+      </div>
+    </div>
+
+    <!-- D3 Exact CSH Vienna Network Visualization Container -->
+    <div class="network-viz-wrapper" data-reveal>
+      <div class="collaborators-d3-container"></div>
+
+      <!-- Floating Glassmorphism Detail Card -->
+      <div class="network-detail-card hidden" aria-hidden="true">
+        <button class="network-detail-card__close" aria-label="Close card">&times;</button>
+        <div class="network-detail-card__header">
+          <div class="network-detail-card__avatar card-avatar">GF</div>
+          <div class="card-header-text" style="flex:1; min-width:0;">
+            <h3 class="card-name">Giorgio Fagiolo</h3>
+            <p class="card-role network-detail-card__role">Full Professor (PhD Supervisor)</p>
+          </div>
+        </div>
+        <div class="network-detail-card__body">
+          <div class="card-inst network-detail-card__inst">Scuola Superiore Sant'Anna</div>
+          <div class="card-topics network-detail-card__topics"></div>
+          <div class="card-papers network-detail-card__papers"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+.collaborators-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.network-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.network-tabs {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--portfolio-surface);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.2);
+  padding: 4px;
+  border-radius: 99px;
+}
+
+.cat-tab {
+  padding: 0.35rem 0.9rem;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--portfolio-muted);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.cat-tab:hover {
+  color: var(--portfolio-text);
+}
+
+.cat-tab.active {
+  background: var(--portfolio-accent-strong);
+  color: var(--portfolio-text);
+}
+
+.network-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--portfolio-surface);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.2);
+  border-radius: 99px;
+  padding: 0.35rem 0.9rem;
+  color: var(--portfolio-muted);
+}
+
+.network-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--portfolio-text);
+  font-size: 0.8rem;
+  width: 140px;
+}
+
+.network-search input::placeholder {
+  color: var(--portfolio-muted);
+}
+
+.network-viz-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 24px;
+  background: var(--portfolio-bg);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.collaborators-d3-container {
+  width: 100%;
+  min-height: 840px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.csh-person, .csh-topic, .csh-inst, .csh-link {
+  transition: opacity 250ms ease;
+}
+
+/* Floating Glassmorphism Detail Card */
+.network-detail-card {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: min(320px, calc(100% - 3rem));
+  background: var(--portfolio-surface);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.35);
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  transition: opacity 250ms ease, transform 250ms ease;
+  pointer-events: none; /* Prevents card from intercepting mouse hover on underlying SVG nodes! */
+}
+
+.network-detail-card.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.network-detail-card__close,
+.network-chip,
+.card-papers a {
+  pointer-events: auto; /* Re-enable pointer events for buttons and chips inside the card */
+}
+
+.network-detail-card__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--portfolio-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.network-detail-card__close:hover {
+  color: var(--portfolio-text);
+}
+
+.network-detail-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.network-detail-card__avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--portfolio-accent-strong);
+  color: var(--portfolio-text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.network-detail-card__header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--portfolio-text);
+}
+
+.network-detail-card__role {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--portfolio-accent);
+  font-weight: 600;
+}
+
+.network-detail-card__inst {
+  margin: 0 0 0.75rem;
+  font-size: 0.78rem;
+  color: var(--portfolio-muted);
+}
+
+.network-detail-card__topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.network-chip {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(var(--portfolio-accent-rgb), 0.1);
+  border: 1px solid rgba(var(--portfolio-accent-rgb), 0.25);
+  color: var(--portfolio-accent);
+  font-weight: 500;
+}
+
+.network-detail-card__papers h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  color: var(--portfolio-text);
+  font-weight: 600;
+}
+
+.network-detail-card__papers ul {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.74rem;
+  color: var(--portfolio-muted);
+  line-height: 1.45;
+}
+
+.network-card-note {
+  font-size: 0.74rem;
+  color: #c084fc;
+  font-style: italic;
+  margin: 0;
+}
+</style>
+
+<script>
+  import * as d3Selection from 'd3-selection';
+  import * as d3Array from 'd3-array';
+  import * as d3Scale from 'd3-scale';
+  import * as d3Force from 'd3-force';
+  import * as d3Ease from 'd3-ease';
+  // Side-effect import: this is what puts .transition() on a selection.
+  import 'd3-transition';
+  import { PEOPLE as people, INSTITUTIONS as institutions, ROLE_COLORS as roleColors } from '../data/people.js';
+
+  /**
+   * The migrated code calls d3.foo(...) in some six hundred places. Rebuilding
+   * the namespace from the packages it actually needs keeps those call sites
+   * untouched, so this migration cannot introduce a rename bug.
+   */
+  const d3 = { ...d3Selection, ...d3Array, ...d3Scale, ...d3Force, ...d3Ease };
+
+  function initCSHInstance(sectionEl) {
+    const container = sectionEl.querySelector('.collaborators-d3-container');
+    const detailCard = sectionEl.querySelector('.network-detail-card');
+    if (!container || typeof d3 === 'undefined') return;
+
+    let W, H, cx, cy, r_b, r_c, NR;
+    let svg, landscape, alllinks, allnodes, guideCirc;
+    let data_a = [], data_b = [], data_c = [], data_links = [];
+    let selectNode = null, currentCat = 'all';
+
+    function dim() {
+      W = container.clientWidth || 960;
+      H = Math.max(840, Math.min(W * 0.85, 920));
+      cx = W / 2;
+      cy = H / 2;
+
+      const viewSize = Math.min(W, H);
+      r_b = viewSize * 0.35; // People ring!
+      r_c = viewSize * 0.45; // External universities ring!
+      NR = Math.max(20, Math.min(26, viewSize * 0.038));
+    }
+
+    function topicPath(x1, y1, x2, y2, pull = 0.35) {
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2;
+      return `M${x1},${y1} Q${cx + (mx - cx) * pull},${cy + (my - cy) * pull} ${x2},${y2}`;
+    }
+
+    // Outer Perimeter Arc Path: Travels at outerR = r_c + 45px (completely outside all university nodes)
+    function instPath(x1, y1, x2, y2, angle1, angle2) {
+      const outerR = r_c + 45;
+      const x_outer1 = cx + outerR * Math.cos(angle1);
+      const y_outer1 = cy + outerR * Math.sin(angle1);
+      const x_outer2 = cx + outerR * Math.cos(angle2);
+      const y_outer2 = cy + outerR * Math.sin(angle2);
+
+      let a1 = angle1;
+      let a2 = angle2;
+      while (a1 < 0) a1 += Math.PI * 2;
+      while (a2 < 0) a2 += Math.PI * 2;
+      let diff = a2 - a1;
+      if (diff < -Math.PI) diff += Math.PI * 2;
+      if (diff > Math.PI) diff -= Math.PI * 2;
+      const sweep = diff > 0 ? 1 : 0;
+
+      // Outer rim edge target at university node
+      const targetEdgeX = cx + (r_c + 28) * Math.cos(angle2);
+      const targetEdgeY = cy + (r_c + 28) * Math.sin(angle2);
+
+      return `M${x1},${y1} L${x_outer1},${y_outer1} A ${outerR} ${outerR} 0 0,${sweep} ${x_outer2},${y_outer2} L${targetEdgeX},${targetEdgeY}`;
+    }
+
+    function setupNetwork(cat) {
+      currentCat = cat;
+      selectNode = null;
+      hideCard();
+
+      const filteredPeople = cat === 'all' ? people : people.filter(p => p.cat === cat);
+
+      // 1. People Positions (data_b)
+      const n_b = filteredPeople.length;
+      data_b = filteredPeople.map((p, i) => {
+        const angle = (i / n_b) * 2 * Math.PI - Math.PI / 2;
+        return {
+          ...p,
+          group: 'people',
+          angle,
+          x: cx + r_b * Math.cos(angle),
+          y: cy + r_b * Math.sin(angle)
+        };
+      });
+
+      // 2. Deterministic Non-Overlapping Multi-Ring Polar Distribution for Topics (data_a)
+      const topicSet = new Set(data_b.flatMap(p => p.topics));
+      const topicArray = Array.from(topicSet);
+      const n_a = topicArray.length;
+
+      // Sort topics deterministically by frequency to put key topics at inner core
+      topicArray.sort((t1, t2) => {
+        const c1 = data_b.filter(p => p.topics.includes(t1)).length;
+        const c2 = data_b.filter(p => p.topics.includes(t2)).length;
+        return c2 - c1;
+      });
+
+      data_a = topicArray.map((t, i) => {
+        const connected = data_b.filter(p => p.topics.includes(t));
+        const meanAngle = d3.mean(connected, p => p.angle) || (i / n_a) * 2 * Math.PI - Math.PI / 2;
+
+        let r_factor, slotAngle;
+        if (i < 4) {
+          // Ring 0: Inner Core (4 items, 0.16 r_b)
+          r_factor = 0.16;
+          slotAngle = meanAngle * 0.4 + (i / 4) * Math.PI * 2;
+        } else if (i < 10) {
+          // Ring 1: Middle Core (6 items, 0.33 r_b)
+          r_factor = 0.33;
+          slotAngle = meanAngle * 0.5 + ((i - 4) / 6) * Math.PI * 2 + Math.PI / 6;
+        } else {
+          // Ring 2: Outer Core (8 items, 0.50 r_b)
+          r_factor = 0.50;
+          slotAngle = meanAngle * 0.6 + ((i - 10) / 8) * Math.PI * 2 + Math.PI / 12;
+        }
+
+        const targetRadius = r_b * r_factor;
+
+        return {
+          id: t,
+          label: t,
+          group: 'topics',
+          angle: slotAngle,
+          targetRadius: targetRadius,
+          x: cx + targetRadius * Math.cos(slotAngle),
+          y: cy + targetRadius * Math.sin(slotAngle),
+          value: connected.length
+        };
+      });
+
+      // Large, bold, highly legible topic font size scale!
+      const size_a = d3.scaleLog().domain(d3.extent(data_a, d => d.value) || [1, 5]).range([13.5, 16]);
+      data_a.forEach(d => { d.fontSize = size_a(d.value); });
+
+      // Robust Physics Engine for Zero-Overlap
+      const topicSim = d3.forceSimulation(data_a)
+        .force('collide', d3.forceCollide(d => Math.max(d.label.length * 4.9 + 24, 48)).strength(1.0))
+        .force('r', d3.forceRadial(d => d.targetRadius, cx, cy).strength(0.85))
+        .stop();
+      for (let i = 0; i < 600; i++) topicSim.tick();
+
+      // Strict Inner Core Boundary Enforcement: Topics can NEVER exceed 50% of the distance to the people ring!
+      const maxAllowedTopicR = r_b * 0.50;
+      data_a.forEach(n => {
+        const d = Math.hypot(n.x - cx, n.y - cy);
+        if (d > maxAllowedTopicR) {
+          n.x = cx + ((n.x - cx) / d) * maxAllowedTopicR;
+          n.y = cy + ((n.y - cy) / d) * maxAllowedTopicR;
+        }
+      });
+
+      // 3. Unique External Institution Positions (data_c)
+      const allExtInsts = data_b.flatMap(p => p.extInst || []);
+      const uniqueInstIds = Array.from(new Set(allExtInsts));
+
+      data_c = uniqueInstIds.map((instId) => {
+        const instInfo = institutions[instId];
+        const connectedPeople = data_b.filter(p => p.extInst && p.extInst.includes(instId));
+        const meanAngle = d3.mean(connectedPeople, p => p.angle) || 0;
+
+        return {
+          id: instId,
+          group: 'institutions',
+          angle: meanAngle,
+          x: cx + r_c * Math.cos(meanAngle),
+          y: cy + r_c * Math.sin(meanAngle),
+          connectedPeople: connectedPeople.map(p => p.name),
+          ...instInfo
+        };
+      });
+
+      // 4. Build CSH Links
+      data_links = [];
+      data_b.forEach(p => {
+        p.topics.forEach(t => {
+          const tp = data_a.find(item => item.id === t);
+          if (tp) {
+            data_links.push({
+              id: `${p.id}-${t}`,
+              personId: p.id,
+              topicId: t,
+              instId: null,
+              source: p,
+              target: tp,
+              type: 'topic'
+            });
+          }
+        });
+        (p.extInst || []).forEach(instId => {
+          const inst = data_c.find(item => item.id === instId);
+          if (inst) {
+            data_links.push({
+              id: `${p.id}-${inst.id}`,
+              personId: p.id,
+              topicId: null,
+              instId: inst.id,
+              source: p,
+              target: inst,
+              type: 'inst'
+            });
+          }
+        });
+      });
+
+      renderNetwork();
+    }
+
+    function renderNetwork() {
+      // Guide Circle
+      guideCirc.attr('cx', cx).attr('cy', cy).attr('r', r_b)
+        .attr('fill', 'none')
+        .attr('stroke', 'rgba(56, 189, 248, 0.14)')
+        .attr('stroke-dasharray', '4 4');
+
+      // SVG Clip Paths for University & People Logos
+      let defs = svg.select('defs');
+      if (defs.empty()) defs = svg.append('defs');
+
+      // University Clips (r: 28 Full Circle Fill!)
+      data_c.forEach(inst => {
+        if (defs.select(`#clip-inst-${inst.id}`).empty()) {
+          defs.append('clipPath')
+            .attr('id', `clip-inst-${inst.id}`)
+            .append('circle')
+            .attr('r', 27);
+        }
+      });
+
+      // People Clips
+      data_b.forEach(p => {
+        if (defs.select(`#clip-person-${p.id}`).empty()) {
+          defs.append('clipPath')
+            .attr('id', `clip-person-${p.id}`)
+            .append('circle')
+            .attr('r', NR - 2);
+        }
+      });
+
+      // Links (Outer Perimeter Arcs for Institutions, Inner Curves for Topics)
+      const linkSel = alllinks.selectAll('.csh-link').data(data_links, d => d.id);
+      linkSel.enter().append('path')
+        .attr('class', 'csh-link')
+        .attr('fill', 'none')
+        .attr('stroke', d => d.type === 'inst' ? '#a855f7' : (roleColors[d.source.cat] || '#38bdf8'))
+        .attr('stroke-dasharray', d => d.type === 'inst' ? '4 3' : 'none')
+        .attr('stroke-width', d => d.type === 'inst' ? 1.4 : 1.3)
+        .attr('stroke-opacity', 0.25)
+        .attr('d', d => d.type === 'inst'
+          ? instPath(d.source.x, d.source.y, d.target.x, d.target.y, d.source.angle, d.target.angle)
+          : topicPath(d.source.x, d.source.y, d.target.x, d.target.y));
+
+      linkSel.attr('d', d => d.type === 'inst'
+        ? instPath(d.source.x, d.source.y, d.target.x, d.target.y, d.source.angle, d.target.angle)
+        : topicPath(d.source.x, d.source.y, d.target.x, d.target.y))
+        .attr('stroke-opacity', 0.25);
+      linkSel.exit().remove();
+
+      // CSH Topic Capsule Pills (data_a) - Large, Crisp, Non-Overlapping!
+      const topicGroup = allnodes.selectAll('.csh-topic').data(data_a, d => d.id);
+      const topicEnt = topicGroup.enter().append('g')
+        .attr('class', 'csh-topic')
+        .attr('transform', d => `translate(${d.x}, ${d.y})`)
+        .style('cursor', 'pointer')
+        .on('mouseenter', (ev, d) => { if (!selectNode) hlTopic(d); })
+        .on('mouseleave', () => {
+          if (!selectNode) {
+            reset();
+            hideCard();
+          }
+        })
+        .on('click', (ev, d) => { ev.stopPropagation(); selectNode = d; hlTopic(d); });
+
+      topicEnt.append('rect')
+        .attr('rx', 99).attr('ry', 99)
+        .attr('fill', 'rgba(12, 18, 32, 0.96)')
+        .attr('stroke', 'rgba(56, 189, 248, 0.55)')
+        .attr('stroke-width', 1.4);
+
+      topicEnt.append('text')
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+        .attr('fill', '#f8fafc')
+        .style('font-size', d => `${d.fontSize || 14}px`)
+        .style('font-weight', '700')
+        .style('letter-spacing', '0.3px')
+        .text(d => d.label);
+
+      topicEnt.each(function() {
+        const g = d3.select(this);
+        const bb = g.select('text').node().getBBox();
+        g.select('rect')
+          .attr('x', bb.x - 11).attr('y', bb.y - 6)
+          .attr('width', bb.width + 22).attr('height', bb.height + 12);
+      });
+
+      topicGroup.attr('transform', d => `translate(${d.x}, ${d.y})`);
+      topicGroup.exit().remove();
+
+      // CSH External Institution Full-Fill Logo Nodes (data_c)
+      const instGroup = allnodes.selectAll('.csh-inst').data(data_c, d => d.id);
+      const instEnt = instGroup.enter().append('g')
+        .attr('class', 'csh-inst')
+        .attr('transform', d => `translate(${d.x}, ${d.y})`)
+        .style('cursor', 'pointer')
+        .on('mouseenter', (ev, d) => {
+          d3.select(ev.currentTarget).select('.csh-inst-circle').transition().duration(220).ease(d3.easeCubicOut).attr('r', 32);
+          if (!selectNode) hlInst(d);
+          showInstCard(d);
+        })
+        .on('mouseleave', (ev, d) => {
+          d3.select(ev.currentTarget).select('.csh-inst-circle').transition().duration(220).ease(d3.easeCubicOut).attr('r', 28);
+          if (!selectNode) {
+            reset();
+            hideCard();
+          }
+        })
+        .on('click', (ev, d) => {
+          ev.stopPropagation();
+          selectNode = d;
+          hlInst(d);
+          showInstCard(d);
+        });
+
+      instEnt.append('circle')
+        .attr('class', 'csh-inst-circle')
+        .attr('r', 28)
+        .attr('fill', 'rgba(12, 17, 27, 0.96)')
+        .attr('stroke', '#a855f7')
+        .attr('stroke-width', 2.6);
+
+      instEnt.append('image')
+        .attr('href', d => d.logo)
+        .attr('xlink:href', d => d.logo)
+        .attr('x', -28).attr('y', -28)
+        .attr('width', 56).attr('height', 56)
+        .attr('preserveAspectRatio', 'xMidYMid slice')
+        .attr('clip-path', d => `url(#clip-inst-${d.id})`);
+
+      instGroup.attr('transform', d => `translate(${d.x}, ${d.y})`);
+      instGroup.exit().remove();
+
+      // CSH People Nodes with Fixed Non-Scaling Hit Target (Prevents Hover Flickering!)
+      const peopleGroup = allnodes.selectAll('.csh-person').data(data_b, d => d.id);
+      const peopleEnt = peopleGroup.enter().append('g')
+        .attr('class', 'csh-person')
+        .attr('transform', d => `translate(${d.x}, ${d.y})`)
+        .style('cursor', 'pointer')
+        .on('mouseenter', (ev, d) => {
+          d3.select(ev.currentTarget).select('.csh-node-circle').transition().duration(200).ease(d3.easeCubicOut).attr('r', NR * 1.25);
+          hlPerson(d);
+          showCard(d);
+        })
+        .on('mouseleave', (ev, d) => {
+          d3.select(ev.currentTarget).select('.csh-node-circle').transition().duration(200).ease(d3.easeCubicOut).attr('r', NR);
+          if (!selectNode) {
+            reset();
+            hideCard();
+          }
+        })
+        .on('click', (ev, d) => {
+          ev.stopPropagation();
+          selectNode = d;
+          hlPerson(d);
+          showCard(d);
+        });
+
+      // Fixed Invisible Hit Target Circle: Mouse hit test target NEVER resizes, eliminating hover flickering!
+      peopleEnt.append('circle')
+        .attr('class', 'csh-hit-area')
+        .attr('r', NR * 1.35)
+        .attr('fill', 'transparent')
+        .style('pointer-events', 'all');
+
+      peopleEnt.append('circle')
+        .attr('class', 'csh-node-circle')
+        .attr('r', NR)
+        .attr('fill', 'rgba(12, 17, 27, 0.96)')
+        .attr('stroke', d => roleColors[d.cat] || '#38bdf8')
+        .attr('stroke-width', 2.2)
+        .style('pointer-events', 'none');
+
+      peopleEnt.append('image')
+        .attr('href', d => d.avatar)
+        .attr('xlink:href', d => d.avatar)
+        .attr('x', -NR + 2).attr('y', -NR + 2)
+        .attr('width', (NR - 2) * 2).attr('height', (NR - 2) * 2)
+        .attr('preserveAspectRatio', 'xMidYMid slice')
+        .attr('clip-path', d => `url(#clip-person-${d.id})`)
+        .style('pointer-events', 'none');
+
+      peopleGroup.attr('transform', d => `translate(${d.x}, ${d.y})`);
+      peopleGroup.exit().remove();
+    }
+
+    // 1. Highlight Person
+    function hlPerson(p) {
+      alllinks.selectAll('.csh-link')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .attr('stroke-opacity', d => d.personId === p.id ? 0.95 : 0.04)
+        .attr('stroke-width', d => d.personId === p.id ? 2.8 : 0.8);
+
+      allnodes.selectAll('.csh-person')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .style('opacity', d => d.id === p.id ? 1 : 0.22);
+
+      allnodes.selectAll('.csh-topic')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .style('opacity', d => p.topics.includes(d.id) ? 1 : 0.18);
+
+      allnodes.selectAll('.csh-inst')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .style('opacity', d => (p.extInst || []).includes(d.id) ? 1 : 0.22);
+    }
+
+    // 2. Highlight Topic
+    function hlTopic(topicItem) {
+      const connectedPeople = data_b.filter(p => p.topics.includes(topicItem.id)).map(p => p.id);
+
+      alllinks.selectAll('.csh-link')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .attr('stroke-opacity', d => d.topicId === topicItem.id ? 0.95 : 0.04)
+        .attr('stroke-width', d => d.topicId === topicItem.id ? 2.8 : 0.8);
+
+      allnodes.selectAll('.csh-person')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .style('opacity', d => connectedPeople.includes(d.id) ? 1 : 0.22);
+
+      allnodes.selectAll('.csh-topic')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .style('opacity', d => d.id === topicItem.id ? 1 : 0.18);
+
+      allnodes.selectAll('.csh-inst')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .style('opacity', d => data_b.some(p => connectedPeople.includes(p.id) && (p.extInst || []).includes(d.id)) ? 1 : 0.22);
+    }
+
+    // 3. Highlight Institution
+    function hlInst(instItem) {
+      const connectedPeople = data_b.filter(p => p.extInst && p.extInst.includes(instItem.id)).map(p => p.id);
+
+      alllinks.selectAll('.csh-link')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .attr('stroke-opacity', d => d.instId === instItem.id || connectedPeople.includes(d.personId) ? 0.95 : 0.04)
+        .attr('stroke-width', d => d.instId === instItem.id || connectedPeople.includes(d.personId) ? 2.8 : 0.8);
+
+      allnodes.selectAll('.csh-person')
+        .transition().duration(250).ease(d3.easeCubicOut)
+        .style('opacity', d => connectedPeople.includes(d.id) ? 1 : 0.22);
+
+      allnodes.selectAll('.csh-topic')
+        .transition().duration(280).ease(d3.easeCubicOut)
+        .style('opacity', d => data_b.some(p => connectedPeople.includes(p.id) && p.topics.includes(d.id)) ? 1 : 0.18);
+
+      allnodes.selectAll('.csh-inst')
+        .transition().duration(280).ease(d3.easeCubicOut)
+        .style('opacity', d => d.id === instItem.id ? 1 : 0.22);
+    }
+
+    function reset() {
+      alllinks.selectAll('.csh-link')
+        .transition().duration(280).ease(d3.easeCubicOut)
+        .attr('stroke-opacity', 0.25)
+        .attr('stroke-width', 1.4);
+
+      allnodes.selectAll('.csh-person')
+        .transition().duration(280).ease(d3.easeCubicOut)
+        .style('opacity', 1);
+
+      allnodes.selectAll('.csh-topic')
+        .transition().duration(280).ease(d3.easeCubicOut)
+        .style('opacity', 1);
+
+      allnodes.selectAll('.csh-inst')
+        .transition().duration(280).ease(d3.easeCubicOut)
+        .style('opacity', 1);
+    }
+
+    function showCard(p) {
+      if (!detailCard) return;
+      detailCard.querySelector('.card-avatar').innerHTML = `<img src="${p.avatar}" width="44" height="44" style="border-radius:50%;object-fit:cover;border:2px solid ${roleColors[p.cat] || '#38bdf8'};" alt="${p.name}">`;
+      detailCard.querySelector('.card-name').innerText = p.name;
+      detailCard.querySelector('.card-role').innerText = p.role;
+      detailCard.querySelector('.card-inst').innerText = p.inst;
+
+      const topicsEl = detailCard.querySelector('.card-topics');
+      topicsEl.innerHTML = p.topics.map(t => `<span class="network-chip">${t}</span>`).join('');
+
+      const papersEl = detailCard.querySelector('.card-papers');
+      papersEl.innerHTML = (p.papers && p.papers.length > 0)
+        ? `<h4>Co-authored Works (${p.papers.length}):</h4><ul>${p.papers.map(paper => `<li>${paper}</li>`).join('')}</ul>`
+        : `<h4>Academic Collaboration:</h4><p class="network-card-note">L'EMbeDS Lab & Research Collaborator</p>`;
+
+      detailCard.classList.remove('hidden');
+      detailCard.setAttribute('aria-hidden', 'false');
+    }
+
+    function showInstCard(inst) {
+      if (!detailCard) return;
+      detailCard.querySelector('.card-avatar').innerHTML = `<div style="width:48px;height:48px;background:rgba(15,23,42,0.98);border:2px solid rgba(168,85,247,0.7);border-radius:50%;display:grid;place-items:center;padding:0;overflow:hidden;flex-shrink:0;"><img src="${inst.logo}" width="48" height="48" style="border-radius:50%;object-fit:cover;width:100%;height:100%;" alt="${inst.abbr}"></div>`;
+      detailCard.querySelector('.card-name').innerText = inst.label;
+
+      const roleText = inst.isHost ? 'Host University' : 'Partner Institution';
+      detailCard.querySelector('.card-role').innerText = roleText;
+      detailCard.querySelector('.card-inst').innerText = inst.info;
+
+      const topicsEl = detailCard.querySelector('.card-topics');
+      topicsEl.innerHTML = `<span class="network-chip" style="border-color:${inst.isHost ? '#38bdf8' : '#a855f7'};color:${inst.isHost ? '#7dd3fc' : '#c084fc'};">${inst.abbr}</span>`;
+
+      const papersEl = detailCard.querySelector('.card-papers');
+      papersEl.innerHTML = `<h4>Affiliated Collaborators:</h4><ul>${inst.connectedPeople.map(person => `<li>${person}</li>`).join('')}</ul>`;
+
+      detailCard.classList.remove('hidden');
+      detailCard.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideCard() {
+      if (detailCard) {
+        detailCard.classList.add('hidden');
+        detailCard.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    function init() {
+      container.innerHTML = '';
+      dim();
+
+      svg = d3.select(container).append('svg')
+        .attr('width', W).attr('height', H)
+        .attr('viewBox', `0 0 ${W} ${H}`);
+
+      landscape = svg.append('g').attr('class', 'landscape');
+      guideCirc = landscape.append('circle').attr('class', 'guide-circ');
+      alllinks = landscape.append('g').attr('class', 'alllinks');
+      allnodes = landscape.append('g').attr('class', 'allnodes');
+
+      setupNetwork(currentCat);
+
+      svg.on('click', () => {
+        selectNode = null;
+        reset();
+        hideCard();
+      });
+    }
+
+    init();
+
+    sectionEl.querySelectorAll('.cat-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        sectionEl.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        currentCat = e.target.getAttribute('data-cat');
+        setupNetwork(currentCat);
+      });
+    });
+
+    const closeBtn = detailCard ? detailCard.querySelector('.network-detail-card__close') : null;
+    if (closeBtn) closeBtn.addEventListener('click', hideCard);
+
+    const searchInput = sectionEl.querySelector('.network-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        allnodes.selectAll('.csh-person').style('opacity', d => (d.name.toLowerCase().includes(query) ? 1 : 0.15));
+      });
+    }
+
+    window.addEventListener('resize', init);
+  }
+
+  const initAll = () => {
+    document.querySelectorAll('.collaborators-network').forEach(sec => {
+      initCSHInstance(sec);
+    });
+  };
+
+  // A deferred module runs before DOMContentLoaded, so the listener is enough
+  // today. The readyState branch is what keeps that true if the script is ever
+  // emitted inline or async, where the event would already have passed.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+</script>
