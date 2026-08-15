@@ -23,6 +23,6 @@ My thesis, titled **"Network Topology Analysis and Machine Learning Techniques f
 This work directly informs my current doctoral research. Further technical details and methodology are available across the portfolio:
 
 - [View the Research Project]({{< relref "/projects/network-crash-prediction/index.md" >}})
-- [Read the Related Paper]({{< relref "/publications/network crash prediction/index.md" >}})
+- [Read the Related Paper]({{< relref "/publications/network-crash-prediction/index.md" >}})
 
 The master program provided advanced methodological training in machine learning and statistical modeling, which I continue to build upon in my PhD research at Scuola Superiore Sant'Anna.

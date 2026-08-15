@@ -30,7 +30,7 @@ const PUBLICATION_PILLARS = {
   'ks-model-smc': 'statistical-verification',
   'agentic-llm-formalization': 'statistical-verification',
   'multi-method-validation-framework': 'text-analytics',
-  'network crash prediction': 'robust-quant',
+  'network-crash-prediction': 'robust-quant',
   'robust-port-opt': 'robust-quant',
 };
 

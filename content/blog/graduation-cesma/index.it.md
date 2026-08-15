@@ -23,6 +23,6 @@ La mia tesi, intitolata **"Network Topology Analysis and Machine Learning Techni
 Questo lavoro si integra direttamente nella mia attività di ricerca. I dettagli metodologici sono approfonditi nelle sezioni dedicate:
 
 - [Vedi il progetto di ricerca]({{< relref "/projects/network-crash-prediction/index.it.md" >}})
-- [Leggi la pubblicazione correlata]({{< relref "/publications/network crash prediction/index.it.md" >}})
+- [Leggi la pubblicazione correlata]({{< relref "/publications/network-crash-prediction/index.it.md" >}})
 
 Il corso di Master ha consolidato competenze avanzate nell'analisi statistica e nei modelli di apprendimento automatico, che costituiscono la base della mia ricerca di dottorato presso la Scuola Superiore Sant'Anna.
