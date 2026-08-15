@@ -1,7 +1,8 @@
 # Spatial 3D Research Portfolio — Design Spec
 
 **Date:** 2026-08-14
-**Status:** Approved in brainstorming (terminal-only session, no visual companion)
+**Status:** Phase 1 built. Revised 2026-08-15 to describe what was actually
+implemented, which diverged substantially from the original design — see §5.
 **Scope:** Full site replacement. Hugo Blox is retired; Astro becomes the site engine.
 Content, assets and curated relationships are migrated from the current repo.
 
@@ -11,7 +12,8 @@ The current site is a mature Hugo Blox academic site: bilingual (`/en/`, `/it/`)
 publication/project/blog pages, Pagefind full-text search, and deploys to Netlify and
 GitHub Pages. It works, but the design and interaction model are to be replaced entirely.
 
-A prototype lives in `portfolio-v2/` (12 WebGL engines, 11 of them dead code). Only
+A prototype lived in `portfolio-v2/` (archived out of the repository on 2026-08-15,
+since most of its weight was third-party material downloaded from the reference site) (12 WebGL engines, 11 of them dead code). Only
 `index.html` + `styles.css` + `fplus-engine.js` are wired. The prototype hardcodes its
 content inline and already drifted from reality: it lists 4 publications and 6 projects
 where the repo has 6 and 13.
@@ -87,92 +89,98 @@ Pagefind is unchanged: it indexes built HTML and is generator-agnostic.
 
 ## 4. The universe model
 
-**Two populations, always co-present:**
+**One body, reactive to the document.** The scene is a backdrop, not a stage. The page
+scrolls normally; the constellation morphs toward whichever `[data-shape]` section is
+nearest the centre of the viewport, using the reference's own weighting — a dead zone of
+40% of the viewport, then a linear falloff over another 50%. The wide dead zone is what
+stops the topology flickering while a section slides past.
 
-1. **Dense field** — several hundred anonymous particles forming the living network. This is
-   the FPlus aesthetic. Visible at all times; provides local texture when zoomed in.
-2. **Content nodes** — the real works (6 publications + the 10 pillar-mapped projects = 16),
-   embedded in the field but clearly distinct (larger, brighter, identified). These alone are
-   interactive.
+**Particles belong to works.** Each of the 350 particles is assigned to one of the 16 real
+works. Wiring is computed once and holds across every layout:
 
-Seen wide, the field reads as one pulsing complex system with the works standing out as
-brighter hubs. Zoomed into a region, that region's works become legible and selectable.
+- **proximity threads** through the resting network (threshold 0.72, uncapped, ~1670
+  edges) — the web reads by accumulation of faint additive threads, not by any one of
+  them being bright;
+- **bridges** between works that genuinely share a research topic (26 of them).
 
-**One bounded volume, not a corridor.** The four macro-clusters are dense regions inside a
-single network that the camera orbits and dives into. This is required by the rhythm below:
-pulling back must reveal *the same system from a new angle*.
+Tags naming a project category (`Research`, `Hackathon`, `Side Quest`) or a tool
+(`Python`, `R`, `Streamlit`, …) are excluded from bridge derivation. A shared programming
+language is not a shared idea, and an edge drawn from one would make the graph assert
+something false about the work.
 
-**Macro-clusters are the four research pillars**, already authored in `content/_index.md`
-with `topics:` and an explicit `projects:` slug list:
+**Five layouts**, all complex-system structures rather than geometric solids, each compact
+and space-filling so the threads stay short:
 
-| Macro-cluster | Mapped projects |
-|---|---|
-| Adaptive Multi-Agent Systems | risk-sentinel, multi-agent-orchestration, real-estate-ai-agent |
-| Statistical Verification | island-model-smc |
-| Robust Quantitative Methods | robust-portfolio-optimization, network-crash-prediction, gas-network-risk-forecasting |
-| Text Analytics and Language Models | nlp-semantic-network-analysis, peft-finetuning, rag-chatbot |
+| # | Layout | Section |
+|---|---|---|
+| 0 | random network | hero, research lead-in |
+| 1 | scale-free hubs, preferential attachment | Adaptive Multi-Agent Systems |
+| 2 | ensemble of stochastic trajectories | Statistical Verification |
+| 3 | two communities joined by a thin bridge | Robust Quantitative Methods |
+| 4 | small-world ring with shortcuts | Text Analytics and Language Models |
 
-Publications and projects of the same pillar sit together and are linked: a paper and the
-project implementing it are one intellectual object and must not be split by content type.
+Works occupy contiguous wedges of each structure, so a work stays a recognisable body
+through every morph.
 
-**Cluster balance is a design constraint, not an outcome.** By projects alone the pillars are
-3 / 1 / 3 / 3: Statistical Verification would render as a nearly empty region. The publication
-assignment must correct this — several SMC papers (`island-model-smc`, `ks-model-smc`,
-`agentic-llm-formalization`) belong there and bring it to parity. Balance must be verified
-after assignment and before positions are tuned; a lopsided pillar is a visible flaw.
+## 5. What changed from the original design, and why
 
-**Required content change:** the 6 publications do not declare a pillar. A curated `pillar:`
-frontmatter field (values: the four pillar slugs) must be added to 6 files, in both languages.
-Tags cannot substitute — there are 77 distinct
-tags across ~20 items, mixing three incompatible axes (research topic, project category
-`Research`/`Hackathon`/`Side Quest`, and technology). Automatic clustering on that vocabulary
-would produce noise.
+Recorded because the divergence is large and the reasons matter more than the outcome.
 
-**Side Quests** (`advanced-recommender-system`, `ai-photo-editor`, `pokenexus` — the 3 of 13
-projects with no pillar) stay out of the research constellation and live on the projects page.
+**The pinned stage and the virtual scroll track are gone.** The original design pinned a
+100vh viewport and drove a camera from a 700vh empty track. It was hard to follow: nothing
+could be read while scrolling. The reference drives its scene from real content sections,
+and that structure suits an academic site far better — the content is the page again.
 
-## 5. Journey and interaction
+**Node picking, labels, the inspector panel and the content-node meshes are gone.** With
+the works listed as readable rows in the sections, a parallel interactive layer inside the
+scene was redundant, and the labels cluttered the frame. Five engine modules were deleted
+outright rather than left dormant.
 
-**Rhythm:** wide field → descend into a region → rise back to the wide field → descend into
-the next. The overview returns at every transition.
+**The camera orbits instead of diving.** It sweeps three quarters of a turn across the
+page, closing from 5.9 to 3.3 over the first fifth. The body rides in the camera's frame,
+so it holds its place on screen while the world's dust and smoke sweep past it. Fixing the
+body in world space instead makes it swing across the view and the composition never
+settles.
 
-**Chapters:** `00` whole network → `01-04` the four pillars → `05` academic path →
-`06` skills → `07` contact.
+**Colour shifts per section** — threads, points, smoke, the readability scrim and the
+background wash all move together. Tinting only the constellation reads as a glitch rather
+than as a change of light.
 
-**State machine:** `traveling` → `at-cluster` → `node-open`.
+**Two overlay layers, not one.** A bottom-anchored wash carries the section colour at full
+strength; a separate side scrim stays near the page background and only takes a fifth of
+the tint. Merging the two jobs into one layer paints the text side with a colour cast.
 
-Scroll governs *which chapter*. Click governs *which node*, in any order, with no forced
-sequence. Continuing to scroll closes the open node and resumes the climb out. The two inputs
-never contend because they act on different axes.
-
-**Node opening — short drift.** The camera makes a small move toward the chosen node (not a
-full flight) while the node expands and the others attenuate; the info panel enters from the
-side. Full camera flights per click were rejected: with several nodes per cluster, exploration
-would become a sequence of waits, and repeated large moves risk motion sickness.
-
-Node panels are previews. They link through to the real, static, citable page
-(`/en/publications/<slug>/`). The 3D is the door, not the archive; `/publications/` and
-`/projects/` remain complete browsable listings.
+**One trade-off was tested in both directions and settled by preference.** Making the
+bridges legible (accent colour, higher intensity) turns the scene into a diagram; the
+reference's restraint keeps threads uniform and quiet. The quiet version was kept, which
+means the topic bridges are present in the structure but not distinguishable by eye.
 
 ## 6. Engine components
 
-Single canvas, single delta-time loop, independent parts:
+Single canvas, single delta-time loop, independent parts under `site/src/engine`:
 
-- **`AmbientLayer`** — nebula shader and volumetric dust. Follows the camera, never the subject.
-- **`ClusterLayer`** — world-space regions. Content nodes as instanced solid meshes with
-  fresnel and emissive response; additive blending reserved for glow around them, not for
-  the bodies themselves.
-- **`CameraRig`** — waypoint path and critically damped follow, all on real delta time. No
-  overshoot; speed independent of display refresh rate.
-- **`Picker`** — raycasts against content-node meshes only, and returns real node identity.
-- **`PostFX`** — controlled bloom, light depth of field, and dithering against banding on the
-  dark field.
+- **`swarm`** — the constellation: points and threads morphing between layouts. Morph runs
+  on the CPU and rewrites both buffers each frame (~12k floats, well under a millisecond);
+  drift stays on the GPU as a pure function of position, so thread endpoints follow their
+  points with no extra work.
+- **`structure`** — layouts, particle-to-work assignment, and the wiring described in §4.
+- **`sections`** — pure, tested: which layout the document is asking for, and how strongly.
+- **`ambient-layer`** — the domain-warped smoke veil and the volumetric dust. The dust is
+  invisible to the main camera by design: it is rendered only by the trail composer.
+- **`postfx`** — two composers. Dust accumulates through an afterimage pass, which is what
+  produces the fluid quality; the main chain is render → bloom → a finishing pass adding
+  the trails, an RGB split, a contrast lift and grain, then sRGB encoding.
+- **`palette`** — six presets in one module; `scripts/build-palette.mjs` generates the CSS
+  variables so scene and stylesheet cannot drift apart.
+- **`damping`** — frame-rate independent throughout.
 
-**`JourneyController`** (DOM side) translates scroll into journey state and listens to the
-picker. **HUD** components (chapter tracker, node chips, inspector) are Astro components
-rendering real DOM.
+Two failures worth recording, both found by measurement rather than by eye:
 
-Lines between particles are updated GPU-side, not rebuilt on the CPU per frame.
+- The finishing pass lifts contrast around a pivot. At a pivot of 0.5 it crushed everything
+  dimmer than mid grey to black and erased the entire thread web. The pivot is now 0.28.
+- Dropping `OutputPass` when the chain was rewritten removed the linear→sRGB conversion.
+  The whole image rendered about five times too dark; bright points survived it and faint
+  threads did not. The conversion now lives in the finishing pass.
 
 ## 7. Content migration
 
@@ -212,9 +220,11 @@ whole and readable.
 Reuses the existing habit (`node --test`, per `package.json`).
 
 - **Graph construction** — deterministic for a given content set; every work in exactly one
-  cluster; no orphan nodes; every link resolves.
-- **Journey state machine** — scroll selects chapter; click opens any node in any order;
-  scrolling past closes and exits.
+  cluster; no orphan nodes; every link resolves. *(Not yet automated: currently verified by
+  one-off checks during the build.)*
+- **Section selection** — the weighting curve: a centred section wins outright, the dead
+  zone holds it through the slide, weight falls to zero beyond the falloff, and a
+  zero-height viewport does not divide by zero.
 - **Camera damping** — delta-time independence, asserted rather than eyeballed. This is
   precisely the current defect and is cheap to test.
 
@@ -235,14 +245,23 @@ Measured against a real build on localhost before tuning.
 work with no surprises. Building the engine first means an unconvincing aesthetic is
 discovered before 62 files have been moved.
 
-**Phase 1 — Engine, on fixture data.** A minimal Astro shell (for the Vite pipeline and a
+**Phase 1 — Engine. Done (commit 99df5bb).** Delivered against real content rather than
+fixtures: `scripts/build-universe.mjs` derives 4 pillars, 16 works and 6 degrees from the
+existing Hugo tree, the last read from `data/authors/me.yaml`.
+
+*Original plan, kept for the record:* A minimal Astro shell (for the Vite pipeline and a
 current local Three.js), the five engine modules, the journey state machine and the HUD,
 driven by a hand-authored `universe.json` that mirrors the real 16 nodes and 4 pillars.
 Judged on localhost until the look holds.
 *Exit criteria:* reads as FPlus or better; clicking a node opens that node's content;
 motion identical at 60 and 120 Hz; bundle measured against §10.
 
-**Phase 2 — Content parity.** Collections and schemas, `/en/` `/it/` routing, the 62 files,
+**Phase 2 — Content parity. Not started, and now the blocking work.** Every one of the 16
+work links on the homepage points at `/publications/…` or `/projects/…`, which do not
+exist: 16 live 404s. Also outstanding: `doi` and `url_pdf` are empty on all six
+publications, so the thing a visitor most wants — the PDF — is not reachable from the data.
+
+ Collections and schemas, `/en/` `/it/` routing, the 62 files,
 page templates, the co-author network page with its tests, Pagefind, and URL parity with the
 current site. The `pillar:` field is added to publications, and the fixture `universe.json`
 is replaced by the build-time generated one.
