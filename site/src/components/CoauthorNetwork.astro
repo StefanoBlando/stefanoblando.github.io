@@ -6,12 +6,17 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
  * layouts/_partials/hbx/blocks/collaborators-network/block.html.
  *
  * Three things changed and nothing else. The data moved to src/data/people.js
- * so the homepage can count from it. The CDN <script src="d3@7"> became scoped
- * npm imports, which is the reason Astro was chosen in the first place. And
- * the category tab counts are derived rather than typed — the Hugo template
- * claimed 8 faculty and 3 PhD candidates against 9 and 2 in its own data.
+ * so the homepage can count from it. The CDN bundle became scoped npm imports,
+ * which is the reason Astro was chosen in the first place. And the category
+ * tab counts are derived rather than typed — the Hugo template claimed 8
+ * faculty and 3 PhD candidates against 9 and 2 in its own data.
  *
  * The rendering code below is unchanged.
+ *
+ * Never spell out a script tag with a src attribute in this file's comments.
+ * The Astro compiler scans for them and does not care that it is inside a
+ * comment: naming the old CDN bundle here was enough to make Vite try to
+ * resolve it as a dependency and log a resolution failure on every reload.
  */
 ---
 
