@@ -53,9 +53,11 @@ Recorded because each closed off alternatives that were live.
   problem.
 - **The full Hugo hero returns**, portrait included, accepting that the portrait competes
   with the backdrop. Parity with the current site and a reachable CV outweigh it.
-- **Content is read in place from the Hugo tree** through Astro collections, rather than
-  moved into `site/src/content/`. Hugo keeps building in parallel, which is the safety net
-  until cutover.
+- **Content is copied into `site/src/content/` and normalised on the way**, rather than read
+  in place from the Hugo tree. Reading in place was the earlier decision, taken to keep Hugo
+  building as a safety net; it was reversed on 2026-08-15 in favour of setting Hugo aside
+  entirely. The consequence is stated plainly in §7: from the copy onward the Hugo tree is
+  legacy, and editing it changes nothing.
 - **English only.** The Italian routing arrives with the rest of Phase 2, before cutover.
   The `.it.md` files stay where they are and nothing is lost.
 
@@ -180,7 +182,7 @@ The seven Hugo menu entries all resolve:
 | Publications | `/publications/` | 6 publications |
 | Experience | `/experience/` | education and experience |
 | Network | `/network/` | migrated D3 visualization |
-| News | `/blog/` | 8 posts |
+| News | `/blog/` | 7 posts |
 | Contact | `/#contact` | anchor |
 
 On index pages the anchors become `/#research` and `/#contact`.
@@ -209,33 +211,64 @@ are and are not part of this.
 
 ## 7. Content pipeline
 
-`site/src/content.config.ts`, using the Astro 5 content layer with `glob()` loaders reading
-outside `src/`:
+The Hugo tree is copied into `site/src/content/` as page bundles and normalised on the way.
+Bundles rather than flat files because 25 assets are co-located with their entries — 21
+`featured.*` images and 4 `cite.bib` — and Astro supports co-located assets natively.
 
-| Collection | base | pattern |
+| Collection | Location | Entries |
 |---|---|---|
-| `publications` | `../content/publications` | `*/index.md` |
-| `projects` | `../content/projects` | `*/index.md` |
-| `blog` | `../content/blog` | `*/index.md` |
+| `publications` | `site/src/content/publications/<slug>/index.md` | 6 |
+| `projects` | `site/src/content/projects/<slug>/index.md` | 13 |
+| `blog` | `site/src/content/blog/<slug>/index.md` | 7 |
+| `events` | `site/src/content/events/<slug>/index.md` | 1 |
 
-Hugo page bundles put each entry at `<slug>/index.md`, so `*/index.md` excludes `_index.md`
-and `_index.it.md` — which sit at the collection root — without a filter.
+**Normalisation, by rule rather than by hand.** A script performs the copy so the transform
+is reproducible and reviewable, and so a mistake can be corrected by editing a rule and
+re-running rather than by re-editing 62 files. Every rule preserves information:
 
-Schemas validate the existing academic frontmatter. A build that fails on a missing field is
-the intended behaviour, per the parent spec §8: a broken build beats a site that lies.
+- **Empty fields are dropped.** Measured, not assumed: `doi`, `url_pdf`, `url_dataset`,
+  `url_poster`, `url_slides`, `url_source` and `url_video` are empty on all six publications.
+  Only `url_code` (one entry) and `url_project` (four) ever carry a value.
+- **The surviving `url_*` fields fold into `links[]`** with a name, so a template renders one
+  list instead of testing eight fields for emptiness.
+- **Hugo Blox names give way to plain ones:** `publication` → `venue`, `publication_short` →
+  `venue_short`, `publication_types: [x]` → `type: x`.
+- **`authors: [me, …]` is expanded** to the real name. `me` is a Hugo author-file reference
+  and means nothing outside it.
+- **Anything the script does not recognise is carried through untouched**, so no field can be
+  lost by omission. What is dropped is dropped by an explicit rule and reported.
 
-Two items become blocking here rather than deferred:
+The copy also repairs `content/projects/real-estate-ai-agent/index.md`, which opens with a
+blank line before its `---` and therefore has no parseable frontmatter at all. Hugo tolerates
+it; every standard parser does not.
 
-- **`content/publications/network crash prediction/` contains spaces.** Hugo tolerated it;
-  as a collection entry id it produces a slug with spaces. It is renamed to
-  `network-crash-prediction`, preserving the public URL
-  `/publications/network-crash-prediction/`.
-- **The hardcoded publication→pillar map goes away.** `build-universe.mjs:27` carries it with
-  the comment *"Curated, pending the `pillar:` frontmatter field"*. With schemas in place,
-  `pillar:` is added to the frontmatter of the six publications and the map is deleted.
+Schemas validate the result. A build that fails on a missing field is intended, per the
+parent spec §8: a broken build beats a site that lies.
 
-**Stated risk:** a `base` path outside `src/` needs to hold on the Netlify build, not only
-locally. This is verified first, not last.
+**The consequence, stated plainly:** after the copy the Hugo tree is legacy. Editing
+`content/` changes nothing that ships. This is the cost of the copy, and it is the reason the
+earlier read-in-place design existed; it was accepted deliberately in order to stop carrying
+Hugo Blox's shape into the new site.
+
+Two items are settled by the copy rather than deferred:
+
+- **`content/publications/network crash prediction/` contained spaces.** Renamed to
+  `network-crash-prediction`, preserving `/publications/network-crash-prediction/`. Two
+  `relref` shortcodes in `content/blog/graduation-cesma/` pointed at the old path and moved
+  with it.
+- **The hardcoded publication→pillar map goes away.** `build-universe.mjs:27` carried it with
+  the comment *"Curated, pending the `pillar:` frontmatter field"*. `pillar:` now sits in the
+  frontmatter of all six publications, English and Italian, and the map is deleted.
+
+**`build-universe.mjs` follows the copy.** It reads `../../content` today. If the pages read
+the Astro copy while the universe reads the Hugo tree, the two diverge at the first edit, so
+the script is repointed in the same pass.
+
+**The research pillars stop being parsed out of a landing page.** The four pillars — title,
+description, `detailed_text`, topics, member projects — live inside `content/_index.md`, a
+Hugo Blox landing page, and `readPillars()` extracts them with regexes keyed to exact
+indentation (`/^ {10}description: (.*)$/m`). Copying that arrangement forward would be
+copying the fragility. They become `site/src/data/pillars.yaml`, and the parser is deleted.
 
 ## 8. Degradation
 
