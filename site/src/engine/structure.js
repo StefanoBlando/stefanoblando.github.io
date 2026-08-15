@@ -150,7 +150,104 @@ function smallWorld(count, rand) {
   return points;
 }
 
-const GENERATORS = [randomNetwork, scaleFree, trajectories, twoCommunities, smallWorld];
+/** A dense core inside a thin shell: the shape of work held up as strongest. */
+function corePeriphery(count, rand) {
+  const points = [];
+  for (let i = 0; i < count; i += 1) {
+    // A third of the cloud forms the core; the rest is a diffuse halo.
+    if (i % 3 === 0) {
+      const radius = Math.cbrt(rand()) * 0.62;
+      const theta = rand() * Math.PI * 2;
+      const phi = Math.acos(2 * rand() - 1);
+      points.push([
+        radius * Math.sin(phi) * Math.cos(theta),
+        radius * Math.sin(phi) * Math.sin(theta),
+        radius * Math.cos(phi),
+      ]);
+      continue;
+    }
+    const radius = 1.35 + Math.cbrt(rand()) * 0.85;
+    const theta = rand() * Math.PI * 2;
+    const phi = Math.acos(2 * rand() - 1);
+    points.push([
+      radius * Math.sin(phi) * Math.cos(theta),
+      radius * Math.sin(phi) * Math.sin(theta) * 0.8,
+      radius * Math.cos(phi),
+    ]);
+  }
+  return points;
+}
+
+/** A branching growth process: one trajectory that keeps splitting. */
+function branchingGrowth(count, rand) {
+  const SEED = { p: [0, -1.7, 0], d: [0, 1, 0] };
+  let frontier = [SEED];
+  const points = [];
+
+  while (points.length < count) {
+    const next = [];
+    for (const tip of frontier) {
+      if (points.length >= count) break;
+      const step = 0.26 + rand() * 0.12;
+      const p = [
+        tip.p[0] + tip.d[0] * step + gaussian(rand) * 0.06,
+        tip.p[1] + tip.d[1] * step + gaussian(rand) * 0.06,
+        tip.p[2] + tip.d[2] * step + gaussian(rand) * 0.06,
+      ];
+      points.push([p[0] * 0.9, p[1] * 0.85, p[2] * 0.9]);
+
+      // Split or continue. The frontier is capped, and a tip that wanders too
+      // far is retired: without both, the structure compounds out of frame.
+      const children = rand() < 0.32 ? 2 : 1;
+      for (let c = 0; c < children && next.length < 26; c += 1) {
+        if (Math.hypot(p[0], p[1], p[2]) > 2.6) continue;
+        const spread = children === 2 ? 0.55 : 0.16;
+        const d = [
+          tip.d[0] + gaussian(rand) * spread,
+          tip.d[1] + gaussian(rand) * spread * 0.4 + 0.12,
+          tip.d[2] + gaussian(rand) * spread,
+        ];
+        const length = Math.hypot(d[0], d[1], d[2]) || 1;
+        next.push({ p, d: [d[0] / length, d[1] / length, d[2] / length] });
+      }
+    }
+    // A frontier that dies out entirely would loop forever.
+    frontier = next.length > 0 ? next : [SEED];
+  }
+  return points;
+}
+
+/** A percolation front: a cluster spreading outward from a seed. */
+function percolationFront(count, rand) {
+  const points = [];
+  for (let i = 0; i < count; i += 1) {
+    // Radius grows with index, so later particles sit further out and the
+    // cluster reads as something that arrived rather than as a static shell.
+    const progress = i / count;
+    const radius = 0.35 + progress * 1.55 + gaussian(rand) * 0.12;
+    const theta = rand() * Math.PI * 2;
+    const phi = Math.acos(2 * rand() - 1);
+    // Anisotropy keeps the front ragged instead of spherical.
+    const ragged = 1 + Math.sin(theta * 5 + phi * 3) * 0.22;
+    points.push([
+      radius * ragged * Math.sin(phi) * Math.cos(theta),
+      radius * ragged * Math.sin(phi) * Math.sin(theta) * 0.75,
+      radius * ragged * Math.cos(phi),
+    ]);
+  }
+  return points;
+}
+
+const GENERATORS = [
+  randomNetwork,
+  scaleFree,
+  trajectories,
+  twoCommunities,
+  smallWorld,
+  corePeriphery,
+  branchingGrowth,
+  percolationFront,
+];
 
 /**
  * Orders a structure's points so consecutive slots are spatial neighbours, then

@@ -71,6 +71,12 @@ export const PRESETS = {
       { primary: '#4f9fc4', accent: '#8ad0ea', smoke: '#23485c', scrim: '4, 13, 22' },
       { primary: '#5a6fbe', accent: '#8f9fe8', smoke: '#2a3358', scrim: '7, 8, 24' },
       { primary: '#56a99b', accent: '#8fd8c6', smoke: '#204f49', scrim: '4, 15, 16' },
+      // Selected work and selected publications, held across both bands.
+      { primary: '#7b8fd0', accent: '#a9b8f2', smoke: '#2b3560', scrim: '8, 10, 26' },
+      // The academic path.
+      { primary: '#4c93b0', accent: '#86c6dc', smoke: '#1f4351', scrim: '4, 12, 18' },
+      // News and contact, held across both bands.
+      { primary: '#8a86c4', accent: '#b3aeea', smoke: '#332f52', scrim: '9, 8, 21' },
     ],
   },
   /** No chromatic accent at all; warmth lives only in the whites. */
