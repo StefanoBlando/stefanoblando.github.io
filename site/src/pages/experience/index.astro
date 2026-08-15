@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import universe from '../../data/universe.json';
+import { PEOPLE, INSTITUTION_COUNT } from '../../data/people.js';
+
+// Both timelines come from universe.json, which reads the author data file.
+// No collection is involved: this is who I am, not what I published.
+const { education, experience } = universe;
+---
+
+<Base
+  title="Experience — Stefano Blando"
+  description="Academic path and professional experience."
+  scene={false}
+>
+  <main class="page">
+    <h1>Experience &amp; Education</h1>
+    <p class="page-lede">
+      PhD in Artificial Intelligence at Scuola Superiore Sant'Anna and the University of Pisa,
+      after statistics and philosophy at Tor Vergata.
+    </p>
+
+    <h2 class="year-heading">Education</h2>
+    <ul class="timeline">
+      {
+        education.map((entry) => (
+          <li>
+            <span class="timeline-years">
+              {entry.from}–{entry.to}
+            </span>
+            <span class="timeline-degree">{entry.degree}</span>
+            <span class="timeline-institution">{entry.institution}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class="year-heading">Experience</h2>
+    <ul class="timeline">
+      {
+        experience.map((entry) => (
+          <li>
+            <span class="timeline-years">
+              {entry.from}–{entry.to}
+            </span>
+            <span class="timeline-degree">{entry.role}</span>
+            <span class="timeline-institution">{entry.org}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class="year-heading">Collaboration</h2>
+    <p class="page-lede">
+      <a href="/network/">
+        {PEOPLE.length} co-authors across {INSTITUTION_COUNT} institutions → Explore the network
+      </a>
+    </p>
+  </main>
+</Base>
