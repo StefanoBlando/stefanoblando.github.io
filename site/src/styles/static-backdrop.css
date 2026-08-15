@@ -1,0 +1,141 @@
+/*
+ * The backdrop for pages that ship no engine.
+ *
+ * The scene pages get their depth from the renderer; these get it from two
+ * gradients and a grain, reading the same variables build-palette.mjs
+ * generates. That is what keeps them in the same family without a canvas —
+ * and without the 140 KB of Three.js that a canvas would cost.
+ */
+
+.static-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 78% 12%, rgba(var(--wash-rgb), 0.26), transparent 62%),
+    radial-gradient(90% 70% at 12% 88%, rgba(var(--scrim-rgb), 0.5), transparent 58%),
+    var(--ink);
+}
+
+/* Grain, inline so nothing is fetched. */
+.static-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.page {
+  position: relative;
+  z-index: 10;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 9rem clamp(1.1rem, 5vw, 4.5rem) 7rem;
+}
+
+.page h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--paper);
+}
+
+.page-lede {
+  max-width: 42rem;
+  margin: 0 0 3rem;
+  color: var(--dim);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.index-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.index-list > li {
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.index-list a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-decoration: none;
+}
+
+.index-title {
+  color: var(--paper);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.index-summary {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.index-list a:hover .index-title {
+  color: var(--gold);
+}
+
+.index-meta {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-row li {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+
+.index-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.76rem;
+}
+
+.index-links a {
+  color: var(--teal);
+  text-decoration: none;
+}
+
+.index-links a:hover {
+  color: var(--gold);
+}
+
+.year-heading {
+  margin: 3rem 0 0.5rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--dim);
+}

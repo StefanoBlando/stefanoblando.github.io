@@ -1,0 +1,26 @@
+---
+/**
+ * The seven-item nav, mirroring config/_default/menus.yaml.
+ *
+ * `anchorBase` is `/` on every page except the homepage, where the two anchor
+ * destinations are on the page you are already reading.
+ */
+const { anchorBase = '' } = Astro.props;
+
+const items = [
+  { name: 'Research', href: `${anchorBase}#research` },
+  { name: 'Projects', href: '/projects/' },
+  { name: 'Publications', href: '/publications/' },
+  { name: 'Experience', href: '/experience/' },
+  { name: 'Network', href: '/network/' },
+  { name: 'News', href: '/blog/' },
+  { name: 'Contact', href: `${anchorBase}#contact` },
+];
+---
+
+<header class="masthead">
+  <a class="wordmark" href="/">Stefano Blando<span>.</span></a>
+  <nav class="masthead-nav">
+    {items.map((item) => <a href={item.href}>{item.name}</a>)}
+  </nav>
+</header>
