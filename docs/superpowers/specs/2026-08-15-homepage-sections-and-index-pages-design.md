@@ -87,7 +87,7 @@ list already in `content/_index.md:71` (`risk-sentinel`, `island-model-smc`,
 set on four of the six publications.
 
 The `path` band closes with a single line — co-author and institution counts, linking to
-`/network/`. The counts are derived at build time from `assets/js/research-network/`, not
+`/network/`. The counts are derived at build time from the people data extracted in §6, not
 typed in, so they cannot drift from the visualization they point at. This keeps the research
 network in the narrative without putting a second visualization on the page.
 
@@ -111,11 +111,12 @@ The assignments carry meaning rather than filling slots: a dense core for the wo
 strongest, a branching growth process for an academic trajectory, an outward-spreading front
 for news and for reaching out.
 
-**Palette cost.** `palette.js:34` gives each of six presets a `tints[]` array of five entries.
-Eight are needed. Only the active preset gets three properly designed additions; the others
-get a `tints[i] ?? tints.at(-1)` fallback so they degrade instead of throwing. Inventing
-eighteen colour triplets nobody will look at is not worth the effort, and a half-considered
-tint is worse than a repeated one.
+**Palette cost.** Only two of the six presets define `tints[]` at all — `reference-scene`
+(`palette.js:34`) and the active `tonal-night` (`palette.js:68`) — each with five entries.
+Eight are needed. `tonal-night` gets three properly designed additions because it is what
+ships. `reference-scene` is a comparison preset and keeps its five: the read at
+`index.js:182` is already `palette.tints?.[shape]`, so a missing index simply leaves the tint
+where it was. The four presets with no `tints` are unaffected, as they are today.
 
 ## 5. Pacing: plateau and transition
 
@@ -189,6 +190,22 @@ performance commitment (§10); with the D3 visualization living on `/network/`, 
 only coherent option. They get a static backdrop instead — a CSS gradient plus grain, driven
 by the same `palette.css` variables the scene uses, so the two stay in the same visual family
 with no JavaScript.
+
+**`/network/` needs more than a copy.** The parent spec (§1) points at
+`assets/js/research-network/` as the co-author visualization to migrate. That is wrong, and
+the error is recorded here so it is not inherited: `assets/js/research-network/` generates the
+*decorative* hero topology from a seeded RNG, and the tests in `tests/network/` cover that,
+not the graph. The real co-author network is
+`layouts/_partials/hbx/blocks/collaborators-network/block.html` — 649 lines of Hugo template
+with the data for 15 people, their institutions and role colours written inline, and D3 loaded
+from a CDN `<script>` at line 49.
+
+The migration therefore does three things rather than one: lift the 15 people out of the
+template into a data module that the `path` band can also count from; replace the CDN global
+with scoped npm imports (`d3-selection`, `d3-scale`, `d3-array`, `d3-force`, `d3-transition`,
+`d3-ease`), since removing CDN globals is the reason Astro was chosen in the first place; and
+port markup and CSS as they are. The decorative hero topology and its tests stay where they
+are and are not part of this.
 
 ## 7. Content pipeline
 
