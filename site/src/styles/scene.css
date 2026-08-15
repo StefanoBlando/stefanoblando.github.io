@@ -116,12 +116,148 @@ main {
   z-index: 10;
 }
 
-/* Each band is a scroll stop carrying a topology for the backdrop. */
+/* Each band is a scroll stop carrying a topology for the backdrop. Its height
+   is also how long that topology is held: the blend only moves between the
+   plateaus, so a taller band is a longer hold. */
 .band {
   min-height: 100vh;
   display: flex;
   align-items: center;
   padding: 7rem clamp(1.1rem, 5vw, 4.5rem) 5rem;
+}
+
+.band-lead {
+  min-height: 90vh;
+}
+
+.band-pillar {
+  min-height: 150vh;
+}
+
+.band-work,
+.band-publications {
+  min-height: 120vh;
+}
+
+.band-path {
+  min-height: 150vh;
+}
+
+.band-news {
+  min-height: 110vh;
+}
+
+.band-contact {
+  min-height: 90vh;
+}
+
+.band-hero {
+  gap: clamp(2rem, 5vw, 4rem);
+  justify-content: space-between;
+}
+
+.hero-portrait img {
+  width: clamp(11rem, 17vw, 17rem);
+  height: auto;
+  border-radius: 50%;
+  filter: grayscale(0.5) contrast(1.05);
+  opacity: 0.92;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin: 2rem 0 1.6rem;
+}
+
+.cta {
+  padding: 0.72rem 1.4rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  transition:
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.cta-primary {
+  color: var(--paper);
+  border-color: var(--teal);
+}
+
+.cta-secondary {
+  color: var(--dim);
+}
+
+.cta:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.social-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin: 0 0 1.4rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+}
+
+.social-row a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.social-row a:hover {
+  color: var(--gold);
+}
+
+.pillar-detail {
+  margin: 1.1rem 0 1.6rem;
+  color: var(--dim);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.1rem;
+  margin: 2rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.card a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  background: var(--tint);
+  text-decoration: none;
+  transition: border-color 200ms ease;
+}
+
+.card a:hover {
+  border-color: var(--gold);
+}
+
+.card-title {
+  color: var(--paper);
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.card-summary {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
 }
 
 .band-inner {
@@ -326,8 +462,22 @@ h2 {
     padding: 4.5rem 1.2rem 3.5rem;
   }
 
+  /* Portrait above the headline, not beside it. The per-band heights above are
+     overridden by `.band` here on purpose: on a phone the content sets the
+     height and the plateaus come out of the content's own length. */
   .band-hero {
     min-height: 90vh;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .hero-portrait img {
+    width: 8.5rem;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
   }
 
   .work-list a,
