@@ -14,7 +14,7 @@ GitHub Pages. It works, but the design and interaction model are to be replaced 
 A prototype lives in `portfolio-v2/` (12 WebGL engines, 11 of them dead code). Only
 `index.html` + `styles.css` + `fplus-engine.js` are wired. The prototype hardcodes its
 content inline and already drifted from reality: it lists 4 publications and 6 projects
-where the repo has 7 and 13.
+where the repo has 6 and 13.
 
 **Visual reference:** fplus.it — dark cosmic field, caustic nebula shader, dense particle
 network, teal/gold palette. Target is "FPlus, or better".
@@ -91,7 +91,7 @@ Pagefind is unchanged: it indexes built HTML and is generator-agnostic.
 
 1. **Dense field** — several hundred anonymous particles forming the living network. This is
    the FPlus aesthetic. Visible at all times; provides local texture when zoomed in.
-2. **Content nodes** — the real works (7 publications + the 10 pillar-mapped projects = 17),
+2. **Content nodes** — the real works (6 publications + the 10 pillar-mapped projects = 16),
    embedded in the field but clearly distinct (larger, brighter, identified). These alone are
    interactive.
 
@@ -121,8 +121,8 @@ assignment must correct this — several SMC papers (`island-model-smc`, `ks-mod
 `agentic-llm-formalization`) belong there and bring it to parity. Balance must be verified
 after assignment and before positions are tuned; a lopsided pillar is a visible flaw.
 
-**Required content change:** the 7 publications do not declare a pillar. A curated `pillar:`
-frontmatter field (values: the four pillar slugs) must be added to 7 files, in both languages.
+**Required content change:** the 6 publications do not declare a pillar. A curated `pillar:`
+frontmatter field (values: the four pillar slugs) must be added to 6 files, in both languages.
 Tags cannot substitute — there are 77 distinct
 tags across ~20 items, mixing three incompatible axes (research topic, project category
 `Research`/`Hackathon`/`Side Quest`, and technology). Automatic clustering on that vocabulary
@@ -180,7 +180,7 @@ Verified inventory: **62 Markdown files**, fully translated.
 
 | Collection | EN | IT |
 |---|---|---|
-| publications | 7 | 7 |
+| publications | 6 (+ index) | 6 (+ index) |
 | projects | 13 (+ index) | 13 (+ index) |
 | blog | 8 | 8 |
 | events | 1 | 1 |
@@ -237,7 +237,7 @@ discovered before 62 files have been moved.
 
 **Phase 1 — Engine, on fixture data.** A minimal Astro shell (for the Vite pipeline and a
 current local Three.js), the five engine modules, the journey state machine and the HUD,
-driven by a hand-authored `universe.json` that mirrors the real 17 nodes and 4 pillars.
+driven by a hand-authored `universe.json` that mirrors the real 16 nodes and 4 pillars.
 Judged on localhost until the look holds.
 *Exit criteria:* reads as FPlus or better; clicking a node opens that node's content;
 motion identical at 60 and 120 Hz; bundle measured against §10.

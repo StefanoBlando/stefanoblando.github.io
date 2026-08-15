@@ -1,0 +1,448 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The scene sits behind everything and never receives a pointer event. */
+#universe {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body[data-scene='off'] #universe {
+  display: none;
+}
+
+.masthead {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem clamp(1.1rem, 4vw, 3rem);
+  background: linear-gradient(to bottom, var(--veil), transparent);
+}
+
+.wordmark {
+  color: var(--paper);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.wordmark span {
+  color: var(--gold);
+}
+
+.masthead-nav {
+  display: flex;
+  gap: 1.4rem;
+}
+
+.masthead-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+
+.masthead-nav a:hover {
+  color: var(--teal);
+}
+
+/* Readability scrim. The dust fills the whole frame, so the side carrying the
+   text needs to be darkened or the copy sits inside the cloud. The reference
+   does the same with a tinted gradient. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(var(--scrim-rgb), 0.9) 0%,
+    rgba(var(--scrim-rgb), 0.55) 34%,
+    rgba(var(--scrim-rgb), 0) 66%
+  );
+  transition: none;
+}
+
+@media (max-width: 900px) {
+  .scrim {
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--scrim-rgb), 0.9) 0%,
+      rgba(var(--scrim-rgb), 0.55) 45%,
+      rgba(var(--scrim-rgb), 0) 100%
+    );
+  }
+}
+
+/* The section's colour, washed up from the bottom. This is the background
+   shift; the scrim above is only about keeping the copy readable, and mixing
+   the two jobs into one layer is what turned the text side into a colour cast. */
+.tint-wash {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(var(--wash-rgb), 0.82) 0%,
+    rgba(var(--wash-rgb), 0.34) 34%,
+    rgba(var(--wash-rgb), 0) 62%
+  );
+}
+
+main {
+  position: relative;
+  z-index: 10;
+}
+
+/* Each band is a scroll stop carrying a topology for the backdrop. */
+.band {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 7rem clamp(1.1rem, 5vw, 4.5rem) 5rem;
+}
+
+.band-inner {
+  width: 100%;
+  max-width: 40rem;
+}
+
+.band-hero .band-inner,
+.band-lead .band-inner {
+  max-width: 44rem;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+}
+
+h1 {
+  margin: 0 0 1.4rem;
+  font-size: clamp(2.1rem, 5vw, 3.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+h2 {
+  margin: 0 0 1.2rem;
+  font-size: clamp(1.5rem, 2.9vw, 2.3rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+.section-lead {
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  color: var(--paper);
+}
+
+.lede {
+  margin: 0 0 2rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.06rem);
+  line-height: 1.66;
+  color: var(--dim);
+}
+
+.affiliation-line {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.section-label {
+  margin: 0 0 1.1rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.topic-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 2.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.topic-row li {
+  padding: 0.28rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-size: 0.63rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+/* Works as readable rows: the content is the page, not the scene. */
+.work-list {
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.work-list li {
+  border-bottom: 1px solid var(--line);
+}
+
+.work-list a {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.2rem 1rem;
+  padding: 1.05rem 0.4rem;
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.25s ease;
+}
+
+.work-list a:hover {
+  background: var(--tint);
+}
+
+.work-kind {
+  grid-row: span 2;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding-top: 0.25rem;
+}
+
+.work-title {
+  font-size: 0.96rem;
+  line-height: 1.32;
+  color: var(--paper);
+}
+
+.work-summary {
+  font-size: 0.79rem;
+  line-height: 1.58;
+  color: var(--dim);
+}
+
+.pillar-link,
+.contact-link {
+  display: inline-block;
+  color: var(--gold);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 3px;
+}
+
+.contact-link {
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.15rem 1rem;
+  padding: 1rem 0.4rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.timeline-years {
+  grid-row: span 2;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  padding-top: 0.2rem;
+}
+
+.timeline-degree {
+  font-size: 0.95rem;
+  line-height: 1.34;
+  color: var(--paper);
+}
+
+.timeline-institution {
+  font-size: 0.78rem;
+  color: var(--dim);
+}
+
+@media (max-width: 720px) {
+  .band {
+    min-height: auto;
+    padding: 4.5rem 1.2rem 3.5rem;
+  }
+
+  .band-hero {
+    min-height: 90vh;
+  }
+
+  .work-list a,
+  .timeline li {
+    grid-template-columns: 1fr;
+  }
+
+  .work-kind,
+  .timeline-years {
+    grid-row: auto;
+  }
+
+  .masthead-nav {
+    gap: 0.9rem;
+  }
+}
+
+/* ---- Cluster page ---------------------------------------------------- */
+
+.cluster-stage {
+  position: relative;
+  min-height: 72vh;
+  display: flex;
+  align-items: center;
+  padding: 8rem clamp(1.1rem, 5vw, 4.5rem) 3rem;
+}
+
+.cluster-intro {
+  max-width: 38rem;
+}
+
+.cluster-intro h1 {
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--teal);
+}
+
+.cluster-index {
+  position: relative;
+  z-index: 10;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.1rem, 5vw, 3rem) 7rem;
+}
+
+.cluster-index h2 {
+  margin: 3rem 0 1.4rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.work-grid a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  height: 100%;
+  padding: 1.35rem 1.25rem;
+  background: var(--ink);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.work-grid a:hover {
+  background: var(--raised);
+}
+
+.work-tags {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.work-group {
+  margin-bottom: 2rem;
+}
+
+.work-group-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.63rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.work-list a {
+  grid-template-columns: 1fr;
+}

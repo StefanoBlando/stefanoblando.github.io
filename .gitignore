@@ -89,3 +89,7 @@ __pycache__/
 .devcontainer/
 
 
+
+# Astro build output and cache (site/)
+site/dist/
+site/.astro/

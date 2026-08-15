@@ -1,0 +1,188 @@
+---
+import universe from '../data/universe.json';
+import '../styles/palette.css';
+import '../styles/scene.css';
+
+const { clusters, nodes, education } = universe;
+
+const worksOf = (id, kind) => nodes.filter((n) => n.cluster === id && n.kind === kind);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#030608" />
+    <title>Stefano Blando — AI Researcher & PhD Candidate</title>
+    <meta
+      name="description"
+      content="PhD candidate at Scuola Superiore Sant'Anna. Adaptive multi-agent systems, statistical verification, robust quantitative methods, and language models for economic and financial systems."
+    />
+  </head>
+
+  <body>
+    <!-- Fixed backdrop. It carries no text and nothing in it is clickable. -->
+    <canvas id="universe" aria-hidden="true"></canvas>
+
+    <div class="tint-wash" aria-hidden="true"></div>
+    <div class="scrim" aria-hidden="true"></div>
+
+    <header class="masthead">
+      <a class="wordmark" href="/">Stefano Blando<span>.</span></a>
+      <nav class="masthead-nav">
+        <a href="#research">Research</a>
+        <a href="#path">Path</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="band band-hero" data-shape="0">
+        <div class="band-inner">
+          <p class="eyebrow"><span class="pip"></span>AI Researcher &amp; PhD Candidate</p>
+          <h1>Understanding complex systems through <em>adaptive intelligence</em></h1>
+          <p class="lede">
+            I work at the intersection of artificial intelligence, agent-based modelling and
+            quantitative finance — building adaptive simulations, statistical verification
+            methods, and tools for studying economic and financial systems.
+          </p>
+          <p class="affiliation-line">Scuola Superiore Sant'Anna · Pisa</p>
+        </div>
+      </section>
+
+      <section class="band band-lead" id="research" data-shape="0">
+        <div class="band-inner">
+          <p class="section-label">Research</p>
+          <h2 class="section-lead">
+            Four connected pillars, from simulation design through to empirical validation.
+          </h2>
+        </div>
+      </section>
+
+      {
+        clusters.map((cluster) => (
+          <section class="band band-pillar" id={cluster.id} data-shape={cluster.index}>
+            <div class="band-inner">
+              <p class="section-label">
+                {String(cluster.index).padStart(2, '0')} — Research pillar
+              </p>
+              <h2>{cluster.title}</h2>
+              <p class="lede">{cluster.description}</p>
+
+              <ul class="topic-row">
+                {cluster.topics.map((topic) => (
+                  <li>{topic}</li>
+                ))}
+              </ul>
+
+              {worksOf(cluster.id, 'publication').length > 0 && (
+                <div class="work-group">
+                  <h3 class="work-group-title">Publications</h3>
+                  <ul class="work-list">
+                    {worksOf(cluster.id, 'publication').map((work) => (
+                      <li>
+                        <a href={work.href}>
+                          <span class="work-title">{work.title}</span>
+                          <span class="work-summary">{work.summary}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {worksOf(cluster.id, 'project').length > 0 && (
+                <div class="work-group">
+                  <h3 class="work-group-title">Projects</h3>
+                  <ul class="work-list">
+                    {worksOf(cluster.id, 'project').map((work) => (
+                      <li>
+                        <a href={work.href}>
+                          <span class="work-title">{work.title}</span>
+                          <span class="work-summary">{work.summary}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <a class="pillar-link" href={`/research/${cluster.id}/`}>Explore this pillar →</a>
+            </div>
+          </section>
+        ))
+      }
+
+      <section class="band band-path" id="path" data-shape="2">
+        <div class="band-inner">
+          <p class="section-label">Academic path</p>
+          <h2>Education</h2>
+          <ul class="timeline">
+            {
+              education.map((entry) => (
+                <li>
+                  <span class="timeline-years">
+                    {entry.from}–{entry.to}
+                  </span>
+                  <span class="timeline-degree">{entry.degree}</span>
+                  <span class="timeline-institution">{entry.institution}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      <section class="band band-contact" id="contact" data-shape="4">
+        <div class="band-inner">
+          <p class="section-label">Contact</p>
+          <h2>Open to collaboration and discussion.</h2>
+          <p class="lede">
+            Research collaborations, seminars, and questions about the work are all welcome.
+          </p>
+          <a class="contact-link" href="mailto:stefano.blando@santannapisa.it">
+            stefano.blando@santannapisa.it
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      import universeData from '../data/universe.json';
+      import { UniverseEngine, isWebGLAvailable } from '../engine/index.js';
+      import { installDiagnostics, reportEnvironment, report } from '../engine/diagnostics.js';
+
+      installDiagnostics();
+
+      const canvas = document.getElementById('universe');
+      reportEnvironment(canvas, universeData);
+
+      if (!isWebGLAvailable()) {
+        document.body.dataset.scene = 'off';
+        report({ kind: 'fallback', reason: 'WebGL2 unavailable' });
+      } else {
+        document.body.dataset.scene = 'on';
+        try {
+          new UniverseEngine({
+            canvas,
+            universe: universeData,
+            quality: window.innerWidth < 780 ? 'low' : 'high',
+            onShape: (state) => {
+              if (state.type === 'context-lost') document.body.dataset.scene = 'off';
+              else report({ kind: state.type, ...state });
+            },
+          });
+        } catch (error) {
+          // The page is readable without the scene; never freeze on a dead canvas.
+          document.body.dataset.scene = 'off';
+          report({
+            kind: 'start-threw',
+            message: error.message,
+            stack: error.stack?.split('\n').slice(0, 8).join(' | '),
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
