@@ -1,38 +1,25 @@
 /**
- * Generates src/data/universe.json from the existing Hugo content tree.
+ * Generates src/data/universe.json from the site's own content.
  *
- * Phase 1 uses this as the fixture source so the prototype shows real work
- * instead of invented placeholders. It is also a dry run of the Phase 2 build
- * step, where the same derivation moves onto Astro content collections.
+ * It reads `src/content` — the same tree the pages read. Pointing this at the
+ * Hugo tree while the pages read the copy would let the constellation and the
+ * page it sits behind describe different work.
  *
- * The publication -> pillar mapping is hardcoded here because the `pillar:`
- * frontmatter field does not exist yet (see spec §4).
+ * Each publication declares its own `pillar:`; the pillars themselves are data
+ * in `src/data/pillars.yaml`. Both used to live in this file, the first as a
+ * hardcoded map and the second as regexes keyed to the indentation of a Hugo
+ * landing page.
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { load as parseYaml } from 'js-yaml';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const CONTENT = join(here, '../../content');
+const CONTENT = join(here, '../src/content');
+const PILLARS = join(here, '../src/data/pillars.yaml');
 const AUTHOR = join(here, '../../data/authors/me.yaml');
 const OUT = join(here, '../src/data/universe.json');
-
-const PILLAR_SLUGS = {
-  'Adaptive Multi-Agent Systems': 'multi-agent',
-  'Statistical Verification': 'statistical-verification',
-  'Robust Quantitative Methods': 'robust-quant',
-  'Text Analytics and Language Models': 'text-analytics',
-};
-
-// Curated, pending the `pillar:` frontmatter field.
-const PUBLICATION_PILLARS = {
-  'island-model-smc': 'statistical-verification',
-  'ks-model-smc': 'statistical-verification',
-  'agentic-llm-formalization': 'statistical-verification',
-  'multi-method-validation-framework': 'text-analytics',
-  'network-crash-prediction': 'robust-quant',
-  'robust-port-opt': 'robust-quant',
-};
 
 // One body, not four regions. Each pillar owns a sector of a single sphere,
 // given by an axis direction; the constellation rotates to present the active
@@ -61,91 +48,23 @@ function mulberry32(seed) {
   };
 }
 
-// Some content files (e.g. projects/real-estate-ai-agent) start with a blank
-// line before the delimiter, so the opening --- is not at offset 0.
-function frontmatter(raw) {
-  const m = raw.match(/^\s*---\r?\n([\s\S]*?)\r?\n---/);
-  return m ? m[1] : '';
-}
-
-function unquote(v) {
-  const s = v.trim();
-  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
-    return s.slice(1, -1);
-  }
-  return s;
-}
-
-function scalar(fm, key) {
-  const re = new RegExp(`^${key}:[ \\t]*(.*)$`, 'm');
-  const m = fm.match(re);
-  return m ? unquote(m[1]) : '';
-}
-
-function list(fm, key) {
-  const lines = fm.split(/\r?\n/);
-  const start = lines.findIndex((l) => new RegExp(`^${key}:[ \\t]*$`).test(l));
-  if (start === -1) return [];
-  const out = [];
-  for (let i = start + 1; i < lines.length; i += 1) {
-    const line = lines[i];
-    if (/^[ \t]*-[ \t]+/.test(line)) out.push(unquote(line.replace(/^[ \t]*-[ \t]+/, '')));
-    else if (line.trim() !== '') break;
-  }
-  return out;
-}
-
-/** Parses the research-pillars block in content/_index.md. */
+/** The four research pillars. Data, not a landing page read back with regexes. */
 function readPillars() {
-  const raw = readFileSync(join(CONTENT, '_index.md'), 'utf8');
-  const blockStart = raw.indexOf('block: research-pillars');
-  if (blockStart === -1) throw new Error('research-pillars block not found in content/_index.md');
-  const after = raw.slice(blockStart);
-  const blockEnd = after.indexOf('\n  - block:', 1);
-  const block = blockEnd === -1 ? after : after.slice(0, blockEnd);
-
-  const chunks = block.split(/^ {8}- name: /m).slice(1);
-  return chunks.map((chunk) => {
-    const name = chunk.split(/\r?\n/)[0].trim();
-    const slug = PILLAR_SLUGS[name];
-    if (!slug) throw new Error(`Unmapped pillar name: "${name}"`);
-    const description = (chunk.match(/^ {10}description: (.*)$/m) || [, ''])[1].trim();
-    const topicsRaw = (chunk.match(/^ {10}topics: \[(.*)\]$/m) || [, ''])[1];
-    const projects = [];
-    const lines = chunk.split(/\r?\n/);
-    const start = lines.findIndex((l) => /^ {10}projects:[ \t]*$/.test(l));
-    if (start !== -1) {
-      for (let i = start + 1; i < lines.length; i += 1) {
-        const t = lines[i].match(/^ {12}- (.+)$/);
-        if (t) projects.push(t[1].trim());
-        else if (lines[i].trim() !== '') break;
-      }
-    }
-    return {
-      id: slug,
-      title: name,
-      description,
-      topics: topicsRaw ? topicsRaw.split(',').map((s) => s.trim()).filter(Boolean) : [],
-      projects,
-    };
-  });
+  return parseYaml(readFileSync(PILLARS, 'utf8'));
 }
 
 function readItem(section, dir) {
   const file = join(CONTENT, section, dir, 'index.md');
   if (!existsSync(file)) return null;
-  const fm = frontmatter(readFileSync(file, 'utf8'));
-  const title = scalar(fm, 'title');
-  const summary = scalar(fm, 'summary') || scalar(fm, 'abstract');
+  const match = readFileSync(file, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!match) throw new Error(`no frontmatter in ${section}/${dir}/index.md`);
+  const fm = parseYaml(match[1]);
   return {
-    title,
-    summary,
-    tags: list(fm, 'tags'),
+    title: fm.title,
+    summary: fm.summary ?? fm.abstract ?? '',
+    tags: fm.tags ?? [],
+    pillar: fm.pillar,
   };
-}
-
-function slugify(dir) {
-  return dir.trim().toLowerCase().replace(/\s+/g, '-');
 }
 
 const pillars = readPillars();
@@ -172,20 +91,28 @@ for (const pillar of pillars) {
   }
 }
 
-for (const [dir, cluster] of Object.entries(PUBLICATION_PILLARS)) {
+// Every publication, taking its pillar from its own frontmatter. A throw
+// rather than a warning: a publication that silently vanishes leaves a
+// half-empty cluster, and a broken build beats a site that lies.
+const publicationDirs = readdirSync(join(CONTENT, 'publications'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort();
+
+for (const dir of publicationDirs) {
   const item = readItem('publications', dir);
-  if (!item) {
-    console.warn(`  ! publication "${dir}" not found`);
-    continue;
+  if (!item) throw new Error(`publication "${dir}" could not be read`);
+  if (!CLUSTER_ORDER.includes(item.pillar)) {
+    throw new Error(`publication "${dir}" has unknown pillar "${item.pillar}"`);
   }
   nodes.push({
-    id: `publication/${slugify(dir)}`,
-    cluster,
+    id: `publication/${dir}`,
+    cluster: item.pillar,
     kind: 'publication',
     title: item.title,
     summary: item.summary,
     tags: item.tags.slice(0, 4),
-    href: `/publications/${slugify(dir)}/`,
+    href: `/publications/${dir}/`,
   });
 }
 
@@ -213,6 +140,34 @@ function readEducation() {
       };
     })
     .filter((e) => e.degree && e.institution);
+}
+
+/**
+ * Work history, normalised to the same from/to shape as education so one
+ * timeline component renders both. The author file calls them `role` and
+ * `org` where education says `degree` and `institution`.
+ */
+function readExperience() {
+  const raw = readFileSync(AUTHOR, 'utf8');
+  const block = raw.match(/^ {2}experience:\n([\s\S]*?)(?=^ {2}[a-z_]+:)/m);
+  if (!block) return [];
+
+  return block[1]
+    .split(/^ {4}- /m)
+    .slice(1)
+    .map((entry) => {
+      const field = (key) => (entry.match(new RegExp(`^ *${key}: *(.+)$`, 'm')) || [, ''])[1].trim();
+      const strip = (s) => s.replace(/^["']|["']$/g, '');
+      const start = strip(field('start'));
+      const end = strip(field('end'));
+      return {
+        role: strip(field('role')),
+        org: strip(field('org')),
+        from: start.slice(0, 4),
+        to: end ? end.slice(0, 4) : 'present',
+      };
+    })
+    .filter((e) => e.role && e.org);
 }
 
 /** Unit vector for a sector axis. */
@@ -268,6 +223,7 @@ const clusters = CLUSTER_ORDER.map((id, index) => {
     index: index + 1,
     title: pillar.title,
     description: pillar.description,
+    detailed_text: pillar.detailed_text,
     topics: pillar.topics,
     axis: axis.map((v) => +v.toFixed(4)),
     accent: layout.accent,
@@ -276,19 +232,22 @@ const clusters = CLUSTER_ORDER.map((id, index) => {
 });
 
 const education = readEducation();
+const experience = readExperience();
 
 const universe = {
   generatedAt: new Date().toISOString().slice(0, 10),
-  source: 'hugo-content-tree',
+  source: 'src/content',
   clusters,
   nodes,
   education,
+  experience,
 };
 
 mkdirSync(dirname(OUT), { recursive: true });
 writeFileSync(OUT, `${JSON.stringify(universe, null, 2)}\n`);
 
 console.log(
-  `universe.json written: ${clusters.length} clusters, ${nodes.length} nodes, ${education.length} degrees`,
+  `universe.json written: ${clusters.length} clusters, ${nodes.length} nodes, ` +
+    `${education.length} degrees, ${experience.length} roles`,
 );
 for (const c of clusters) console.log(`  ${c.index}. ${c.title.padEnd(38)} ${c.count} nodes`);
