@@ -1,0 +1,84 @@
+# The four research pillars. Transcribed from the Hugo landing page, then
+# owned here as data rather than parsed back out of a page with regexes.
+- id: multi-agent
+  index: 1
+  title: Adaptive Multi-Agent Systems
+  description: >-
+    I study populations of learning, heuristic, and deliberative agents interacting over evolving
+    economic networks, studying how local adaptation shapes aggregate dynamics.
+  detailed_text: >-
+    In this research line, I model economic systems as dynamic, decentralized networks of
+    heterogeneous decision-makers. Rather than assuming hyper-rational global equilibrium, agents
+    operate with bounded rationality, local interactions, and adaptive strategies (such as
+    multi-agent reinforcement learning or heuristic decision rules). By combining network science
+    and agent-based modeling, I analyze how micro-level adaptation gives rise to macroeconomic
+    phenomena, market liquidity shifts, and emergent systemic patterns.
+  topics:
+    - Multi-Agent Systems
+    - Reinforcement Learning
+    - Graph Neural Networks
+  projects:
+    - risk-sentinel
+    - multi-agent-orchestration
+    - real-estate-ai-agent
+- id: statistical-verification
+  index: 2
+  title: Statistical Verification
+  description: >-
+    I use convergence diagnostics and statistical model checking to make simulation evidence more
+    reliable and reproducible.
+  detailed_text: >-
+    Agent-based models and complex stochastic simulations generate massive execution traces that are
+    notoriously challenging to validate formally. My work applies Statistical Model Checking (SMC),
+    hypothesis testing, and rigorous statistical convergence diagnostics to verify complex
+    simulation outcomes against temporal logic specifications. This bridge between formal methods
+    and agent-based economics establishes quantifiable confidence intervals for policy interventions
+    and stress-test scenarios.
+  topics:
+    - Statistical Model Checking
+    - Agent-Based Modeling
+    - Reproducibility
+  projects:
+    - island-model-smc
+- id: robust-quant
+  index: 3
+  title: Robust Quantitative Methods
+  description: >-
+    I apply econometrics, robust statistics, and graph learning to systemic risk and financial
+    decision problems.
+  detailed_text: >-
+    To address instability and structural shocks in economic infrastructure, I integrate robust
+    econometrics, extreme value theory, and graph neural networks. This approach enables early
+    detection of financial contagion vectors, stress propagation in interbank market networks, and
+    energy network vulnerability forecasting. The goal is to build quantitative decision-support
+    frameworks that remain resilient under heavy-tailed distributions and structural market regime
+    shifts.
+  topics:
+    - Econometrics
+    - Systemic Risk
+    - Economic Networks
+  projects:
+    - robust-portfolio-optimization
+    - network-crash-prediction
+    - gas-network-risk-forecasting
+- id: text-analytics
+  index: 4
+  title: Text Analytics and Language Models
+  description: >-
+    I apply text analytics and language models to multilingual corpora, sentiment and narrative
+    dynamics, and to systems based on retrieval and embeddings.
+  detailed_text: >-
+    I apply text analytics methods and language models to the study of unstructured data. The work
+    covers the semantic structure of multilingual corpora, the extraction of sentiment and narrative
+    dynamics, and the construction of systems based on retrieval, custom embeddings, and
+    parameter-efficient adaptation of pretrained models. I use classical text analytics alongside
+    transformer architectures, state-space models, and foundation models, with attention to
+    verifying that results depend on the data rather than on the technique employed.
+  topics:
+    - NLP
+    - Narrative Economics
+    - Foundation Models
+  projects:
+    - nlp-semantic-network-analysis
+    - peft-finetuning
+    - rag-chatbot
