@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+// Author-supplied links: a blank url renders href="" and reloads the page.
+const links = project.data.links.filter((link) => link.url);
+---
+
+<Base
+  title={`${project.data.title} — Stefano Blando`}
+  description={project.data.summary}
+  scene={false}
+>
+  <main class="page">
+    <p class="index-meta">Project</p>
+    <h1>{project.data.title}</h1>
+    <p class="page-lede">{project.data.summary}</p>
+
+    <ul class="tag-row">
+      {project.data.tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+
+    {
+      links.length > 0 && (
+        <ul class="index-links">
+          {links.map((link) => (
+            <li>
+              <a href={link.url}>{link.name ?? 'Link'}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <article class="prose"><Content /></article>
+
+    <p class="back-link"><a href="/projects/">← All projects</a></p>
+  </main>
+</Base>

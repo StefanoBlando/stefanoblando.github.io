@@ -1,0 +1,47 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const publications = await getCollection('publications');
+  return publications.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+// `doi` and `url_pdf` are empty on every publication, so an unguarded template
+// would put six dead links on the page. The absence is data about the content.
+const links = entry.data.links.filter((link) => link.url);
+
+const year = entry.data.date.getFullYear();
+---
+
+<Base title={`${entry.data.title} — Stefano Blando`} description={entry.data.summary} scene={false}>
+  <main class="page">
+    <p class="index-meta">{[entry.data.type, year].filter(Boolean).join(' · ')}</p>
+    <h1>{entry.data.title}</h1>
+
+    <p class="page-lede">{entry.data.authors.join(', ')}</p>
+    <p class="index-meta">{entry.data.venue}</p>
+
+    {
+      links.length > 0 && (
+        <ul class="index-links">
+          {links.map((link) => (
+            <li>
+              <a href={link.url}>{link.name ?? 'Link'}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <h2 class="year-heading">Abstract</h2>
+    <p class="prose">{entry.data.abstract}</p>
+
+    <article class="prose"><Content /></article>
+
+    <p class="back-link"><a href="/publications/">← All publications</a></p>
+  </main>
+</Base>

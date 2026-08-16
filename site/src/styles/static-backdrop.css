@@ -139,3 +139,95 @@
   font-weight: 400;
   color: var(--dim);
 }
+
+/*
+ * Rendered Markdown bodies. A measure of about 34rem and generous leading:
+ * these pages are the only place on the site where somebody reads more than
+ * three sentences at a stretch.
+ */
+.prose {
+  max-width: 34rem;
+  margin: 2rem 0 3rem;
+  color: var(--dim);
+  font-size: 0.98rem;
+  line-height: 1.78;
+}
+
+.prose h2,
+.prose h3 {
+  margin: 2.6rem 0 0.9rem;
+  color: var(--paper);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.prose h2 { font-size: 1.35rem; }
+.prose h3 { font-size: 1.1rem; }
+.prose p { margin: 0 0 1.2rem; }
+
+.prose strong {
+  color: var(--paper);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.prose a:hover { border-color: var(--gold); }
+
+.prose ul,
+.prose ol {
+  margin: 0 0 1.2rem;
+  padding-left: 1.2rem;
+}
+
+.prose li { margin: 0 0 0.45rem; }
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.6rem 0;
+  border: 1px solid var(--line);
+}
+
+.prose code {
+  padding: 0.1rem 0.35rem;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  font-size: 0.86em;
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem;
+  background: var(--raised);
+  border: 1px solid var(--line);
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.prose blockquote {
+  margin: 1.6rem 0;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--line);
+  color: var(--muted);
+}
+
+.back-link { margin-top: 3rem; }
+
+.back-link a {
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.back-link a:hover { color: var(--gold); }
