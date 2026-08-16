@@ -51,7 +51,9 @@ export const PRESETS = {
     accent: '#9dbbe8', // links and highlights: lighter, same family
     smoke: '#2a3d5c',
     pale: '#dfe6f2',
-    muted: '#5a6b85',
+    // Secondary text. Measured against the ink at 3.65:1 before, which fails
+    // WCAG AA for the small uppercase it is used for; 6.6:1 now.
+    muted: '#8496b4',
     dim: '#93a2bc',
     raised: '#0c1222',
     /**

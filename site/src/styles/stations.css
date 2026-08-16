@@ -20,9 +20,9 @@
 
 .station-index {
   margin: 0 0 1rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.28em;
-  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.24em;
+  color: var(--dim);
 }
 
 .station-title {
@@ -38,8 +38,8 @@
   display: inline-block;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--line);
-  color: var(--teal);
-  font-size: 0.9rem;
+  color: var(--gold);
+  font-size: 0.98rem;
   text-decoration: none;
   transition:
     color 200ms ease,
@@ -57,10 +57,10 @@
 
 .scroll-hint {
   margin-top: 3.5rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.28em;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--dim);
 }
 
 @media (max-width: 720px) {
@@ -142,5 +142,50 @@ body[data-scene='off'] .page-dots {
 @media (max-width: 720px) {
   .page-dots {
     right: 0.7rem;
+  }
+}
+
+/*
+ * The hero carries the portrait: a name and a line are not recognition.
+ * It comes after the copy in the DOM so a reader meets the words first, and
+ * is ordered to the right visually, opposite the text column.
+ */
+.page-hero {
+  justify-content: space-between;
+  gap: clamp(1.5rem, 5vw, 4rem);
+}
+
+.hero-portrait {
+  order: 2;
+  flex: 0 0 auto;
+}
+
+.hero-portrait img {
+  width: clamp(9rem, 15vw, 15rem);
+  height: auto;
+  border-radius: 50%;
+  filter: grayscale(0.45) contrast(1.05);
+  opacity: 0.94;
+  /* Lifts the circle off a field that may be bright right behind it. */
+  box-shadow: 0 0 0 1px var(--line), 0 18px 60px rgba(0, 0, 0, 0.55);
+}
+
+.page-hero .station-inner {
+  order: 1;
+}
+
+@media (max-width: 720px) {
+  .page-hero {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .hero-portrait {
+    order: 0;
+  }
+
+  .hero-portrait img {
+    width: 7.5rem;
   }
 }

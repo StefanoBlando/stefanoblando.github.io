@@ -39,6 +39,18 @@ const PAGES = pagesOf(JOURNEY).map((index) => ({ ...JOURNEY[index], index }));
           data-page={ordinal}
           id={page.kind === 'contact' ? 'contact' : page.label?.toLowerCase()}
         >
+          {page.kind === 'hero' && (
+            <div class="hero-portrait">
+              <img
+                src="/media/portrait.png"
+                alt="Portrait of Stefano Blando"
+                width="320"
+                height="320"
+                loading="eager"
+              />
+            </div>
+          )}
+
           <div class="station-inner">
             {page.kind === 'hero' && (
               <>

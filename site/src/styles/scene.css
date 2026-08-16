@@ -33,7 +33,7 @@ body[data-scene='off'] #universe {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.5rem clamp(1.1rem, 4vw, 3rem);
-  background: linear-gradient(to bottom, var(--veil), transparent);
+  background: linear-gradient(to bottom, var(--veil) 0%, var(--veil-mid) 55%, transparent 100%);
 }
 
 .wordmark {
@@ -55,10 +55,10 @@ body[data-scene='off'] #universe {
 }
 
 .masthead-nav a {
-  color: var(--muted);
+  color: var(--dim);
   text-decoration: none;
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   transition: color 0.25s ease;
 }
@@ -77,9 +77,10 @@ body[data-scene='off'] #universe {
   pointer-events: none;
   background: linear-gradient(
     to right,
-    rgba(var(--scrim-rgb), 0.9) 0%,
-    rgba(var(--scrim-rgb), 0.55) 34%,
-    rgba(var(--scrim-rgb), 0) 66%
+    rgba(var(--scrim-rgb), 0.96) 0%,
+    rgba(var(--scrim-rgb), 0.82) 30%,
+    rgba(var(--scrim-rgb), 0.4) 55%,
+    rgba(var(--scrim-rgb), 0) 78%
   );
   transition: none;
 }
