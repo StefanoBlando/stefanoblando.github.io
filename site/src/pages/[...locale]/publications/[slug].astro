@@ -1,33 +1,130 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Base from '../../layouts/Base.astro';
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { citationFor } from '../../../lib/citation.js';
+import { collectionFor, translationsOf } from '../../../i18n/content.js';
+import { useTranslations, localise, LANGS } from '../../../i18n/ui.js';
+import { localePaths } from '../../../i18n/routes.js';
 
 export async function getStaticPaths() {
-  const publications = await getCollection('publications');
-  return publications.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const byLang = Object.fromEntries(
+    await Promise.all(LANGS.map(async (lang) => [lang, await collectionFor('publications', lang)])),
+  );
+
+  return localePaths((lang) =>
+    byLang[lang].map((entry) => ({ params: { slug: entry.id }, props: { entry } })),
+  );
 }
 
-const { entry } = Astro.props;
+const { lang, entry } = Astro.props;
+const t = useTranslations(lang);
 const { Content } = await render(entry);
+const { data } = entry;
 
-// `doi` and `url_pdf` are empty on every publication, so an unguarded template
-// would put six dead links on the page. The absence is data about the content.
-const links = entry.data.links.filter((link) => link.url);
+/**
+ * The `cite.bib` that four of these bundles have carried since the migration
+ * without anything ever offering it. Inlined at build time, so the page ships
+ * the citation as text rather than fetching a file for it. One BibTeX entry
+ * serves both languages: a citation is not translated.
+ *
+ * Read through Vite's glob rather than with `fs`: this module is compiled, so
+ * `import.meta.url` points into the build output and every path resolved
+ * against it missed — silently, since a missing file is a valid answer here.
+ */
+const BIBS = import.meta.glob('../../../content/publications/*/cite.bib', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
 
-const year = entry.data.date.getFullYear();
+const bundledBib = BIBS[`../../../content/publications/${entry.id}/cite.bib`] ?? null;
+const cite = citationFor(data, bundledBib);
+
+// A link with no url is a placeholder the Hugo tree carried; an unguarded
+// template would put six dead links on the page. The absence is data.
+const links = data.links.filter((link) => link.url);
+
+const year = data.date.getFullYear();
+const iso = data.date.toISOString().slice(0, 10);
+
+const doiUrl = data.doi ? `https://doi.org/${data.doi}` : null;
+const pdfUrl = data.pdf ? new URL(data.pdf, Astro.site).href : null;
+
+/**
+ * Highwire Press tags — the format Google Scholar actually reads to index a
+ * paper and attach it to its author. Without them a publication page is an
+ * ordinary web page that happens to mention a title, and the site contributes
+ * nothing to the citation record.
+ */
+const citation = [
+  ['citation_title', data.title],
+  ['citation_publication_date', iso.replace(/-/g, '/')],
+  ['citation_journal_title', data.venue],
+  ['citation_language', lang],
+  doiUrl ? ['citation_doi', data.doi] : null,
+  pdfUrl ? ['citation_pdf_url', pdfUrl] : null,
+].filter(Boolean);
+
+/** Schema.org, for everything that reads structured data rather than Highwire. */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ScholarlyArticle',
+  headline: data.title,
+  name: data.title,
+  datePublished: iso,
+  abstract: data.abstract,
+  keywords: data.tags.join(', '),
+  inLanguage: lang,
+  author: data.authors.map((name) => ({ '@type': 'Person', name })),
+  publication: data.venue,
+  url: new URL(Astro.url.pathname, Astro.site).href,
+  ...(doiUrl
+    ? { sameAs: doiUrl, identifier: { '@type': 'PropertyValue', propertyID: 'DOI', value: data.doi } }
+    : {}),
+};
+
+const alternates = await translationsOf('publications', entry.id, (l) =>
+  localise(`/publications/${entry.id}/`, l),
+);
 ---
 
-<Base title={`${entry.data.title} — Stefano Blando`} description={entry.data.summary} scene={false}>
-  <main class="page">
-    <p class="index-meta">{[entry.data.type, year].filter(Boolean).join(' · ')}</p>
-    <h1>{entry.data.title}</h1>
+<Base
+  title={`${data.title} — Stefano Blando`}
+  description={data.summary}
+  scene={false}
+  lang={lang}
+  alternates={alternates}
+  type="article"
+>
+  <Fragment slot="head">
+    {citation.map(([name, content]) => <meta name={name} content={content} />)}
+    {data.authors.map((name) => <meta name="citation_author" content={name} />)}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </Fragment>
 
-    <p class="page-lede">{entry.data.authors.join(', ')}</p>
-    <p class="index-meta">{entry.data.venue}</p>
+  <main class="page page-article">
+    <p class="index-meta">{[data.type, year].filter(Boolean).join(' · ')}</p>
+    <h1>{data.title}</h1>
+
+    <p class="page-lede">{data.authors.join(', ')}</p>
+    <p class="index-meta">{data.venue}</p>
 
     {
-      links.length > 0 && (
+      doiUrl && (
+        <p class="record-doi">
+          DOI <a href={doiUrl}>{data.doi}</a>
+        </p>
+      )
+    }
+
+    {
+      (links.length > 0 || pdfUrl) && (
         <ul class="action-links">
+          {pdfUrl && (
+            <li>
+              <a href={pdfUrl}>PDF →</a>
+            </li>
+          )}
           {links.map((link) => (
             <li>
               <a href={link.url}>{link.name ?? 'Link'} →</a>
@@ -37,11 +134,54 @@ const year = entry.data.date.getFullYear();
       )
     }
 
-    <h2 class="year-heading">Abstract</h2>
-    <p class="prose">{entry.data.abstract}</p>
+    {
+      cite && (
+        <details class="cite">
+          <summary>
+            {t('publications.cite')} {data.type.toLowerCase()}
+            {cite.source === 'generated' && (
+              <span class="cite-note">{t('publications.citeGenerated')}</span>
+            )}
+          </summary>
+          <div class="cite-body">
+            <pre><code>{cite.bibtex}</code></pre>
+            <button
+              class="cite-copy"
+              type="button"
+              data-copy
+              data-copied={t('publications.copied')}
+            >
+              {t('publications.copy')}
+            </button>
+          </div>
+        </details>
+      )
+    }
+
+    <h2 class="year-heading">{t('publications.abstract')}</h2>
+    <p class="prose">{data.abstract}</p>
 
     <article class="prose"><Content /></article>
 
-    <p class="back-link"><a href="/publications/">← All publications</a></p>
+    <p class="back-link">
+      <a href={localise('/publications/', lang)}>{t('publications.back')}</a>
+    </p>
   </main>
+
+  {/* A citation you have to select by hand is a citation nobody takes. */}
+  <script is:inline>
+    (() => {
+      const button = document.querySelector('[data-copy]');
+      if (!button || !navigator.clipboard) return;
+      const bibtex = document.querySelector('.cite-body code').textContent;
+      const idle = button.textContent;
+      button.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(bibtex);
+        button.textContent = button.dataset.copied;
+        setTimeout(() => {
+          button.textContent = idle;
+        }, 1600);
+      });
+    })();
+  </script>
 </Base>

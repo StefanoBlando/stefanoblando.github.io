@@ -1,32 +1,51 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import { Image } from 'astro:assets';
-import Base from '../../layouts/Base.astro';
+import Base from '../../../layouts/Base.astro';
+import { collectionFor, translationsOf } from '../../../i18n/content.js';
+import { useTranslations, localise, LANGS } from '../../../i18n/ui.js';
+import { localePaths } from '../../../i18n/routes.js';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
-  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+  const byLang = Object.fromEntries(
+    await Promise.all(LANGS.map(async (lang) => [lang, await collectionFor('projects', lang)])),
+  );
+
+  return localePaths((lang) =>
+    byLang[lang].map((project) => ({ params: { slug: project.id }, props: { project } })),
+  );
 }
 
-const { project } = Astro.props;
+const { lang, project } = Astro.props;
+const t = useTranslations(lang);
 const { Content } = await render(project);
 
 // Author-supplied links: a blank url renders href="" and reloads the page.
 const links = project.data.links.filter((link) => link.url);
-const covers = import.meta.glob('../../content/projects/*/featured.{png,jpg,jpeg,webp}', {
+
+const covers = import.meta.glob('../../../content/projects/*/featured.{png,jpg,jpeg,webp}', {
   eager: true,
 });
-const cover = Object.entries(covers).find(([path]) => path.includes(`/${project.id}/`))?.[1]?.default;
+const cover = Object.entries(covers).find(([path]) => path.includes(`/${project.id}/`))?.[1]
+  ?.default;
 
+/* Only the languages this project actually exists in, so the switch and the
+   hreflang can never point at a page that is not there. */
+const alternates = await translationsOf('projects', project.id, (l) =>
+  localise(`/projects/${project.id}/`, l),
+);
 ---
 
 <Base
   title={`${project.data.title} — Stefano Blando`}
   description={project.data.summary}
   scene={false}
+  lang={lang}
+  alternates={alternates}
+  type="article"
 >
-  <main class="page">
-    <p class="index-meta">Project</p>
+  <main class="page page-article">
+    <p class="index-meta">{t('nav.projects')}</p>
     <h1>{project.data.title}</h1>
     <p class="page-lede">{project.data.summary}</p>
 
@@ -49,13 +68,15 @@ const cover = Object.entries(covers).find(([path]) => path.includes(`/${project.
     {
       cover && (
         <figure class="detail-cover">
-          <Image src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 900px) 92vw, 62rem" />
+          <Image src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 900px) 92vw, 42rem" />
         </figure>
       )
     }
 
     <article class="prose"><Content /></article>
 
-    <p class="back-link"><a href="/projects/">← All projects</a></p>
+    <p class="back-link">
+      <a href={localise('/projects/', lang)}>{t('projects.back')}</a>
+    </p>
   </main>
 </Base>

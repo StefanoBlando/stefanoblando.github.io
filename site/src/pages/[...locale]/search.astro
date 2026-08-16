@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import { useTranslations, localise } from '../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../i18n/routes.js';
+
+/**
+ * Search, over the index Pagefind builds from `dist/` after Astro has written
+ * it. The UI's script and stylesheet therefore do not exist until that step
+ * has run: in `astro dev` this page is an empty box, and that is expected —
+ * run `npm run build && npm run preview` to try it.
+ *
+ * Pagefind reads the `lang` attribute of each page and keeps one index per
+ * language, so this page finds Italian pages when it is the Italian page.
+ *
+ * `is:inline` on both scripts is not decoration. Without it Astro tries to
+ * resolve `/pagefind/pagefind-ui.js` at build time, when it has not been
+ * generated yet, and the build fails.
+ */
+export function getStaticPaths() {
+  return localePaths();
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base
+  title={t('search.title')}
+  description={t('search.description')}
+  scene={false}
+  lang={lang}
+  alternates={alternatesFor('/search/')}
+  indexed={false}
+>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+
+  <main class="page">
+    <header class="page-head">
+      <p class="page-kicker">{t('search.kicker')}</p>
+      <h1>{t('search.heading')}</h1>
+      <p class="page-lede">{t('search.lede')}</p>
+    </header>
+
+    <div id="search" class="search-box" data-lang={lang} data-placeholder={t('search.placeholder')}>
+    </div>
+
+    <noscript>
+      <p class="cv-note">
+        {t('search.noscript')} <a href={localise('/publications/', lang)}>{t('nav.publications')}</a
+        >, <a href={localise('/projects/', lang)}>{t('nav.projects')}</a> &amp;
+        <a href={localise('/blog/', lang)}>{t('nav.news')}</a>
+        {t('search.noscriptEnd')}
+      </p>
+    </noscript>
+  </main>
+
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof PagefindUI === 'undefined') return;
+      const box = document.getElementById('search');
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: false,
+        pageSize: 8,
+        // One index holds both languages; this is what keeps an Italian
+        // search from answering with English pages.
+        language: box.dataset.lang,
+        translations: { placeholder: box.dataset.placeholder },
+      });
+    });
+  </script>
+</Base>

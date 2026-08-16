@@ -1,5 +1,6 @@
 ---
 import Masthead from '../components/Masthead.astro';
+import { useTranslations, DEFAULT_LANG, localise } from '../i18n/ui.js';
 import '../styles/fonts.css';
 import '../styles/palette.css';
 import '../styles/scene.css';
@@ -10,23 +11,127 @@ import '../styles/static-backdrop.css';
  * `scene` says whether this page carries the 3D engine. Pages that do not get
  * the CSS backdrop instead and ship no 3D JavaScript at all, which is a
  * success criterion of the parent spec rather than an optimisation.
+ *
+ * `lang` is a prop rather than a constant because the site is bilingual and
+ * the Italian routes are the next thing to be built; `alternates` is what
+ * those routes will fill in, and until they exist it stays empty rather than
+ * advertising pages that would 404.
+ *
+ * `image` is the card a shared link shows. It defaults to the site card.
  */
-const { title, description, scene = false, anchorBase = '/' } = Astro.props;
+const {
+  title,
+  description,
+  scene = false,
+  anchorBase = '/',
+  lang = 'en',
+  image = '/media/social-card.png',
+  alternates = [],
+  type = 'website',
+  // Search indexes the reading, not the journey: the homepage is eight labels
+  // and would match every query with none of the answers.
+  indexed = !scene,
+} = Astro.props;
+
+const t = useTranslations(lang);
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
+const SITE_NAME = `Stefano Blando — ${t('home.role')}`;
+
+/**
+ * The facet a result belongs to, taken from where the page lives — and named
+ * in the language of the page. The first path segment is the locale on the
+ * Italian routes, so it is dropped before looking the section up.
+ */
+const SECTION_KEYS = {
+  research: 'nav.research',
+  projects: 'nav.projects',
+  publications: 'nav.publications',
+  blog: 'nav.news',
+  experience: 'nav.experience',
+  network: 'nav.network',
+};
+const segments = Astro.url.pathname.split('/').filter(Boolean);
+const sectionKey = SECTION_KEYS[segments[0] === lang ? segments[1] : segments[0]];
+const section = sectionKey ? t(sectionKey) : null;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#030608" />
+
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${t('nav.news')} — Stefano Blando`}
+      href={localise('/rss.xml', lang)}
+    />
+
+    {/* Emitted only where a translation actually exists. */}
+    {
+      alternates.map((alternate) => (
+        <link rel="alternate" hreflang={alternate.lang} href={new URL(alternate.href, Astro.site)} />
+      ))
+    }
+    {/* The default language is what an unmatched visitor should be sent to. */}
+    {
+      alternates.length > 1 && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(
+            alternates.find((a) => a.lang === DEFAULT_LANG)?.href ?? '/',
+            Astro.site,
+          )}
+        />
+      )
+    }
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content={lang === 'it' ? 'it_IT' : 'en_GB'} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Stefano Blando, AI researcher and PhD candidate" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+
+    {/* Where a publication puts its citation metadata and a page its JSON-LD. */}
+    <slot name="head" />
   </head>
 
   <body data-backdrop={scene ? 'scene' : 'static'}>
     {!scene && <div class="static-backdrop" aria-hidden="true"></div>}
-    <Masthead anchorBase={anchorBase} />
-    <slot />
+    <a class="skip-link" href="#content">{t('nav.skip')}</a>
+    <Masthead anchorBase={anchorBase} lang={lang} alternates={alternates} />
+    {/* An unstyled wrapper purely so the skip link has somewhere to land;
+        it holds no box of its own beyond what its children already had. It
+        also bounds what search indexes, which keeps the nav out of every
+        result. */}
+    <div
+      id="content"
+      tabindex="-1"
+      data-pagefind-body={indexed ? true : undefined}
+      data-pagefind-filter={indexed && section ? `section:${section}` : undefined}
+    >
+      <slot />
+    </div>
+
   </body>
 </html>

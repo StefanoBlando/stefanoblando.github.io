@@ -45,10 +45,10 @@
 }
 
 .page-lede {
-  max-width: 42rem;
+  max-width: 44rem;
   margin: 0 0 3rem;
   color: var(--dim);
-  font-size: 1rem;
+  font-size: 1.1rem;
   line-height: 1.7;
 }
 
@@ -72,14 +72,14 @@
 
 .index-title {
   color: var(--paper);
-  font-size: 1.05rem;
-  line-height: 1.45;
+  font-size: 1.28rem;
+  line-height: 1.35;
 }
 
 .index-summary {
-  color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.65;
+  color: var(--dim);
+  font-size: 1rem;
+  line-height: 1.68;
 }
 
 .index-list a:hover .index-title {
@@ -89,7 +89,8 @@
 .index-meta {
   display: block;
   margin-top: 0.55rem;
-  font-size: 0.72rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--dim);
@@ -105,16 +106,17 @@
 }
 
 .tag-row li {
-  padding: 0.2rem 0.55rem;
+  padding: 0.28rem 0.7rem;
   border: 1px solid var(--line);
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
   color: var(--dim);
 }
 
 .year-heading {
   margin: 3rem 0 0.5rem;
-  font-size: 0.72rem;
+  font-family: var(--mono);
+  font-size: 0.76rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-weight: 400;
@@ -127,11 +129,11 @@
  * three sentences at a stretch.
  */
 .prose {
-  max-width: 34rem;
+  max-width: 36rem;
   margin: 2rem 0 3rem;
   color: var(--dim);
-  font-size: 0.98rem;
-  line-height: 1.78;
+  font-size: 1.06rem;
+  line-height: 1.75;
 }
 
 .prose h2,
@@ -142,8 +144,8 @@
   letter-spacing: -0.01em;
 }
 
-.prose h2 { font-size: 1.35rem; }
-.prose h3 { font-size: 1.1rem; }
+.prose h2 { font-size: 1.55rem; }
+.prose h3 { font-size: 1.24rem; }
 .prose p { margin: 0 0 1.2rem; }
 
 .prose strong {
@@ -205,7 +207,7 @@
 
 .back-link a {
   color: var(--muted);
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
@@ -229,7 +231,7 @@
 .page-kicker {
   margin: 0 0 1.1rem;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--teal);
@@ -243,12 +245,19 @@
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  /* `min(…, 100%)` so the track can go below its ideal width on a narrow
+     phone instead of forcing the page sideways. */
+  grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
   gap: clamp(1.4rem, 3vw, 2.6rem) clamp(1.2rem, 2.5vw, 2rem);
 }
 
+/* A column, so the tag row can be pinned to the foot of the card and every
+   card in a row ends on the same line — which is what was making the grid
+   look accidental, not the titles. */
 .card-link {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   text-decoration: none;
   color: inherit;
 }
@@ -308,34 +317,35 @@
 }
 
 .card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 1.1rem 0 0;
 }
 
 .card-kind {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.55rem;
   font-family: var(--mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.2em;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--teal);
 }
 
 .card-title {
-  /* Two lines whether it needs them or not, so the summaries below start at
-     the same height across a row. Ragged baselines were the one thing making
-     the grid look accidental. */
-  min-height: 2.7em;
-  margin: 0 0 0.5rem;
-  font-size: 1.04rem;
+  /* No forced height any more. It reserved two lines on every card, which
+     opened a hole under every one-line title; the row is squared off at the
+     bottom instead, where the eye actually reads the grid. */
+  margin: 0 0 0.55rem;
+  font-size: 1.24rem;
   font-weight: 400;
-  line-height: 1.35;
+  line-height: 1.3;
   color: var(--paper);
   transition: color 250ms ease;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  /* Never clamped. At the old size two lines held most titles; at this one it
+     cut "Island Model + MultiVeStA — Statistical Model Checking of…" in half,
+     and a title a reader cannot finish is the one thing a card must not do. */
 }
 
 .card-link:hover .card-title {
@@ -344,9 +354,9 @@
 
 .card-summary {
   margin: 0;
-  font-size: 0.84rem;
-  line-height: 1.62;
-  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--dim);
   /* Four lines keeps the grid even without truncating anything meaningful. */
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -354,26 +364,30 @@
   overflow: hidden;
 }
 
+/* `margin-top: auto` is the whole alignment fix: the tags sit on the floor of
+   the card, and the cards stretch to the tallest in their row. */
 .card-tags {
   display: flex;
-  flex-wrap: nowrap;
-  overflow: hidden;
-  gap: 0.35rem;
-  margin: 0.85rem 0 0;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.9rem;
+  margin: 1rem 0 0;
   padding: 0;
   list-style: none;
 }
 
-.card-tags li {
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  color: var(--dim);
+.card-tags {
+  margin-top: auto;
+  padding-top: 1rem;
 }
 
-.card-tags li:not(:last-child)::after {
-  content: ' /';
-  color: var(--line);
+.card-tags li {
+  /* A tag never breaks across lines, which is what produced the stray
+     slashes: the label wrapped while its separator stayed behind. */
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }
 
 /* ---- Records: publications, where there is no image to lead with ------ */
@@ -401,7 +415,7 @@
 /* The year as a rail down the left: a bibliography's own way of being read. */
 .record-year {
   font-family: var(--mono);
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   letter-spacing: 0.06em;
   color: var(--gold);
   padding-top: 0.2rem;
@@ -409,10 +423,10 @@
 
 .record-title {
   display: block;
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
   font-weight: 400;
-  line-height: 1.38;
+  line-height: 1.32;
   color: var(--paper);
   text-decoration: none;
   transition: color 250ms ease;
@@ -423,18 +437,18 @@
 }
 
 .record-venue {
-  margin: 0 0 0.55rem;
+  margin: 0 0 0.6rem;
   font-family: var(--serif);
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 1.08rem;
   color: var(--dim);
 }
 
 .record-authors {
-  margin: 0 0 0.7rem;
-  font-size: 0.82rem;
+  margin: 0 0 0.8rem;
+  font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--muted);
+  color: var(--dim);
 }
 
 .record-authors .is-me {
@@ -444,10 +458,10 @@
 .record-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.9rem;
+  gap: 1rem;
   align-items: baseline;
   font-family: var(--mono);
-  font-size: 0.66rem;
+  font-size: 0.76rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -484,7 +498,122 @@
   }
 }
 
+/* ---- Cite ------------------------------------------------------------- */
+
+.cite {
+  margin: 1.8rem 0 0;
+  max-width: 44rem;
+  border: 1px solid var(--line);
+}
+
+.cite summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.cite summary::-webkit-details-marker {
+  display: none;
+}
+
+.cite[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Said plainly: this entry was built from the metadata, not written by hand. */
+.cite-note {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: none;
+}
+
+.cite-body {
+  padding: 1rem 1.1rem 1.1rem;
+}
+
+.cite-body pre {
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+
+.cite-copy {
+  margin-top: 0.9rem;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.cite-copy:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
 /* ---- Detail pages ----------------------------------------------------- */
+
+/*
+ * One column for an article.
+ *
+ * These pages were running four measures at once: the title to 62rem, the
+ * lede to 44, the cover picture to 62 and the prose to 36 — so the text hung
+ * as a narrow column under a picture half again as wide, sharing neither
+ * edge with it. Everything in the article now takes the same width.
+ *
+ * Left-aligned inside the page rather than centred: the whole site hangs off
+ * one left edge, and a centred column here would read as a different site.
+ */
+.page-article {
+  --measure: 42rem;
+}
+
+.page-article > *,
+.page-article .prose {
+  max-width: var(--measure);
+}
+
+.page-article .page-lede {
+  max-width: var(--measure);
+}
+
+/* The identifier a paper is cited by, set as the instrument output it is. */
+.record-doi {
+  margin: 1.2rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.record-doi a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.record-doi a:hover {
+  border-color: var(--gold);
+}
 
 /* The card promised an image; the page has to deliver it. */
 .detail-cover {
@@ -511,10 +640,10 @@
 
 .action-links a {
   display: inline-block;
-  padding: 0.55rem 1rem;
+  padding: 0.62rem 1.1rem;
   border: 1px solid var(--line);
   color: var(--paper);
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   letter-spacing: 0.03em;
   text-decoration: none;
   transition:
@@ -527,4 +656,492 @@
   border-color: var(--gold);
   color: var(--gold);
   background: var(--tint);
+}
+
+/* ---- Search ------------------------------------------------------------
+ *
+ * Pagefind ships its own widget with its own light theme. These are the
+ * variables it exposes; without them the search box arrives as a white card
+ * dropped onto a dark page.
+ */
+
+.search-box {
+  --pagefind-ui-scale: 0.85;
+  --pagefind-ui-primary: var(--gold);
+  --pagefind-ui-text: var(--paper);
+  --pagefind-ui-background: transparent;
+  --pagefind-ui-border: var(--line);
+  --pagefind-ui-tag: var(--raised);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 0;
+  --pagefind-ui-font: var(--sans);
+  max-width: 46rem;
+}
+
+.search-box .pagefind-ui__search-input {
+  background: var(--raised);
+  color: var(--paper);
+  font-weight: 400;
+}
+
+.search-box .pagefind-ui__result {
+  border-top: 1px solid var(--line);
+  padding: 1.3rem 0;
+}
+
+.search-box .pagefind-ui__result-excerpt {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/*
+ * The widget ships `.pagefind-ui--reset mark { all: revert }`, which hands the
+ * highlight back to the browser default — a yellow block, on a dark page. Both
+ * of these need that class in the selector to outrank it.
+ */
+.search-box .pagefind-ui--reset mark {
+  background: none;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.search-box .pagefind-ui--reset .pagefind-ui__result-link:hover {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.search-box .pagefind-ui__result-tags,
+.search-box .pagefind-ui__filter-name,
+.search-box .pagefind-ui__message {
+  color: var(--dim);
+}
+
+/* ---- Curriculum: the rail, and everything hung off it ------------------ */
+
+/* A section label that carries its own count and rules off to the margin, so
+   a page made of six stacked lists still reads as one document. */
+.cv-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: clamp(3.4rem, 7vw, 5.4rem) 0 clamp(1.6rem, 3vw, 2.4rem);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.cv-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.cv-count {
+  color: var(--gold);
+}
+
+/*
+ * The timeline. The years sit in a fixed left column, the rail runs down the
+ * gap beside them, and each entry is pinned to it by a marker — which is the
+ * one thing the flat list this replaced could not do: show that the entries
+ * are one continuous run rather than six unrelated rows.
+ */
+.cv-timeline {
+  /* Wide enough for "2025 — present" on one line at the current type size.
+     Re-check it if that size changes: it wrapped at 8.5rem. */
+  --rail: 10rem;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-timeline::before {
+  content: '';
+  position: absolute;
+  left: var(--rail);
+  top: 0.55rem;
+  bottom: 0.55rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--line), var(--line) 88%, transparent);
+}
+
+.cv-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail) 1fr;
+  gap: 0 2.4rem;
+  padding: 0 0 clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.cv-entry:last-child {
+  padding-bottom: 0;
+}
+
+.cv-entry::before {
+  content: '';
+  position: absolute;
+  left: var(--rail);
+  top: 0.42rem;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  background: var(--ink);
+}
+
+/* Still running: the only lit marker on the page. */
+.cv-entry.is-current::before {
+  border-color: var(--gold);
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(var(--wash-rgb), 0.55), 0 0 14px var(--gold);
+}
+
+.cv-when {
+  margin: 0;
+  padding-right: 1.1rem;
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.cv-entry.is-current .cv-when {
+  color: var(--gold);
+}
+
+.cv-title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.16rem, 1.7vw, 1.34rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--paper);
+}
+
+.cv-org {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin: 0 0 0.9rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--dim);
+}
+
+.cv-org a {
+  color: var(--dim);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.cv-org a:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.cv-place {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Grades, theses, supervisors: the parts of a degree that are a value against
+   a label, set as one rather than buried in a paragraph. */
+.cv-facts {
+  /* The same measure as the prose below it, so the rules stop where the
+     paragraphs stop instead of running out into the margin. */
+  max-width: 38rem;
+  margin: 0 0 0.9rem;
+}
+
+.cv-fact {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0 1rem;
+  padding: 0.42rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.cv-fact dt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  padding-top: 0.18rem;
+}
+
+.cv-fact dd {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--paper);
+}
+
+.cv-note {
+  max-width: 40rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--dim);
+}
+
+.cv-bullets {
+  max-width: 38rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cv-bullets li {
+  position: relative;
+  padding-left: 1.2rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.98rem;
+  line-height: 1.68;
+  color: var(--dim);
+}
+
+.cv-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 5px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* ---- Awards ----------------------------------------------------------- */
+
+.award-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.award {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0 clamp(1rem, 3vw, 2.4rem);
+  padding: clamp(1.1rem, 2vw, 1.6rem) 0;
+  border-bottom: 1px solid var(--line);
+  transition: background 300ms ease;
+}
+
+.award:hover {
+  background: var(--tint);
+}
+
+.award-year {
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  padding-top: 0.2rem;
+}
+
+.award-title {
+  display: block;
+  margin: 0 0 0.4rem;
+  font-size: 1.16rem;
+  line-height: 1.35;
+  color: var(--paper);
+  text-decoration: none;
+  transition: color 250ms ease;
+}
+
+a.award-title:hover {
+  color: var(--gold);
+}
+
+.award-awarder {
+  margin: 0 0 0.55rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--dim);
+}
+
+.award-summary {
+  max-width: 44rem;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--dim);
+}
+
+/* ---- Skills and languages --------------------------------------------- */
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: clamp(1.8rem, 3.5vw, 2.8rem) clamp(1.6rem, 4vw, 3rem);
+}
+
+.skill-group-name {
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+}
+
+.skill-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.36rem 0;
+  font-size: 0.92rem;
+  color: var(--dim);
+}
+
+.skill-label {
+  line-height: 1.4;
+}
+
+/* Five ticks rather than a bar with a number on it: the claim is a level of
+   fluency, and a percentage would be a precision nobody measured. */
+.meter {
+  display: flex;
+  gap: 4px;
+  flex: none;
+  align-items: center;
+}
+
+.tick {
+  width: 10px;
+  height: 3px;
+  /* Unlit ticks have to be visible enough to be counted and quiet enough not
+     to be mistaken for lit ones — at equal weight the meter read as a dash. */
+  background: rgba(var(--wash-rgb), 0.85);
+}
+
+.tick.is-on {
+  background: var(--gold);
+}
+
+.lang-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem clamp(1.6rem, 4vw, 3rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lang {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.3rem 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.lang-name {
+  grid-column: 1;
+  font-size: 1.02rem;
+  color: var(--paper);
+}
+
+.lang-label {
+  grid-column: 1;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Beside the pair, not above the label it measures. */
+.lang .meter {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+/* ---- The one thing on the page to click through ----------------------- */
+
+.cv-callout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 1.3rem 1.5rem;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  transition:
+    border-color 250ms ease,
+    background 250ms ease;
+}
+
+.cv-callout:hover {
+  border-color: var(--gold);
+  background: var(--tint);
+}
+
+.cv-callout-figure {
+  font-size: 1.14rem;
+  color: var(--paper);
+}
+
+.cv-callout-cta {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Below the fold of a phone the rail moves to the edge and the years go back
+   above the title, which is the only place they still fit. */
+@media (max-width: 640px) {
+  .cv-timeline {
+    --rail: 4px;
+  }
+
+  .cv-entry {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-left: 1.5rem;
+  }
+
+  .cv-when {
+    padding-right: 0;
+    margin-bottom: 0.35rem;
+    text-align: left;
+  }
+
+  .cv-fact {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .award {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
 }

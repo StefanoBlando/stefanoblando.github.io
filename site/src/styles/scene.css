@@ -24,6 +24,30 @@ body[data-scene='off'] #universe {
   display: none;
 }
 
+#content:focus {
+  outline: none;
+}
+
+/* Off-screen until tabbed to, which is the first thing a keyboard reaches. */
+.skip-link {
+  position: fixed;
+  top: 0.6rem;
+  left: 0.6rem;
+  z-index: 60;
+  padding: 0.6rem 1rem;
+  background: var(--raised);
+  border: 1px solid var(--gold);
+  color: var(--paper);
+  font-size: 0.78rem;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 180ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
 .masthead {
   position: fixed;
   inset: 0 0 auto 0;
@@ -33,38 +57,204 @@ body[data-scene='off'] #universe {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.5rem clamp(1.1rem, 4vw, 3rem);
-  background: linear-gradient(to bottom, var(--veil) 0%, var(--veil-mid) 55%, transparent 100%);
+}
+
+/*
+ * The bar is a layer of its own rather than a background on the header, so the
+ * blur and the fade apply to what passes underneath and never to the header's
+ * own type. A gradient alone did not hide anything: a page scrolling past was
+ * legible straight through the top of it.
+ */
+.masthead::before {
+  content: '';
+  position: absolute;
+  /* Hangs below the bar: the fade needs room to finish, and inside the bar's
+     own height it was still ending on legible text. Nothing is clickable
+     through this band, hence pointer-events. */
+  inset: 0 0 -2.2rem 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--veil);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  /* All the fading is done here, so the blur stops where the tint stops and
+     the bar keeps its bottom edge soft over the scene. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 100%);
 }
 
 .wordmark {
+  position: relative;
+  z-index: 1;
   color: var(--paper);
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .wordmark span {
   color: var(--gold);
 }
 
-.masthead-nav {
-  display: flex;
-  gap: 1.4rem;
+.menu {
+  position: relative;
+  z-index: 1;
 }
 
+/* The toggle exists only on a phone; see the media query at the end. */
+.menu-toggle {
+  display: none;
+}
+
+.masthead-nav {
+  display: flex;
+  gap: 1.3rem;
+}
+
+/* Set in the page's own colour rather than in the metadata grey it used to
+   wear: at --dim and 0.74rem the nav read as a caption on the bar instead of
+   as the way around the site. */
 .masthead-nav a {
-  color: var(--dim);
+  position: relative;
+  color: var(--paper);
+  /* Held just under full brightness so that the section you have reached can
+     be brighter than the six you have not. */
+  opacity: 0.76;
   text-decoration: none;
-  font-size: 0.74rem;
-  letter-spacing: 0.14em;
+  font-size: 0.8rem;
+  letter-spacing: 0.11em;
   text-transform: uppercase;
-  transition: color 0.25s ease;
+  transition:
+    color 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .masthead-nav a:hover {
-  color: var(--teal);
+  color: var(--gold);
+  opacity: 1;
+}
+
+/*
+ * The mark under the current item. It grows from the centre rather than
+ * appearing at width, so handing it from one item to the next reads as the
+ * dash travelling along the row — which is what the Hugo site did, at 16px.
+ *
+ * `[aria-current]` unqualified on purpose: `page` is set at build time on the
+ * section you are in, `location` by the homepage as you scroll past a
+ * section. Both mean "here", and both get the dash.
+ */
+.masthead-nav a::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.5rem;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition:
+    width 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 220ms ease;
+  pointer-events: none;
+}
+
+.masthead-nav a:hover::after {
+  width: 10px;
+  opacity: 0.55;
+}
+
+.masthead-nav a[aria-current] {
+  opacity: 1;
+}
+
+.masthead-nav a[aria-current]::after {
+  width: 18px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .masthead-nav a::after {
+    transition: none;
+  }
+}
+
+/* Wide enough for the row: the disclosure is not one. Both rules are needed —
+   engines hide a closed details' contents with `display` or with
+   `content-visibility` depending on their vintage. */
+@media (min-width: 1080px) {
+  .menu > .masthead-nav {
+    display: flex;
+  }
+
+  .menu::details-content {
+    content-visibility: visible;
+    block-size: auto;
+  }
+
+  /* In the row the glass speaks for itself; the word is left for readers who
+     cannot see it. */
+  .nav-icon-link {
+    display: grid;
+    place-items: center;
+  }
+
+  .nav-icon-word {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .nav-icon-link::after {
+    bottom: -0.62rem;
+  }
+}
+
+/* ---- The controls at the end of the row -------------------------------- */
+
+.masthead-tools {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+/* The other language, named in itself — "Italiano", never "IT". A reader
+   looking for their language recognises the word, not the code. */
+.lang-switch {
+  color: var(--paper);
+  opacity: 0.76;
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  transition:
+    color 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.lang-switch:hover {
+  color: var(--gold);
+  opacity: 1;
+}
+
+/* One of the two is shown at a time: in the bar on a desktop, inside the
+   panel on a phone, where the bar has no room for it. */
+.lang-switch-panel {
+  display: none;
+}
+
+.nav-icon {
+  width: 17px;
+  height: 17px;
+  display: block;
 }
 
 /* Readability scrim. The dust fills the whole frame, so the side carrying the
@@ -93,6 +283,33 @@ body[data-scene='off'] #universe {
       rgba(var(--scrim-rgb), 0.55) 45%,
       rgba(var(--scrim-rgb), 0) 100%
     );
+  }
+
+  /*
+   * On a phone the copy is centred vertically, which is exactly where that
+   * gradient has run out — the lede was being read through the brightest part
+   * of the cloud. So the copy carries its own shadow instead of trusting a
+   * fixed layer to be dark in the right place.
+   */
+  .page-panel .station-inner {
+    position: relative;
+  }
+
+  .page-panel .station-inner::before {
+    content: '';
+    position: absolute;
+    /* Sideways it reaches exactly the panel's own padding, so the pocket ends
+       flush with the screen edge and never past it — a round -2rem here put
+       14px of horizontal scroll on the homepage. */
+    inset: -4rem calc(-1 * clamp(1.1rem, 5vw, 4.5rem));
+    z-index: -1;
+    pointer-events: none;
+    background: rgba(var(--scrim-rgb), 0.9);
+    /* `closest-side` is what keeps this seamless: the fade always finishes
+       inside the box, so the pocket has no cut edge. A radial *background*
+       was clipped mid-fade and drew a hard line across the phone. */
+    -webkit-mask-image: radial-gradient(closest-side, #000 0%, #000 58%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 0%, #000 58%, transparent 100%);
   }
 }
 
@@ -149,7 +366,7 @@ main {
   align-items: center;
   gap: 0.6rem;
   margin: 0 0 1.6rem;
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--teal);
@@ -163,10 +380,13 @@ main {
   box-shadow: 0 0 12px var(--gold);
 }
 
+/* The hero name. It sits over a moving field at a distance, which is not the
+   same as sitting on a page: what read as ample on a mock-up read as small
+   on the scene. */
 h1 {
-  margin: 0 0 1.4rem;
-  font-size: clamp(2.1rem, 5vw, 3.9rem);
-  line-height: 1.05;
+  margin: 0 0 1.5rem;
+  font-size: clamp(2.7rem, 6.4vw, 5.4rem);
+  line-height: 1.02;
   letter-spacing: -0.03em;
   font-weight: 500;
 }
@@ -186,59 +406,137 @@ h2 {
 }
 
 .lede {
-  margin: 0 0 2rem;
-  font-size: clamp(0.95rem, 1.2vw, 1.06rem);
-  line-height: 1.66;
-  color: var(--dim);
-}
-
-.timeline {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--line);
-}
-
-.timeline li {
-  display: grid;
-  grid-template-columns: 7rem 1fr;
-  gap: 0.15rem 1rem;
-  padding: 1rem 0.4rem;
-  border-bottom: 1px solid var(--line);
-}
-
-.timeline-years {
-  grid-row: span 2;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  color: var(--gold);
-  padding-top: 0.2rem;
-}
-
-.timeline-degree {
-  font-size: 0.95rem;
-  line-height: 1.34;
-  color: var(--paper);
-}
-
-.timeline-institution {
-  font-size: 0.78rem;
+  margin: 0 0 2.2rem;
+  font-size: clamp(1.06rem, 1.5vw, 1.32rem);
+  line-height: 1.6;
   color: var(--dim);
 }
 
 @media (max-width: 720px) {
-  .work-list a,
-  .timeline li {
+  .work-list a {
     grid-template-columns: 1fr;
   }
 
-  .work-kind,
-  .timeline-years {
+  .work-kind {
     grid-row: auto;
+  }
+}
+
+/*
+ * Measured, not guessed: the wordmark plus eight items at this size need
+ * 1040px before the row touches the wordmark, and 1080 to breathe. Anything
+ * narrower gets the panel — which is a real menu, not a downgrade. Re-measure
+ * whenever an item is added or the type size changes; the last time this was
+ * estimated rather than measured it was wrong by 260px and the row sat
+ * silently cut off across the whole tablet range.
+ *
+ * The bar is given an exact height because the panel is positioned against it.
+ */
+@media (max-width: 1079px) {
+  .masthead {
+    --masthead-height: 3.4rem;
+    height: var(--masthead-height);
+    padding: 0 clamp(1.2rem, 4vw, 3rem);
+    align-items: center;
+  }
+
+  .wordmark {
+    font-size: 0.78rem;
+    letter-spacing: 0.13em;
+  }
+
+  .menu-toggle {
+    display: block;
+    list-style: none;
+    cursor: pointer;
+    padding: 0.3rem 0 0.3rem 0.8rem;
+    color: var(--dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .menu-toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .menu[open] .menu-toggle {
+    color: var(--gold);
+  }
+
+  .menu-label-close,
+  .menu[open] .menu-label-open {
+    display: none;
+  }
+
+  .menu[open] .menu-label-close {
+    display: inline;
   }
 
   .masthead-nav {
-    gap: 0.9rem;
+    position: fixed;
+    inset: var(--masthead-height) 0 auto 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 clamp(1.2rem, 4vw, 3rem) 0.6rem;
+    /* A sheet, not a veil: a menu is the one place on the site where what is
+       behind it does not matter and legibility does. */
+    background: rgba(var(--scrim-rgb), 0.98);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  /* A row you can hit with a thumb, not a line of small caps. */
+  .masthead-nav a {
+    padding: 0.95rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* In the panel the glass sits beside its word: a lone icon in a list of
+     seven labels reads as a mistake. */
+  .nav-icon-link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  /* The language moves into the panel, where there is room for the word. */
+  .lang-switch-bar {
+    display: none;
+  }
+
+  .lang-switch-panel {
+    display: block;
+    padding: 0.95rem 0;
+    border-top: 1px solid var(--line);
+    color: var(--gold);
+    opacity: 1;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* In the panel there is no row to travel along, so the mark is a dot at the
+     end of the current row. */
+  .masthead-nav a::after {
+    left: auto;
+    right: 0;
+    bottom: auto;
+    top: 50%;
+    width: 0;
+    height: 5px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+
+  .masthead-nav a:hover::after,
+  .masthead-nav a[aria-current]::after {
+    width: 5px;
+    opacity: 1;
   }
 }
 

@@ -18,27 +18,36 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
  * comment: naming the old CDN bundle here was enough to make Vite try to
  * resolve it as a dependency and log a resolution failure on every reload.
  */
+import { useTranslations, DEFAULT_LANG } from '../i18n/ui.js';
+
+const { lang = DEFAULT_LANG } = Astro.props;
+const t = useTranslations(lang);
 ---
 
-<section id="collaborators-network-section" class="collaborators-network portfolio-section" aria-labelledby="collaborators-title">
+<section
+  id="collaborators-network-section"
+  class="collaborators-network portfolio-section"
+  aria-labelledby="collaborators-title"
+  data-works-label={t('network.works')}
+>
   <div class="portfolio-section__inner">
     <div class="collaborators-header">
       <div>
-        <p class="portfolio-eyebrow">Research Network</p>
-        <h2 id="collaborators-title">Co-authors & L'EMbeDS Lab Network</h2>
-        <p class="portfolio-section__intro">Faithful CSH Vienna radial network visualization connecting co-authors, PhD supervisors, lab colleagues, and research topics.</p>
+        <p class="portfolio-eyebrow">{t('network.eyebrow')}</p>
+        <h2 id="collaborators-title">{t('network.heading')}</h2>
+        <p class="portfolio-section__intro">{t('network.intro')}</p>
       </div>
 
       <div class="network-controls">
         <div class="network-tabs" role="tablist">
-          <button class="cat-tab active" data-cat="all">All ({PEOPLE.length})</button>
-          <button class="cat-tab" data-cat="faculty">Faculty ({COUNT_BY_CATEGORY.faculty})</button>
-          <button class="cat-tab" data-cat="postdoc">PostDoc &amp; Staff ({COUNT_BY_CATEGORY.postdoc})</button>
-          <button class="cat-tab" data-cat="phd">PhD Candidates ({COUNT_BY_CATEGORY.phd})</button>
+          <button class="cat-tab active" data-cat="all">{t('network.all')} ({PEOPLE.length})</button>
+          <button class="cat-tab" data-cat="faculty">{t('network.faculty')} ({COUNT_BY_CATEGORY.faculty})</button>
+          <button class="cat-tab" data-cat="postdoc">{t('network.postdoc')} ({COUNT_BY_CATEGORY.postdoc})</button>
+          <button class="cat-tab" data-cat="phd">{t('network.phd')} ({COUNT_BY_CATEGORY.phd})</button>
         </div>
         <div class="network-search">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" class="network-search-input" placeholder="Search collaborator..." aria-label="Search collaborator">
+          <input type="text" class="network-search-input" placeholder={t('network.searchPlaceholder')} aria-label={t('network.searchLabel')}>
         </div>
       </div>
     </div>
@@ -46,10 +55,11 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
     <!-- D3 Exact CSH Vienna Network Visualization Container -->
     <div class="network-viz-wrapper" data-reveal>
       <div class="collaborators-d3-container"></div>
+      <p class="network-pan-hint">{t('network.pan')}</p>
 
       <!-- Floating Glassmorphism Detail Card -->
       <div class="network-detail-card hidden" aria-hidden="true">
-        <button class="network-detail-card__close" aria-label="Close card">&times;</button>
+        <button class="network-detail-card__close" aria-label={t('network.close')}>&times;</button>
         <div class="network-detail-card__header">
           <div class="network-detail-card__avatar card-avatar">GF</div>
           <div class="card-header-text" style="flex:1; min-width:0;">
@@ -77,6 +87,23 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
   margin-bottom: 2rem;
 }
 
+/*
+ * This block came over from the Hugo stylesheet, where these variables were
+ * defined. They were not carried across, so every rule below referencing one
+ * was invalid at computed-value time — the tabs, the search field and the card
+ * were taking inherited or initial colours rather than the ones written here.
+ * Mapped onto the site's own palette, which also means they follow the theme.
+ */
+.collaborators-network {
+  --portfolio-bg: var(--ink);
+  --portfolio-surface: var(--raised);
+  --portfolio-text: var(--paper);
+  --portfolio-muted: var(--muted);
+  --portfolio-accent: var(--gold);
+  --portfolio-accent-strong: var(--teal);
+  --portfolio-accent-rgb: 107, 138, 184;
+}
+
 .network-controls {
   display: flex;
   align-items: center;
@@ -86,7 +113,12 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
 
 .network-tabs {
   display: inline-flex;
+  /* Four pills in a pill. On a small phone they wrap rather than push the
+     page sideways, which is why this is not `nowrap`. */
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 4px;
+  max-width: 100%;
   background: var(--portfolio-surface);
   border: 1px solid rgba(var(--portfolio-accent-rgb), 0.2);
   padding: 4px;
@@ -155,6 +187,33 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
   display: flex;
   justify-content: center;
   align-items: center;
+  /* The figure has a minimum working width; narrower than that, it pans.
+     See MIN_FIGURE in the script below. */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--portfolio-accent-rgb), 0.4) transparent;
+}
+
+.collaborators-d3-container > svg {
+  flex: none;
+}
+
+/* Only says anything where the figure is actually wider than its frame. */
+.network-pan-hint {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .network-pan-hint {
+    display: block;
+    margin: 0.7rem 0 0;
+    text-align: center;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--portfolio-muted);
+  }
 }
 
 .csh-person, .csh-topic, .csh-inst, .csh-link {
@@ -299,6 +358,12 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
    */
   const d3 = { ...d3Selection, ...d3Array, ...d3Scale, ...d3Force, ...d3Ease };
 
+  /* The one label this script writes at runtime, carried on the section so the
+     graph speaks the language of the page it is on. */
+  const WORKS_LABEL =
+    document.getElementById('collaborators-network-section')?.dataset.worksLabel ??
+    'Co-authored works';
+
   function initCSHInstance(sectionEl) {
     const container = sectionEl.querySelector('.collaborators-d3-container');
     const detailCard = sectionEl.querySelector('.network-detail-card');
@@ -309,8 +374,18 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
     let data_a = [], data_b = [], data_c = [], data_links = [];
     let selectNode = null, currentCat = 'all';
 
+    /**
+     * Below about 800px the radial layout cannot be drawn without the rings
+     * colliding: the node radius has a floor and fifteen people do not fit on
+     * a circle that small. Scaling the whole figure down instead would take
+     * the labels to four pixels. So the composition keeps its smallest working
+     * width and the container pans, which is the usual treatment for a diagram
+     * wider than the screen.
+     */
+    const MIN_FIGURE = 820;
+
     function dim() {
-      W = container.clientWidth || 960;
+      W = Math.max(container.clientWidth || 960, MIN_FIGURE);
       H = Math.max(840, Math.min(W * 0.85, 920));
       cx = W / 2;
       cy = H / 2;
@@ -319,6 +394,47 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
       r_b = viewSize * 0.35; // People ring!
       r_c = viewSize * 0.45; // External universities ring!
       NR = Math.max(20, Math.min(26, viewSize * 0.038));
+    }
+
+    /**
+     * Separation for boxes rather than for circles.
+     *
+     * The topics are pills — about 200 wide and 30 tall. A circular collision
+     * radius wide enough for the label reserves that much room above and
+     * below it too, which is exactly where the next pill needed to go, so the
+     * core could never resolve. This pushes each overlapping pair apart along
+     * whichever axis needs the least movement, which is what lets flat labels
+     * stack.
+     */
+    function pillCollide(pad = 7, strength = 0.55) {
+      let nodes;
+      function force() {
+        for (let i = 0; i < nodes.length; i += 1) {
+          for (let j = i + 1; j < nodes.length; j += 1) {
+            const a = nodes[i];
+            const b = nodes[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const minX = a.halfW + b.halfW + pad;
+            const minY = a.halfH + b.halfH + pad;
+            const overlapX = minX - Math.abs(dx);
+            const overlapY = minY - Math.abs(dy);
+            if (overlapX <= 0 || overlapY <= 0) continue;
+
+            if (overlapX / minX < overlapY / minY) {
+              const shift = (overlapX / 2) * (dx < 0 ? -1 : 1) * strength;
+              a.vx -= shift;
+              b.vx += shift;
+            } else {
+              const shift = (overlapY / 2) * (dy < 0 ? -1 : 1) * strength;
+              a.vy -= shift;
+              b.vy += shift;
+            }
+          }
+        }
+      }
+      force.initialize = (n) => { nodes = n; };
+      return force;
     }
 
     function topicPath(x1, y1, x2, y2, pull = 0.35) {
@@ -387,18 +503,24 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
         const connected = data_b.filter(p => p.topics.includes(t));
         const meanAngle = d3.mean(connected, p => p.angle) || (i / n_a) * 2 * Math.PI - Math.PI / 2;
 
+        /*
+         * The rings start further out than they used to. The innermost four
+         * are the most connected topics, which are also the longest labels —
+         * on a ring of 0.16 r_b there is not room for one of them, let alone
+         * four, and they stayed overlapped whatever the separation did.
+         */
         let r_factor, slotAngle;
         if (i < 4) {
-          // Ring 0: Inner Core (4 items, 0.16 r_b)
-          r_factor = 0.16;
+          // Ring 0: Inner Core (4 items)
+          r_factor = 0.27;
           slotAngle = meanAngle * 0.4 + (i / 4) * Math.PI * 2;
         } else if (i < 10) {
-          // Ring 1: Middle Core (6 items, 0.33 r_b)
-          r_factor = 0.33;
+          // Ring 1: Middle Core (6 items)
+          r_factor = 0.43;
           slotAngle = meanAngle * 0.5 + ((i - 4) / 6) * Math.PI * 2 + Math.PI / 6;
         } else {
-          // Ring 2: Outer Core (8 items, 0.50 r_b)
-          r_factor = 0.50;
+          // Ring 2: Outer Core (the rest)
+          r_factor = 0.56;
           slotAngle = meanAngle * 0.6 + ((i - 10) / 8) * Math.PI * 2 + Math.PI / 12;
         }
 
@@ -420,22 +542,35 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
       const size_a = d3.scaleLog().domain(d3.extent(data_a, d => d.value) || [1, 5]).range([13.5, 16]);
       data_a.forEach(d => { d.fontSize = size_a(d.value); });
 
-      // Robust Physics Engine for Zero-Overlap
-      const topicSim = d3.forceSimulation(data_a)
-        .force('collide', d3.forceCollide(d => Math.max(d.label.length * 4.9 + 24, 48)).strength(1.0))
-        .force('r', d3.forceRadial(d => d.targetRadius, cx, cy).strength(0.85))
-        .stop();
-      for (let i = 0; i < 600; i++) topicSim.tick();
-
-      // Strict Inner Core Boundary Enforcement: Topics can NEVER exceed 50% of the distance to the people ring!
-      const maxAllowedTopicR = r_b * 0.50;
-      data_a.forEach(n => {
-        const d = Math.hypot(n.x - cx, n.y - cy);
-        if (d > maxAllowedTopicR) {
-          n.x = cx + ((n.x - cx) / d) * maxAllowedTopicR;
-          n.y = cy + ((n.y - cy) / d) * maxAllowedTopicR;
-        }
+      // The pill's own half-extent, estimated from the label the way the
+      // rendered rect is sized from its bbox further down.
+      data_a.forEach(d => {
+        d.halfW = d.label.length * 4 + 13;
+        d.halfH = 16;
       });
+
+      const topicSim = d3.forceSimulation(data_a)
+        .force('separate', pillCollide(7, 0.7))
+        .force('r', d3.forceRadial(d => d.targetRadius, cx, cy).strength(0.18))
+        .stop();
+
+      /*
+       * The boundary is enforced on every tick, not once at the end. Clamping
+       * after the simulation undid the separation the simulation had just
+       * found and dropped every label back into the middle — which is what
+       * made the core a pile of overlapping pills.
+       */
+      const maxAllowedTopicR = r_b * 0.62;
+      for (let i = 0; i < 600; i++) {
+        topicSim.tick();
+        for (const n of data_a) {
+          const d = Math.hypot(n.x - cx, n.y - cy) || 1;
+          if (d > maxAllowedTopicR) {
+            n.x = cx + ((n.x - cx) / d) * maxAllowedTopicR;
+            n.y = cy + ((n.y - cy) / d) * maxAllowedTopicR;
+          }
+        }
+      }
 
       // 3. Unique External Institution Positions (data_c)
       const allExtInsts = data_b.flatMap(p => p.extInst || []);
@@ -774,7 +909,7 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
 
       const papersEl = detailCard.querySelector('.card-papers');
       papersEl.innerHTML = (p.papers && p.papers.length > 0)
-        ? `<h4>Co-authored Works (${p.papers.length}):</h4><ul>${p.papers.map(paper => `<li>${paper}</li>`).join('')}</ul>`
+        ? `<h4>${WORKS_LABEL} (${p.papers.length}):</h4><ul>${p.papers.map(paper => `<li>${paper}</li>`).join('')}</ul>`
         : `<h4>Academic Collaboration:</h4><p class="network-card-note">L'EMbeDS Lab & Research Collaborator</p>`;
 
       detailCard.classList.remove('hidden');
@@ -821,6 +956,10 @@ import { PEOPLE, COUNT_BY_CATEGORY } from '../data/people.js';
       allnodes = landscape.append('g').attr('class', 'allnodes');
 
       setupNetwork(currentCat);
+
+      // When it is panned, it starts on the middle of the figure rather than
+      // on its left edge, where there is nothing.
+      container.scrollLeft = (container.scrollWidth - container.clientWidth) / 2;
 
       svg.on('click', () => {
         selectNode = null;

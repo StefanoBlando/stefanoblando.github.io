@@ -1,28 +1,46 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import { Image } from 'astro:assets';
-import Base from '../../layouts/Base.astro';
+import Base from '../../../layouts/Base.astro';
+import { collectionFor, translationsOf } from '../../../i18n/content.js';
+import { useTranslations, localise, LANGS } from '../../../i18n/ui.js';
+import { localePaths } from '../../../i18n/routes.js';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  const byLang = Object.fromEntries(
+    await Promise.all(LANGS.map(async (lang) => [lang, await collectionFor('blog', lang)])),
+  );
+
+  return localePaths((lang) =>
+    byLang[lang].map((post) => ({ params: { slug: post.id }, props: { post } })),
+  );
 }
 
-const { post } = Astro.props;
+const { lang, post } = Astro.props;
+const t = useTranslations(lang);
 const { Content } = await render(post);
 
-
-const covers = import.meta.glob('../../content/blog/*/featured.{png,jpg,jpeg,webp}', {
+const covers = import.meta.glob('../../../content/blog/*/featured.{png,jpg,jpeg,webp}', {
   eager: true,
 });
 const cover = Object.entries(covers).find(([path]) => path.includes(`/${post.id}/`))?.[1]?.default;
 
+const LOCALES = { en: 'en-GB', it: 'it-IT' };
 const formatDate = (date) =>
-  date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
+  date.toLocaleDateString(LOCALES[lang], { year: 'numeric', month: 'long', day: 'numeric' });
+
+const alternates = await translationsOf('blog', post.id, (l) => localise(`/blog/${post.id}/`, l));
 ---
 
-<Base title={`${post.data.title} — Stefano Blando`} description={post.data.summary} scene={false}>
-  <main class="page">
+<Base
+  title={`${post.data.title} — Stefano Blando`}
+  description={post.data.summary}
+  scene={false}
+  lang={lang}
+  alternates={alternates}
+  type="article"
+>
+  <main class="page page-article">
     <p class="index-meta">{formatDate(post.data.date)}</p>
     <h1>{post.data.title}</h1>
     <p class="page-lede">{post.data.summary}</p>
@@ -34,13 +52,15 @@ const formatDate = (date) =>
     {
       cover && (
         <figure class="detail-cover">
-          <Image src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 900px) 92vw, 62rem" />
+          <Image src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 900px) 92vw, 42rem" />
         </figure>
       )
     }
 
     <article class="prose"><Content /></article>
 
-    <p class="back-link"><a href="/blog/">← All news</a></p>
+    <p class="back-link">
+      <a href={localise('/blog/', lang)}>{t('blog.back')}</a>
+    </p>
   </main>
 </Base>

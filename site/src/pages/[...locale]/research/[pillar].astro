@@ -1,47 +1,66 @@
 ---
-import Base from '../../layouts/Base.astro';
-import universe from '../../data/universe.json';
+import Base from '../../../layouts/Base.astro';
+import pillars from '../../../data/pillars.json';
+import { collectionFor } from '../../../i18n/content.js';
+import { useTranslations, localise } from '../../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../../i18n/routes.js';
 
 export function getStaticPaths() {
-  return universe.clusters.map((cluster) => ({
-    params: { pillar: cluster.id },
-    props: { cluster },
-  }));
+  return localePaths(() => pillars.map((pillar) => ({ params: { pillar: pillar.id }, props: { pillar } })));
 }
 
-const { cluster } = Astro.props;
-const works = universe.nodes.filter((n) => n.cluster === cluster.id);
+const { lang, pillar } = Astro.props;
+const t = useTranslations(lang);
 
-const publications = works.filter((w) => w.kind === 'publication');
-const projects = works.filter((w) => w.kind === 'project');
+/* The works in this pillar, in the language being read: publications declare
+   their pillar, the pillar names its projects. */
+const publications = (await collectionFor('publications', lang)).filter(
+  (entry) => entry.data.pillar === pillar.id,
+);
+const projects = (await collectionFor('projects', lang)).filter((entry) =>
+  pillar.projects.includes(entry.id),
+);
+
+const sections = [
+  { heading: t('nav.publications'), base: '/publications/', entries: publications },
+  { heading: t('nav.projects'), base: '/projects/', entries: projects },
+].filter((section) => section.entries.length > 0);
 ---
 
-<Base title={`${cluster.title} — Stefano Blando`} description={cluster.description} scene={false}>
+<Base
+  title={`${pillar.title[lang]} — Stefano Blando`}
+  description={pillar.description[lang]}
+  scene={false}
+  lang={lang}
+  alternates={alternatesFor(`/research/${pillar.id}/`)}
+>
   <main class="page">
-    <p class="index-meta">{String(cluster.index).padStart(2, '0')} — Research pillar</p>
-    <h1>{cluster.title}</h1>
-    <p class="page-lede">{cluster.description}</p>
+    <p class="index-meta">
+      {String(pillar.index).padStart(2, '0')} — {t('research.heading')}
+    </p>
+    <h1>{pillar.title[lang]}</h1>
+    <p class="page-lede">{pillar.description[lang]}</p>
 
     <ul class="tag-row">
-      {cluster.topics.map((topic) => <li>{topic}</li>)}
+      {pillar.topics[lang].map((topic) => <li>{topic}</li>)}
     </ul>
 
     {/* The long-form paragraph the homepage used to carry, now where it can be read. */}
-    <p class="pillar-detail">{cluster.detailed_text}</p>
+    <p class="pillar-detail">{pillar.detailed_text[lang]}</p>
 
     {
-      publications.length > 0 && (
+      sections.map((section) => (
         <>
-          <h2 class="year-heading">Publications</h2>
+          <h2 class="year-heading">{section.heading}</h2>
           <ul class="index-list">
-            {publications.map((work) => (
+            {section.entries.map((entry) => (
               <li>
-                <a href={work.href}>
-                  <span class="index-title">{work.title}</span>
-                  <span class="index-summary">{work.summary}</span>
+                <a href={localise(`${section.base}${entry.id}/`, lang)}>
+                  <span class="index-title">{entry.data.title}</span>
+                  <span class="index-summary">{entry.data.summary}</span>
                 </a>
                 <ul class="tag-row">
-                  {work.tags.map((tag) => (
+                  {entry.data.tags.slice(0, 4).map((tag) => (
                     <li>{tag}</li>
                   ))}
                 </ul>
@@ -49,32 +68,11 @@ const projects = works.filter((w) => w.kind === 'project');
             ))}
           </ul>
         </>
-      )
+      ))
     }
 
-    {
-      projects.length > 0 && (
-        <>
-          <h2 class="year-heading">Projects</h2>
-          <ul class="index-list">
-            {projects.map((work) => (
-              <li>
-                <a href={work.href}>
-                  <span class="index-title">{work.title}</span>
-                  <span class="index-summary">{work.summary}</span>
-                </a>
-                <ul class="tag-row">
-                  {work.tags.map((tag) => (
-                    <li>{tag}</li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </>
-      )
-    }
-
-    <p class="back-link"><a href="/research/">← All research</a></p>
+    <p class="back-link">
+      <a href={localise('/research/', lang)}>{t('research.back')}</a>
+    </p>
   </main>
 </Base>

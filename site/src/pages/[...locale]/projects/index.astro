@@ -1,16 +1,26 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import WorkCard from '../../components/WorkCard.astro';
+import Base from '../../../layouts/Base.astro';
+import WorkCard from '../../../components/WorkCard.astro';
+import { collectionFor } from '../../../i18n/content.js';
+import { useTranslations, localise } from '../../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../../i18n/routes.js';
 
-const projects = (await getCollection('projects')).sort((a, b) => b.data.date - a.data.date);
+export function getStaticPaths() {
+  return localePaths();
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const projects = (await collectionFor('projects', lang)).sort((a, b) => b.data.date - a.data.date);
 
 /**
  * The bundle images, keyed by slug. They sit beside their Markdown rather than
  * in the frontmatter, which is how Hugo page bundles work and how they were
- * migrated, so they are picked up by path instead of being declared.
+ * migrated, so they are picked up by path instead of being declared. One image
+ * serves both languages — a translation does not need its own photograph.
  */
-const covers = import.meta.glob('../../content/projects/*/featured.{png,jpg,jpeg,webp}', {
+const covers = import.meta.glob('../../../content/projects/*/featured.{png,jpg,jpeg,webp}', {
   eager: true,
 });
 const coverFor = (slug) =>
@@ -18,25 +28,24 @@ const coverFor = (slug) =>
 ---
 
 <Base
-  title="Projects — Stefano Blando"
-  description="Simulations, interfaces and agentic systems built around the research questions."
+  title={t('projects.title')}
+  description={t('projects.description')}
   scene={false}
+  lang={lang}
+  alternates={alternatesFor('/projects/')}
 >
   <main class="page page-wide">
     <header class="page-head">
-      <p class="page-kicker">{projects.length} projects</p>
-      <h1>Research, <em>built</em></h1>
-      <p class="page-lede">
-        Simulations, interfaces and agentic systems built around the research questions — some
-        from the work itself, some from hackathons, some from curiosity.
-      </p>
+      <p class="page-kicker">{projects.length} {t('projects.count')}</p>
+      <h1>{t('projects.headingA')} <em>{t('projects.headingB')}</em></h1>
+      <p class="page-lede">{t('projects.lede')}</p>
     </header>
 
     <div class="card-grid">
       {
         projects.map((project, i) => (
           <WorkCard
-            href={`/projects/${project.id}/`}
+            href={localise(`/projects/${project.id}/`, lang)}
             title={project.data.title}
             summary={project.data.summary}
             tags={project.data.tags}

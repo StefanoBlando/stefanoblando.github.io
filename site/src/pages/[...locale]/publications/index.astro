@@ -1,12 +1,19 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../layouts/Base.astro';
+import Base from '../../../layouts/Base.astro';
+import { collectionFor } from '../../../i18n/content.js';
+import { useTranslations, localise } from '../../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../../i18n/routes.js';
 
-const publications = (await getCollection('publications')).sort(
+export function getStaticPaths() {
+  return localePaths();
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const publications = (await collectionFor('publications', lang)).sort(
   (a, b) => b.data.date - a.data.date,
 );
-
-const years = [...new Set(publications.map((p) => p.data.date.getFullYear()))];
 
 /**
  * Only links that point somewhere. `doi` and `url_pdf` are empty on every
@@ -30,18 +37,17 @@ const authorsHtml = (authors) =>
 ---
 
 <Base
-  title="Publications — Stefano Blando"
-  description="Peer-reviewed papers, conference proceedings, and working papers in computational economics, agent-based modeling, and quantitative finance."
+  title={t('publications.title')}
+  description={t('publications.description')}
   scene={false}
+  lang={lang}
+  alternates={alternatesFor('/publications/')}
 >
   <main class="page">
     <header class="page-head">
-      <p class="page-kicker">{publications.length} publications</p>
-      <h1>Papers and <em>proceedings</em></h1>
-      <p class="page-lede">
-        Peer-reviewed papers, conference proceedings and working papers in computational
-        economics, agent-based modeling and quantitative finance.
-      </p>
+      <p class="page-kicker">{publications.length} {t('publications.count')}</p>
+      <h1>{t('publications.headingA')} <em>{t('publications.headingB')}</em></h1>
+      <p class="page-lede">{t('publications.lede')}</p>
     </header>
 
     <ul class="record-list">
@@ -50,25 +56,25 @@ const authorsHtml = (authors) =>
           <li class="record">
             <span class="record-year">{entry.data.date.getFullYear()}</span>
             <div>
-              <a class="record-title" href={`/publications/${entry.id}/`}>
-                      {entry.data.title}
-                    </a>
-                    <p class="record-venue">{entry.data.venue}</p>
-                    <p class="record-authors" set:html={authorsHtml(entry.data.authors)} />
-                    <div class="record-meta">
-                      <span class="record-type">{entry.data.type}</span>
-                      {linksOf(entry.data).length > 0 && (
-                        <ul class="record-links">
-                          {linksOf(entry.data).map((link) => (
-                            <li>
-                              <a href={link.url}>{link.name ?? 'Link'}</a>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
-                </li>
+              <a class="record-title" href={localise(`/publications/${entry.id}/`, lang)}>
+                {entry.data.title}
+              </a>
+              <p class="record-venue">{entry.data.venue}</p>
+              <p class="record-authors" set:html={authorsHtml(entry.data.authors)} />
+              <div class="record-meta">
+                <span class="record-type">{entry.data.type}</span>
+                {linksOf(entry.data).length > 0 && (
+                  <ul class="record-links">
+                    {linksOf(entry.data).map((link) => (
+                      <li>
+                        <a href={link.url}>{link.name ?? 'Link'}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </li>
         ))
       }
     </ul>

@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import { UI } from '../i18n/ui.js';
+
+/**
+ * The site had no 404 at all: a mistyped or retired URL landed on the host's
+ * own error page, outside the site entirely. This one keeps you inside it and
+ * offers the four places worth going.
+ */
+/*
+ * A static host serves one 404 for the whole site and cannot know which
+ * language the missing address was meant to be in — so this page says it in
+ * both, rather than guessing and being wrong half the time.
+ */
+const SECTIONS = ['research', 'publications', 'projects', 'news'];
+const HREFS = {
+  research: '/research/',
+  publications: '/publications/',
+  projects: '/projects/',
+  news: '/blog/',
+};
+---
+
+<Base
+  title="Not found — Stefano Blando"
+  description="That page does not exist. The research, publications, projects and news are all still here."
+  scene={false}
+  indexed={false}
+>
+  <main class="page">
+    <header class="page-head">
+      <p class="page-kicker">{UI.en['notfound.kicker']}</p>
+      <h1>{UI.en['notfound.headingA']} <em>{UI.en['notfound.headingB']}</em></h1>
+      <p class="page-lede">{UI.en['notfound.lede']}</p>
+      <p class="page-lede" lang="it">{UI.it['notfound.lede']}</p>
+    </header>
+
+    <ul class="index-list">
+      {
+        SECTIONS.map((key) => (
+          <li>
+            <a href={HREFS[key]}>
+              <span class="index-title">{UI.en[`nav.${key}`]}</span>
+              <span class="index-summary">{UI.en[`station.${key}`]}</span>
+            </a>
+          </li>
+        ))
+      }
+      {
+        SECTIONS.map((key) => (
+          <li lang="it">
+            <a href={`/it${HREFS[key]}`}>
+              <span class="index-title">{UI.it[`nav.${key}`]}</span>
+              <span class="index-summary">{UI.it[`station.${key}`]}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Base>

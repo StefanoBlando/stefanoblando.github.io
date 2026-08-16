@@ -1,14 +1,25 @@
 ---
-import Base from '../../layouts/Base.astro';
-import CoauthorNetwork from '../../components/CoauthorNetwork.astro';
+import Base from '../../../layouts/Base.astro';
+import CoauthorNetwork from '../../../components/CoauthorNetwork.astro';
+import { useTranslations } from '../../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../../i18n/routes.js';
+
+export function getStaticPaths() {
+  return localePaths();
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <Base
-  title="Research Network — Stefano Blando"
-  description="Interactive circular visualization connecting researchers, PhD supervisors, lab colleagues, and research topics."
+  title={t('network.title')}
+  description={t('network.description')}
   scene={false}
+  lang={lang}
+  alternates={alternatesFor('/network/')}
 >
   <main class="page page-wide">
-    <CoauthorNetwork />
+    <CoauthorNetwork lang={lang} />
   </main>
 </Base>

@@ -1,26 +1,109 @@
 ---
+import { useTranslations, localise, otherLang, DEFAULT_LANG } from '../i18n/ui.js';
+
 /**
- * The seven-item nav, mirroring config/_default/menus.yaml.
+ * The nav, mirroring config/_default/menus.yaml.
  *
- * `anchorBase` is `/` on every page except the homepage, where the two anchor
- * destinations are on the page you are already reading.
+ * `anchorBase` is `/` on every page except the homepage, where Contact — the
+ * one remaining anchor — is on the page you are already reading.
+ *
+ * Below a small laptop the row becomes a disclosure. It is a `<details>`
+ * rather than a scripted drawer because content pages ship no JavaScript for
+ * navigation, and a menu is not a good reason to change that.
  */
-const { anchorBase = '' } = Astro.props;
+const { anchorBase = '', lang = DEFAULT_LANG, alternates = [] } = Astro.props;
+const t = useTranslations(lang);
 
 const items = [
-  { name: 'Research', href: `${anchorBase}#research` },
-  { name: 'Projects', href: '/projects/' },
-  { name: 'Publications', href: '/publications/' },
-  { name: 'Experience', href: '/experience/' },
-  { name: 'Network', href: '/network/' },
-  { name: 'News', href: '/blog/' },
-  { name: 'Contact', href: `${anchorBase}#contact` },
+  // Research has an index of its own with four pillar pages under it. It used
+  // to point at the homepage's own section, which on every other page meant
+  // "go back to the homepage" — not what the word promises.
+  { key: 'research', href: localise('/research/', lang) },
+  { key: 'projects', href: localise('/projects/', lang) },
+  { key: 'publications', href: localise('/publications/', lang) },
+  { key: 'experience', href: localise('/experience/', lang) },
+  { key: 'network', href: localise('/network/', lang) },
+  { key: 'news', href: localise('/blog/', lang) },
+  { key: 'contact', href: `${anchorBase}#contact` },
+  // Last, and a glass rather than a word: it is a tool, not a destination.
+  // The word still shows inside the phone panel, where a lone icon in a list
+  // of seven labels would read as a mistake.
+  { key: 'search', href: localise('/search/', lang), icon: true },
 ];
+
+/** A section is current on its index and on everything below it. */
+const here = Astro.url.pathname;
+const current = (href) => href.startsWith('/') && here.startsWith(href);
+
+/**
+ * Where the other language's copy of *this* page is. Only offered when it
+ * exists: a switch that lands on a 404 is worse than no switch, and a
+ * translated post is not guaranteed to have been written.
+ */
+const other = otherLang(lang);
+const switchTo = alternates.find((alternate) => alternate.lang === other);
 ---
 
 <header class="masthead">
-  <a class="wordmark" href="/">Stefano Blando<span>.</span></a>
-  <nav class="masthead-nav">
-    {items.map((item) => <a href={item.href}>{item.name}</a>)}
-  </nav>
+  <a class="wordmark" href={localise('/', lang)}>Stefano Blando<span>.</span></a>
+
+  <details class="menu">
+    <summary class="menu-toggle">
+      <span class="menu-label menu-label-open">{t('nav.menu')}</span>
+      <span class="menu-label menu-label-close">{t('nav.close')}</span>
+    </summary>
+    <nav class="masthead-nav">
+      {
+        items.map((item) => (
+          <a
+            href={item.href}
+            class:list={[item.icon && 'nav-icon-link']}
+            aria-current={current(item.href) ? 'page' : undefined}
+          >
+            {item.icon && (
+              <svg class="nav-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.6" />
+                <line
+                  x1="13.4"
+                  y1="13.4"
+                  x2="18"
+                  y2="18"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+            )}
+            <span class:list={[item.icon && 'nav-icon-word']}>{t(`nav.${item.key}`)}</span>
+          </a>
+        ))
+      }
+
+      {/* Inside the panel on a phone, in the bar on a desktop. */}
+      {
+        switchTo && (
+          <a class="lang-switch lang-switch-panel" href={switchTo.href} lang={other} hreflang={other}>
+            {t('lang.switch')}
+          </a>
+        )
+      }
+    </nav>
+  </details>
+
+  <div class="masthead-tools">
+    {
+      switchTo && (
+        <a
+          class="lang-switch lang-switch-bar"
+          href={switchTo.href}
+          lang={other}
+          hreflang={other}
+          aria-label={t('lang.switchLabel')}
+        >
+          {t('lang.switch')}
+        </a>
+      )
+    }
+
+  </div>
 </header>

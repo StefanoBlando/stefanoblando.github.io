@@ -1,60 +1,205 @@
 ---
-import Base from '../../layouts/Base.astro';
-import universe from '../../data/universe.json';
-import { PEOPLE, INSTITUTION_COUNT } from '../../data/people.js';
+import Base from '../../../layouts/Base.astro';
+import resumeEn from '../../../data/resume.json';
+import resumeIt from '../../../data/resume.it.json';
+import { PEOPLE, INSTITUTION_COUNT } from '../../../data/people.js';
+import { useTranslations, localise } from '../../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../../i18n/routes.js';
 
-// Both timelines come from universe.json, which reads the author data file.
-// No collection is involved: this is who I am, not what I published.
-const { education, experience } = universe;
+export function getStaticPaths() {
+  return localePaths();
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+/**
+ * The résumé is generated from the author data files by build-resume.mjs —
+ * one per language, since `me-it.yaml` is a translation of the whole record
+ * rather than of its labels. This is who I am rather than what I published,
+ * so no content collection is involved, and none of it reaches a browser.
+ */
+const resume = lang === 'it' ? resumeIt : resumeEn;
+const { education, experience, awards, skills, languages, since, orcid } = resume;
+
+/** The generator writes "present"; in Italian the page says "oggi". */
+const until = (to) => (to === 'present' ? t('experience.present') : to);
+const level = (n) => `${n} ${t('experience.outOf')}`;
+
+const YEAR_DASH = ' — ';
 ---
 
 <Base
-  title="Experience — Stefano Blando"
-  description="Academic path and professional experience."
+  title={t('experience.title')}
+  description={t('experience.description')}
   scene={false}
+  lang={lang}
+  alternates={alternatesFor('/experience/')}
 >
   <main class="page">
-    <h1>Experience &amp; Education</h1>
-    <p class="page-lede">
-      PhD in Artificial Intelligence at Scuola Superiore Sant'Anna and the University of Pisa,
-      after statistics and philosophy at Tor Vergata.
-    </p>
+    <header class="page-head">
+      <p class="page-kicker">{since}{YEAR_DASH}{t('experience.present')}</p>
+      <h1>{t('experience.headingA')} <em>{t('experience.headingB')}</em></h1>
+      <p class="page-lede">{t('experience.lede')}</p>
+      {/* The two things a CV page is looked up for. The PDF has been sitting
+          in `public/uploads/` unlinked since the migration. */}
+      <ul class="action-links">
+        <li><a href="/uploads/resume.pdf">{t('experience.cv')} →</a></li>
+        <li><a href={`https://orcid.org/${orcid}`}>ORCID {orcid} →</a></li>
+      </ul>
+    </header>
 
-    <h2 class="year-heading">Education</h2>
-    <ul class="timeline">
+    <h2 class="cv-heading">{t('experience.education')} <span class="cv-count">{education.length}</span></h2>
+    <ol class="cv-timeline">
       {
         education.map((entry) => (
-          <li>
-            <span class="timeline-years">
-              {entry.from}–{entry.to}
-            </span>
-            <span class="timeline-degree">{entry.degree}</span>
-            <span class="timeline-institution">{entry.institution}</span>
+          <li class:list={['cv-entry', entry.current && 'is-current']}>
+            <p class="cv-when">
+              {entry.from}
+              {YEAR_DASH}
+              {until(entry.to)}
+            </p>
+            <div class="cv-what">
+              <h3 class="cv-title">{entry.degree}</h3>
+              <p class="cv-org">{entry.institution}</p>
+
+              {entry.facts.length > 0 && (
+                <dl class="cv-facts">
+                  {entry.facts.map((fact) => (
+                    <div class="cv-fact">
+                      <dt>{fact.label}</dt>
+                      <dd>{fact.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+
+              {entry.notes.map((note) => (
+                <p class="cv-note">{note}</p>
+              ))}
+
+              {entry.bullets.length > 0 && (
+                <ul class="cv-bullets">
+                  {entry.bullets.map((bullet) => (
+                    <li>{bullet}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </li>
         ))
       }
-    </ul>
+    </ol>
 
-    <h2 class="year-heading">Experience</h2>
-    <ul class="timeline">
+    <h2 class="cv-heading">{t('experience.experience')} <span class="cv-count">{experience.length}</span></h2>
+    <ol class="cv-timeline">
       {
         experience.map((entry) => (
-          <li>
-            <span class="timeline-years">
-              {entry.from}–{entry.to}
-            </span>
-            <span class="timeline-degree">{entry.role}</span>
-            <span class="timeline-institution">{entry.org}</span>
+          <li class:list={['cv-entry', entry.current && 'is-current']}>
+            <p class="cv-when">
+              {entry.from}
+              {YEAR_DASH}
+              {until(entry.to)}
+            </p>
+            <div class="cv-what">
+              <h3 class="cv-title">{entry.role}</h3>
+              <p class="cv-org">
+                {entry.url ? (
+                  <a href={entry.url} rel="noopener">
+                    {entry.org}
+                  </a>
+                ) : (
+                  entry.org
+                )}
+                {entry.location && <span class="cv-place">{entry.location}</span>}
+              </p>
+
+              {entry.notes.map((note) => (
+                <p class="cv-note">{note}</p>
+              ))}
+
+              {entry.bullets.length > 0 && (
+                <ul class="cv-bullets">
+                  {entry.bullets.map((bullet) => (
+                    <li>{bullet}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <h2 class="cv-heading">{t('experience.awards')} <span class="cv-count">{awards.length}</span></h2>
+    <ul class="award-list">
+      {
+        awards.map((award) => (
+          <li class="award">
+            <span class="award-year">{award.year}</span>
+            <div>
+              {award.url ? (
+                <a class="award-title" href={award.url}>
+                  {award.title}
+                </a>
+              ) : (
+                <span class="award-title">{award.title}</span>
+              )}
+              <p class="award-awarder">{award.awarder}</p>
+              {award.summary && <p class="award-summary">{award.summary}</p>}
+            </div>
           </li>
         ))
       }
     </ul>
 
-    <h2 class="year-heading">Collaboration</h2>
-    <p class="page-lede">
-      <a href="/network/">
-        {PEOPLE.length} co-authors across {INSTITUTION_COUNT} institutions → Explore the network
-      </a>
-    </p>
+    <h2 class="cv-heading">{t('experience.skills')}</h2>
+    <div class="skill-grid">
+      {
+        skills.map((group) => (
+          <section class="skill-group">
+            <h3 class="skill-group-name">{group.name}</h3>
+            <ul class="skill-list">
+              {group.items.map((item) => (
+                <li class="skill">
+                  <span class="skill-label">{item.label}</span>
+                  <span class="meter" role="img" aria-label={level(item.level)}>
+                    {[1, 2, 3, 4, 5].map((tick) => (
+                      <i class:list={['tick', tick <= item.level && 'is-on']} />
+                    ))}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+
+    <h2 class="cv-heading">{t('experience.languages')}</h2>
+    <ul class="lang-row">
+      {
+        languages.map((language) => (
+          <li class="lang">
+            <span class="lang-name">{language.name}</span>
+            <span class="meter" role="img" aria-label={level(language.level)}>
+              {[1, 2, 3, 4, 5].map((tick) => (
+                <i class:list={['tick', tick <= language.level && 'is-on']} />
+              ))}
+            </span>
+            <span class="lang-label">{language.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 class="cv-heading">{t('experience.collaboration')}</h2>
+    <a class="cv-callout" href={localise('/network/', lang)}>
+      <span class="cv-callout-figure">
+        {PEOPLE.length} {t('experience.coauthors')}, {INSTITUTION_COUNT}{' '}
+        {t('experience.institutions')}
+      </span>
+      <span class="cv-callout-cta">{t('experience.explore')}</span>
+    </a>
   </main>
 </Base>

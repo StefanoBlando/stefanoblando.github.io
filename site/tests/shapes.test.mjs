@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { buildStructure, SHAPE_COUNT } from '../src/engine/structure.js';
 import { PRESETS, ACTIVE } from '../src/engine/palette.js';
 import { buildPages } from '../src/engine/pages.js';
+import { LANGS, useTranslations } from '../src/i18n/ui.js';
 
 const universe = JSON.parse(readFileSync(new URL('../src/data/universe.json', import.meta.url)));
 const COUNT = 350;
@@ -82,12 +83,18 @@ test('every page has a shape and a tint the palette defines', () => {
   }
 });
 
-test('every page that links somewhere has a label and a destination', () => {
+test('every destination names a translated label and a real path', () => {
+  // The words live in the interface dictionary now, so what a page must carry
+  // is a key that resolves in both languages, not the words themselves.
   for (const page of buildPages()) {
     if (page.kind !== 'destination') continue;
-    assert.ok(page.label, 'a destination has no label');
-    assert.match(page.href, /^\/[a-z-]*\/$/, `${page.label} has a suspect href`);
-    assert.ok(page.cta, `${page.label} has no call to action`);
+    assert.ok(page.key, 'a destination has no key');
+    assert.match(page.href, /^\/[a-z-]*\/$/, `${page.key} has a suspect href`);
+    for (const lang of LANGS) {
+      const t = useTranslations(lang);
+      assert.ok(t(`nav.${page.key}`), `${lang}.nav.${page.key} is empty`);
+      assert.ok(t(`station.${page.key}`), `${lang}.station.${page.key} is empty`);
+    }
   }
 });
 

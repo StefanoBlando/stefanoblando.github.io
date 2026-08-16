@@ -1,6 +1,15 @@
 ---
-import Base from '../layouts/Base.astro';
-import { buildPages } from '../engine/pages.js';
+import Base from '../../layouts/Base.astro';
+import { buildPages } from '../../engine/pages.js';
+import { useTranslations, localise } from '../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../i18n/routes.js';
+
+export function getStaticPaths() {
+  return localePaths();
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 
 /**
  * The homepage is one cloud taking eight shapes as you scroll.
@@ -15,14 +24,58 @@ import { buildPages } from '../engine/pages.js';
  * a visitor whose engine failed, gets all the destinations as a plain list.
  */
 const PAGES = buildPages();
+
+const ORCID = '0009-0007-0523-6855';
+const ORCID_URL = `https://orcid.org/${ORCID}`;
+
+/**
+ * Who this site is about, in the form a search engine reads. The `sameAs`
+ * list is what ties the site to the Scholar, GitHub, LinkedIn and ORCID
+ * profiles as one person rather than five unrelated pages — and ORCID is the
+ * one of them that a publisher or a funder will actually resolve.
+ */
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Stefano Blando',
+  jobTitle: 'PhD Candidate in Artificial Intelligence',
+  email: 'mailto:stefano.blando@santannapisa.it',
+  url: new URL('/', Astro.site).href,
+  image: new URL('/media/portrait.png', Astro.site).href,
+  affiliation: [
+    { '@type': 'CollegeOrUniversity', name: 'Scuola Superiore Sant’Anna', url: 'https://www.santannapisa.it' },
+    { '@type': 'CollegeOrUniversity', name: 'University of Pisa', url: 'https://www.unipi.it/' },
+  ],
+  knowsAbout: [
+    'Agent-Based Modeling',
+    'Multi-Agent Systems',
+    'Statistical Model Checking',
+    'Robust Statistics',
+    'Complex Networks',
+    'Economic Simulation',
+  ],
+  identifier: { '@type': 'PropertyValue', propertyID: 'ORCID', value: ORCID_URL },
+  sameAs: [
+    ORCID_URL,
+    'https://github.com/stefano-blando',
+    'https://www.linkedin.com/in/stefano-blando/',
+    'https://scholar.google.com/citations?user=dNbRRG0AAAAJ',
+  ],
+};
 ---
 
 <Base
-  title="Stefano Blando — AI Researcher & PhD Candidate"
-  description="PhD candidate at Scuola Superiore Sant'Anna. Adaptive multi-agent systems, statistical verification, robust quantitative methods, and language models for economic and financial systems."
+  title={t('home.title')}
+  description={t('home.description')}
   scene={true}
   anchorBase=""
+  lang={lang}
+  alternates={alternatesFor('/')}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(person)} is:inline />
+  </Fragment>
+
   <!-- Fixed backdrop. It carries no text and nothing in it is clickable. -->
   <canvas id="universe" aria-hidden="true"></canvas>
 
@@ -35,7 +88,10 @@ const PAGES = buildPages();
         <section
           class={`page-panel page-${page.kind}`}
           data-page={ordinal}
-          id={page.kind === 'contact' ? 'contact' : page.label?.toLowerCase()}
+          {/* The nav item this section belongs to, matched by href so the two
+              lists cannot drift apart. The hero belongs to none. */}
+          data-nav={page.href ?? (page.kind === 'contact' ? '#contact' : undefined)}
+          id={page.kind === 'contact' ? 'contact' : page.key}
         >
           <div class="station-inner">
             {page.kind === 'hero' && (
@@ -50,45 +106,46 @@ const PAGES = buildPages();
                 />
                 <p class="eyebrow">
                   <span class="pip" />
-                  AI Researcher &amp; PhD Candidate
+                  {t('home.role')}
                 </p>
                 <h1>Stefano Blando</h1>
-                <p class="lede">
-                  Adaptive multi-agent systems, statistical verification, and robust
-                  quantitative methods for economic and financial systems.
-                </p>
-                <p class="scroll-hint">Scroll to travel</p>
+                <p class="lede">{t('home.lede')}</p>
+                <p class="scroll-hint">{t('home.scroll')}</p>
               </>
             )}
 
             {page.kind === 'destination' && (
               <>
-                <p class="station-index">{String(ordinal).padStart(2, '0')}</p>
-                <h2 class="station-title">{page.label}</h2>
-                <a class="station-link" href={page.href}>
-                  {page.cta} →
+                <h2 class="station-title">{t(`nav.${page.key}`)}</h2>
+                <a class="station-link" href={localise(page.href, lang)}>
+                  {t(`station.${page.key}`)} →
                 </a>
               </>
             )}
 
             {page.kind === 'contact' && (
               <>
-                <p class="station-index">{String(ordinal).padStart(2, '0')}</p>
-                <h2 class="station-title">Contact</h2>
+                <h2 class="station-title">{t('home.contact')}</h2>
                 <a class="station-link" href="mailto:stefano.blando@santannapisa.it">
                   stefano.blando@santannapisa.it →
                 </a>
-                <ul class="social-row" aria-label="Social profiles">
+                <ul class="social-row" aria-label={t('home.profiles')}>
+                  <li>
+                    <a href={ORCID_URL}>ORCID</a>
+                  </li>
+                  <li>
+                    <a href="https://scholar.google.com/citations?user=dNbRRG0AAAAJ">Scholar</a>
+                  </li>
                   <li>
                     <a href="https://github.com/stefano-blando">GitHub</a>
                   </li>
                   <li>
                     <a href="https://www.linkedin.com/in/stefano-blando/">LinkedIn</a>
                   </li>
-                  <li>
-                    <a href="https://scholar.google.com/citations?user=dNbRRG0AAAAJ">Scholar</a>
-                  </li>
                 </ul>
+                {/* The identifier itself, not only a link to it: it is what a
+                    publisher form asks you to paste. */}
+                <p class="orcid-id">{ORCID}</p>
               </>
             )}
           </div>
@@ -104,17 +161,17 @@ const PAGES = buildPages();
           type="button"
           class="page-dot"
           data-goto={ordinal}
-          aria-label={page.label ?? (page.kind === 'hero' ? 'Start' : 'Contact')}
+          aria-label={page.key ? t(`nav.${page.key}`) : t(page.kind === 'hero' ? 'home.start' : 'home.contact')}
         />
       ))
     }
   </nav>
 
   <script>
-    import universeData from '../data/universe.json';
-    import { UniverseEngine, isWebGLAvailable } from '../engine/index.js';
-    import { installSmoothScroll } from '../engine/smooth-scroll.js';
-    import { installDiagnostics, reportEnvironment, report } from '../engine/diagnostics.js';
+    import universeData from '../../data/universe.json';
+    import { UniverseEngine, isWebGLAvailable } from '../../engine/index.js';
+    import { installSmoothScroll } from '../../engine/smooth-scroll.js';
+    import { installDiagnostics, reportEnvironment, report } from '../../engine/diagnostics.js';
 
     installDiagnostics();
 
@@ -125,6 +182,28 @@ const PAGES = buildPages();
     const dots = [...document.querySelectorAll('.page-dot')];
 
     installSmoothScroll();
+
+    /*
+     * Lighting the section you have reached in the nav.
+     *
+     * Driven by the same position the dots read, so the mark, the dot and the
+     * shape can never disagree — an IntersectionObserver would be a second
+     * opinion about which page you are on. `location` rather than `page`:
+     * you are looking at that section, you are not on that page.
+     */
+    const navLinks = new Map(
+      [...document.querySelectorAll('.masthead-nav a')].map((a) => [a.getAttribute('href'), a]),
+    );
+    const panelNav = panels.map((panel) => panel.dataset.nav ?? null);
+    let marked = null;
+
+    const markNav = (index) => {
+      const href = panelNav[index] ?? null;
+      if (href === marked) return;
+      navLinks.get(marked)?.removeAttribute('aria-current');
+      navLinks.get(href)?.setAttribute('aria-current', 'location');
+      marked = href;
+    };
 
     /**
      * The copy fades as its section leaves the middle of the screen, so the
@@ -138,12 +217,25 @@ const PAGES = buildPages();
       for (const [i, dot] of dots.entries()) {
         dot.classList.toggle('is-current', Math.round(position) === i);
       }
+      markNav(Math.round(position));
     };
 
     if (!isWebGLAvailable()) {
-      // No engine and no stepper: leave an ordinary readable document.
+      // No engine and no stepper: leave an ordinary readable document. The
+      // sections still scroll past, so the nav still follows them — here off
+      // an observer, since there is no engine to report the position.
       document.body.dataset.scene = 'off';
       report({ kind: 'fallback', reason: 'WebGL2 unavailable' });
+
+      const seen = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) markNav(Number(entry.target.dataset.page));
+          }
+        },
+        { rootMargin: '-45% 0px -45%', threshold: 0 },
+      );
+      for (const panel of panels) seen.observe(panel);
     } else {
       document.body.dataset.scene = 'on';
       try {

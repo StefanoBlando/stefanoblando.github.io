@@ -1,49 +1,69 @@
 ---
-import Base from '../../layouts/Base.astro';
-import universe from '../../data/universe.json';
+import Base from '../../../layouts/Base.astro';
+import pillars from '../../../data/pillars.json';
+import { collectionFor } from '../../../i18n/content.js';
+import { useTranslations, localise } from '../../../i18n/ui.js';
+import { localePaths, alternatesFor } from '../../../i18n/routes.js';
 
-const { clusters, nodes } = universe;
-const countIn = (id, kind) => nodes.filter((n) => n.cluster === id && n.kind === kind).length;
+export function getStaticPaths() {
+  return localePaths();
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+/*
+ * The counts come from the content, not from a generated file: a publication
+ * declares its own pillar in frontmatter and a pillar lists its projects, so
+ * counting here is counting the same thing the pillar page will list.
+ */
+const publications = await collectionFor('publications', lang);
+
+const countsFor = (pillar) => [
+  publications.filter((p) => p.data.pillar === pillar.id).length,
+  pillar.projects.length,
+];
 ---
 
 <Base
-  title="Research — Stefano Blando"
-  description="Four connected research pillars: adaptive multi-agent systems, statistical verification, robust quantitative methods, and text analytics."
+  title={t('research.title')}
+  description={t('research.description')}
   scene={false}
+  lang={lang}
+  alternates={alternatesFor('/research/')}
 >
   <main class="page">
-    <h1>Research</h1>
-    <p class="page-lede">
-      Four connected pillars, from simulation design through to empirical validation. Each
-      gathers the papers and the software built around one line of questions.
-    </p>
+    <h1>{t('research.heading')}</h1>
+    <p class="page-lede">{t('research.lede')}</p>
 
     <ul class="index-list">
       {
-        clusters.map((cluster) => (
-          <li>
-            <a href={`/research/${cluster.id}/`}>
-              <span class="index-title">
-                {String(cluster.index).padStart(2, '0')} — {cluster.title}
+        pillars.map((pillar) => {
+          const [publicationCount, projectCount] = countsFor(pillar);
+          return (
+            <li>
+              <a href={localise(`/research/${pillar.id}/`, lang)}>
+                <span class="index-title">
+                  {String(pillar.index).padStart(2, '0')} — {pillar.title[lang]}
+                </span>
+                <span class="index-summary">{pillar.description[lang]}</span>
+              </a>
+              <span class="index-meta">
+                {[
+                  publicationCount > 0 && `${publicationCount} ${t('research.publications')}`,
+                  projectCount > 0 && `${projectCount} ${t('research.projects')}`,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
               </span>
-              <span class="index-summary">{cluster.description}</span>
-            </a>
-            <span class="index-meta">
-              {[
-                countIn(cluster.id, 'publication') > 0 &&
-                  `${countIn(cluster.id, 'publication')} publications`,
-                countIn(cluster.id, 'project') > 0 && `${countIn(cluster.id, 'project')} projects`,
-              ]
-                .filter(Boolean)
-                .join(' · ')}
-            </span>
-            <ul class="tag-row">
-              {cluster.topics.map((topic) => (
-                <li>{topic}</li>
-              ))}
-            </ul>
-          </li>
-        ))
+              <ul class="tag-row">
+                {pillar.topics[lang].map((topic) => (
+                  <li>{topic}</li>
+                ))}
+              </ul>
+            </li>
+          );
+        })
       }
     </ul>
   </main>
