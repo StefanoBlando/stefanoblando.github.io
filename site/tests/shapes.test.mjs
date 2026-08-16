@@ -22,17 +22,41 @@ test('the field is populated, finite and does not collapse', () => {
   assert.ok(max - min > 0.5, `the field spans only ${max - min}`);
 });
 
-test('the field stays within the volume the journey was built against', () => {
-  // The camera stops are derived from the work positions, which sit on a shell
-  // inside this radius. If the field grew, every stop would be framed wrongly
-  // and nothing else would report it.
-  const { positions } = buildStructure(universe, COUNT);
-  let maxRadius = 0;
-  for (let i = 0; i < positions.length; i += 3) {
-    const r = Math.hypot(positions[i], positions[i + 1], positions[i + 2]);
-    if (r > maxRadius) maxRadius = r;
+test('every region is a separate body, and none swallows another', () => {
+  // Two regions overlapping would read as one misshapen blob, and the road
+  // between them would have nowhere to go.
+  const { regions } = buildStructure(universe, COUNT);
+  assert.equal(regions.length, 7);
+  for (let a = 0; a < regions.length; a += 1) {
+    for (let b = a + 1; b < regions.length; b += 1) {
+      const gap = Math.hypot(
+        regions[a].centre[0] - regions[b].centre[0],
+        regions[a].centre[1] - regions[b].centre[1],
+        regions[a].centre[2] - regions[b].centre[2],
+      );
+      const touching = regions[a].radius + regions[b].radius;
+      assert.ok(gap > touching, `${regions[a].id} and ${regions[b].id} overlap`);
+    }
   }
-  assert.ok(maxRadius < 3, `the field reaches ${maxRadius.toFixed(2)}`);
+});
+
+test('a region is as big as what is behind its link', () => {
+  const { regions } = buildStructure(universe, COUNT);
+  const size = (id) => regions.find((r) => r.id === id).size;
+  assert.ok(size('projects') > size('publications'), '13 projects against 6 publications');
+  assert.ok(size('research') > size('news'), '16 works against 7 posts');
+});
+
+test('the particle budget is spent exactly', () => {
+  for (const count of [220, 350]) {
+    const { positions, regions } = buildStructure(universe, count);
+    assert.equal(positions.length, count * 3, `count ${count} produced the wrong buffer`);
+    assert.equal(
+      regions.reduce((sum, r) => sum + r.size, 0),
+      count,
+      `count ${count}: the regions do not add up`,
+    );
+  }
 });
 
 test('the field is deterministic for a given content set', () => {

@@ -33,20 +33,20 @@ test('every destination carries a label, a link and a call to action', () => {
 
 test('there is travelling between destinations, but never a trek', () => {
   // A destination reached in one step is a cut, not a journey; one reached in
-  // six is a page nobody finishes scrolling.
+  // six is a page nobody finishes.
   let sinceLast = 0;
   const legs = [];
-  for (const stop of journey.slice(1, -1)) {
+  for (const stop of journey.slice(1)) {
     sinceLast += 1;
-    if (stop.kind === 'destination') {
+    if (stop.kind === 'destination' || stop.kind === 'contact') {
       legs.push(sinceLast);
       sinceLast = 0;
     }
   }
-  assert.equal(legs.length, 6);
+  assert.equal(legs.length, 7, 'six destinations and the contact page');
   for (const [i, hops] of legs.entries()) {
-    if (i === 0) continue; // the first destination opens the walk
-    assert.ok(hops >= 2 && hops <= 3, `leg ${i} takes ${hops} stops`);
+    if (i === 0) continue; // the first destination opens the road
+    assert.ok(hops >= 2 && hops <= 4, `leg ${i} takes ${hops} stops`);
   }
 });
 
@@ -63,7 +63,7 @@ test('every stop is a finite composition looking somewhere else', () => {
       assert.ok(Number.isFinite(v), `stop ${i} has a non-finite coordinate`);
     }
     const d = distance(stop.position, stop.target);
-    assert.ok(d > 0.5 && d < 14, `stop ${i} looks from ${d.toFixed(2)} away`);
+    assert.ok(d > 0.5 && d < 20, `stop ${i} looks from ${d.toFixed(2)} away`);
   }
 });
 
@@ -72,11 +72,25 @@ test('the journey is deterministic', () => {
   assert.deepEqual(journey, again);
 });
 
-test('the walk stays inside the world the field occupies', () => {
-  // The field reaches a radius of about 2.25; a camera at 20 would be looking
+test('the road stays inside the sky the regions occupy', () => {
+  // The regions sit on a shell of about 5.2; a camera at 30 would be looking
   // at a speck, and nothing else would report it.
   for (const [i, stop] of journey.entries()) {
     const r = Math.hypot(...stop.position);
-    assert.ok(r < 8, `stop ${i} sits at radius ${r.toFixed(2)}`);
+    assert.ok(r < 16, `stop ${i} sits at radius ${r.toFixed(2)}`);
+  }
+});
+
+test('every destination arrives at a different region', () => {
+  const arrivals = journey.filter((s) => s.region !== null).map((s) => s.region);
+  assert.equal(new Set(arrivals).size, arrivals.length, 'two pages share a region');
+  assert.equal(arrivals.length, 7, 'six destinations and contact');
+});
+
+test('the colour changes on arrival, not while travelling', () => {
+  for (let i = 1; i < journey.length; i += 1) {
+    if (journey[i].tint === journey[i - 1].tint) continue;
+    const arrived = journey[i].kind === 'destination' || journey[i].kind === 'contact';
+    assert.ok(arrived, `the tint changes at stop ${i}, which is only travelling`);
   }
 });

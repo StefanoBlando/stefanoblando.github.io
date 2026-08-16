@@ -3,6 +3,7 @@ import { AmbientLayer } from './ambient-layer.js';
 import { Swarm } from './swarm.js';
 import { createPostFX } from './postfx.js';
 import { buildJourney, interpolateStops, pagesOf } from './journey.js';
+import { regionLayout } from './structure.js';
 import { createStepper } from './stepper.js';
 import { clampDelta, damp } from './damping.js';
 
@@ -102,10 +103,12 @@ export class UniverseEngine {
     this.camPos = this.camDesired.clone();
     this.camLook = this.camLookDesired.clone();
 
-    // How lit each work is. Works already passed keep an ember; the one being
-    // arrived at burns full. Damped per frame so nothing switches on abruptly.
-    this.glow = new Float32Array(this.universe.nodes.length);
-    this.glowTarget = new Float32Array(this.universe.nodes.length);
+    // How lit each region is. Regions already passed keep an ember; the one
+    // being arrived at burns full. Damped per frame so nothing switches on
+    // abruptly. One value per region, which is what `owner` indexes.
+    const regionCount = regionLayout(this.universe).length;
+    this.glow = new Float32Array(regionCount);
+    this.glowTarget = new Float32Array(regionCount);
 
     this.pointerSpeed = 0;
     this.lastPointer = null;
@@ -229,31 +232,30 @@ export class UniverseEngine {
   }
 
   /**
-   * Lights the road behind you and the node you are arriving at.
+   * Lights the road behind you and the region you are arriving at.
    *
-   * Everything the journey has already passed keeps a low ember, so the path
-   * reads as travelled rather than as a series of unrelated flashes. The stop
-   * being approached comes up on the same curve as the camera, so the light
-   * arrives exactly when you do.
+   * Everything already passed keeps a low ember, so the road reads as
+   * travelled rather than as a series of unrelated flashes. The region being
+   * approached comes up on the same curve as the camera, so its whole body —
+   * points and the threads inside it — is lit exactly when you arrive.
    */
   aimGlow(from, to, t) {
     const EMBER = 0.28;
     this.glowTarget.fill(0);
 
     for (let i = 0; i <= from; i += 1) {
-      const work = this.journey[i]?.work;
-      if (work != null) this.glowTarget[work] = Math.max(this.glowTarget[work], EMBER);
+      const region = this.journey[i]?.region;
+      if (region != null) this.glowTarget[region] = Math.max(this.glowTarget[region], EMBER);
     }
 
-    const arriving = this.journey[to]?.work;
+    const arriving = this.journey[to]?.region;
     if (arriving != null) {
       this.glowTarget[arriving] = Math.max(this.glowTarget[arriving], EMBER + (1 - EMBER) * t);
     }
 
-    // A destination burns brighter than a stop you merely travelled through.
     const here = this.journey[from];
-    if (here?.work != null && here.kind === 'destination') {
-      this.glowTarget[here.work] = Math.max(this.glowTarget[here.work], 1);
+    if (here?.region != null) {
+      this.glowTarget[here.region] = Math.max(this.glowTarget[here.region], 1);
     }
   }
 

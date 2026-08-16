@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { load as parseYaml } from 'js-yaml';
+import { PEOPLE, INSTITUTION_COUNT } from '../src/data/people.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const CONTENT = join(here, '../src/content');
@@ -241,6 +242,14 @@ const universe = {
   nodes,
   education,
   experience,
+  // The scene sizes each region of the sky by what is behind its link, so it
+  // needs the counts even for the parts that are not works.
+  counts: {
+    coauthors: PEOPLE.length,
+    institutions: INSTITUTION_COUNT,
+    posts: readdirSync(join(CONTENT, 'blog'), { withFileTypes: true }).filter((e) => e.isDirectory())
+      .length,
+  },
 };
 
 mkdirSync(dirname(OUT), { recursive: true });

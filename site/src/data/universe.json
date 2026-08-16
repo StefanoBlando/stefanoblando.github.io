@@ -436,5 +436,10 @@
       "from": "2020",
       "to": "2025"
     }
-  ]
+  ],
+  "counts": {
+    "coauthors": 15,
+    "institutions": 9,
+    "posts": 7
+  }
 }
