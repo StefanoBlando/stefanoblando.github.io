@@ -75,15 +75,72 @@
 }
 
 /*
- * Smooth scrolling. The content is taken out of flow and moved by a damped
- * value; the spacer holds the document's real height so the scrollbar, the
- * keyboard and anchor links keep working. The script sets the height and the
- * transform — these rules only stop the page flashing before it runs.
+ * Pages are stacked in one place and cross-faded; there is no scrolling
+ * document. With the engine off these rules are neutralised below, so the
+ * markup falls back to an ordinary readable list.
  */
-#scroll-content {
-  width: 100%;
+body[data-scene='on'] {
+  overflow: hidden;
+  height: 100vh;
 }
 
-#scroll-spacer {
-  pointer-events: none;
+body[data-scene='on'] .page-panel {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 7rem clamp(1.1rem, 5vw, 4.5rem);
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.page-panel {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 7rem clamp(1.1rem, 5vw, 4.5rem);
+}
+
+/* The journey's progress, and a way to jump. */
+.page-dots {
+  position: fixed;
+  right: clamp(1rem, 2.5vw, 2.2rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+body[data-scene='off'] .page-dots {
+  display: none;
+}
+
+.page-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 300ms ease,
+    border-color 300ms ease,
+    transform 300ms ease;
+}
+
+.page-dot.is-current {
+  background: var(--gold);
+  border-color: var(--gold);
+  transform: scale(1.5);
+}
+
+@media (max-width: 720px) {
+  .page-dots {
+    right: 0.7rem;
+  }
 }

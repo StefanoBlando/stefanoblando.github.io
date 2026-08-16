@@ -1,18 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
 import universe from '../data/universe.json';
-import { buildJourney } from '../engine/journey.js';
+import { buildJourney, pagesOf } from '../engine/journey.js';
 
 /**
- * The homepage is a walk through the graph.
+ * The homepage is a walk through the graph, one page at a time.
  *
- * Every stop is one screen of scroll. Destinations carry a title and a link;
- * the stops between them carry nothing at all — they are the travelling, and
- * the field is the only thing to look at. `data-shape` is the stop index, and
- * the engine resolves it to the same camera composition this list was built
- * from, so the DOM and the camera cannot disagree about where you are.
+ * Two or three gestures advance a page; the flight between them travels the
+ * legs of the walk and always takes the same time. The pages are stacked in
+ * one place and cross-faded by the engine, because there is no scrolling
+ * document any more — handing the pace of the animation to the wheel is what
+ * made it read as chaos.
+ *
+ * Every page is in the markup and readable without JavaScript: a crawler, or
+ * a visitor whose engine failed, gets all the destinations as a plain list.
  */
 const JOURNEY = buildJourney(universe);
+const PAGES = pagesOf(JOURNEY).map((index) => ({ ...JOURNEY[index], index }));
 ---
 
 <Base
@@ -27,20 +31,16 @@ const JOURNEY = buildJourney(universe);
   <div class="tint-wash" aria-hidden="true"></div>
   <div class="scrim" aria-hidden="true"></div>
 
-  <!-- The canvas and the overlays stay outside the scrolled wrapper: a
-       transform makes an element the containing block for its fixed
-       descendants, which would leave them scrolling with the page. -->
-  <div id="scroll-content">
-    <main>
-      {
-      JOURNEY.map((stop, index) => (
+  <main id="pages">
+    {
+      PAGES.map((page, ordinal) => (
         <section
-          class={`station station-${stop.kind}`}
-          data-shape={index}
-          id={stop.kind === 'contact' ? 'contact' : stop.label?.toLowerCase()}
+          class={`page-panel page-${page.kind}`}
+          data-page={ordinal}
+          id={page.kind === 'contact' ? 'contact' : page.label?.toLowerCase()}
         >
           <div class="station-inner">
-            {stop.kind === 'hero' && (
+            {page.kind === 'hero' && (
               <>
                 <p class="eyebrow">
                   <span class="pip" />
@@ -55,19 +55,19 @@ const JOURNEY = buildJourney(universe);
               </>
             )}
 
-            {stop.kind === 'destination' && (
+            {page.kind === 'destination' && (
               <>
-                <p class="station-index">{String(JOURNEY.slice(0, index).filter((s) => s.kind === 'destination').length + 1).padStart(2, '0')}</p>
-                <h2 class="station-title">{stop.label}</h2>
-                <a class="station-link" href={stop.href}>
-                  {stop.cta} →
+                <p class="station-index">{String(ordinal).padStart(2, '0')}</p>
+                <h2 class="station-title">{page.label}</h2>
+                <a class="station-link" href={page.href}>
+                  {page.cta} →
                 </a>
               </>
             )}
 
-            {stop.kind === 'contact' && (
+            {page.kind === 'contact' && (
               <>
-                <p class="station-index">07</p>
+                <p class="station-index">{String(ordinal).padStart(2, '0')}</p>
                 <h2 class="station-title">Contact</h2>
                 <a class="station-link" href="mailto:stefano.blando@santannapisa.it">
                   stefano.blando@santannapisa.it →
@@ -87,46 +87,88 @@ const JOURNEY = buildJourney(universe);
             )}
           </div>
         </section>
-        ))
-      }
-    </main>
-  </div>
-  <div id="scroll-spacer" aria-hidden="true"></div>
+      ))
+    }
+  </main>
+
+  <nav class="page-dots" aria-label="Journey">
+    {
+      PAGES.map((page, ordinal) => (
+        <button
+          type="button"
+          class="page-dot"
+          data-goto={ordinal}
+          aria-label={page.label ?? (page.kind === 'hero' ? 'Start' : 'Contact')}
+        />
+      ))
+    }
+  </nav>
 
   <script>
     import universeData from '../data/universe.json';
     import { UniverseEngine, isWebGLAvailable } from '../engine/index.js';
-    import { installSmoothScroll } from '../engine/smooth-scroll.js';
     import { installDiagnostics, reportEnvironment, report } from '../engine/diagnostics.js';
 
     installDiagnostics();
 
-    // Text and camera on one inertia. Without this the copy moves on the raw
-    // scroll position while the scene glides, and the page reads as two things
-    // bolted together.
-    installSmoothScroll({
-      content: document.getElementById('scroll-content'),
-      spacer: document.getElementById('scroll-spacer'),
-    });
-
     const canvas = document.getElementById('universe');
     reportEnvironment(canvas, universeData);
 
+    const panels = [...document.querySelectorAll('.page-panel')];
+    const dots = [...document.querySelectorAll('.page-dot')];
+
+    /**
+     * A page is fully present only once the flight has arrived. Halfway
+     * between two, both are gone and the field has the screen to itself,
+     * which is the point of travelling.
+     */
+    const paint = (position) => {
+      for (const [i, panel] of panels.entries()) {
+        const presence = Math.max(0, 1 - Math.abs(position - i) * 2.4);
+        panel.style.opacity = String(presence);
+        panel.style.transform = `translateY(${(i - position) * 42}px)`;
+        panel.style.pointerEvents = presence > 0.6 ? 'auto' : 'none';
+        panel.setAttribute('aria-hidden', presence > 0.6 ? 'false' : 'true');
+      }
+      for (const [i, dot] of dots.entries()) {
+        dot.classList.toggle('is-current', Math.round(position) === i);
+      }
+    };
+
     if (!isWebGLAvailable()) {
+      // No engine and no stepper: leave an ordinary readable document.
       document.body.dataset.scene = 'off';
       report({ kind: 'fallback', reason: 'WebGL2 unavailable' });
     } else {
       document.body.dataset.scene = 'on';
       try {
-        new UniverseEngine({
+        const engine = new UniverseEngine({
           canvas,
           universe: universeData,
           quality: window.innerWidth < 780 ? 'low' : 'high',
+          onPage: paint,
           onShape: (state) => {
             if (state.type === 'context-lost') document.body.dataset.scene = 'off';
             else report({ kind: state.type, ...state });
           },
         });
+
+        paint(0);
+
+        for (const dot of dots) {
+          dot.addEventListener('click', () => engine.goToPage(Number(dot.dataset.goto)));
+        }
+
+        // The masthead's two anchors are pages now, not places to scroll to.
+        for (const link of document.querySelectorAll('a[href^="#"]')) {
+          link.addEventListener('click', (event) => {
+            const target = document.getElementById(link.getAttribute('href').slice(1));
+            const ordinal = panels.indexOf(target);
+            if (ordinal < 0) return;
+            event.preventDefault();
+            engine.goToPage(ordinal);
+          });
+        }
       } catch (error) {
         // The page is readable without the scene; never freeze on a dead canvas.
         document.body.dataset.scene = 'off';

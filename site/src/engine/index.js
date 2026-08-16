@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { AmbientLayer } from './ambient-layer.js';
 import { Swarm } from './swarm.js';
 import { createPostFX } from './postfx.js';
-import { pickActiveBlend, readSections } from './sections.js';
-import { buildJourney, interpolateStops } from './journey.js';
+import { buildJourney, interpolateStops, pagesOf } from './journey.js';
+import { createStepper } from './stepper.js';
 import { clampDelta, damp } from './damping.js';
 
 
@@ -21,18 +21,23 @@ export function isWebGLAvailable() {
 /**
  * A journey through one place.
  *
- * The field is fixed in world space and the camera travels between authored
- * stations, one per `[data-shape]` section. Scroll decides where between two
- * stations the camera sits; the same curve carries the colour.
+ * The field is fixed in world space and the camera travels a walk through its
+ * graph. Two or three gestures advance one page; the flight between pages
+ * always takes the same time, passing through the stops on the way, and the
+ * colour and the lighting ride along with it.
  *
- * Nothing here is clickable and nothing here holds text — the stations'
- * titles and links live in the DOM above it.
+ * The pace deliberately does not belong to the input device. Free scrolling
+ * let a trackpad flick cross three stops in a moment, and no amount of care in
+ * the path survives that.
+ *
+ * Nothing here is clickable and nothing here holds text — the pages' titles
+ * and links live in the DOM above it, driven by `onPage`.
  */
 export class UniverseEngine {
-  constructor({ canvas, universe, sectionSelector = '[data-shape]', quality = 'high', onShape } = {}) {
+  constructor({ canvas, universe, quality = 'high', onShape, onPage } = {}) {
     this.canvas = canvas;
     this.universe = universe;
-    this.sectionSelector = sectionSelector;
+    this.onPage = onPage ?? (() => {});
     this.quality = quality;
     this.onShape = onShape ?? (() => {});
 
@@ -90,6 +95,7 @@ export class UniverseEngine {
     // Built from the same universe the page rendered its stops from, so the
     // two cannot disagree about where stop N is.
     this.journey = buildJourney(this.universe);
+    this.pages = pagesOf(this.journey);
     this.waypoint = { from: 0, to: 0, t: 0 };
     this.camDesired = new THREE.Vector3(...this.journey[0].position);
     this.camLookDesired = new THREE.Vector3(...this.journey[0].target);
@@ -123,6 +129,15 @@ export class UniverseEngine {
       });
     }
 
+    // Two or three gestures advance one page; the flight between them always
+    // takes the same time. Handing that pace to the wheel is what made the
+    // journey read as chaos.
+    this.stepper = createStepper({
+      pages: this.pages.length,
+      reducedMotion: this.reducedMotion,
+      onChange: (position) => this.onPage?.(position, this.pages.length),
+    });
+
     this.bindEvents();
     this.readShape();
 
@@ -144,7 +159,6 @@ export class UniverseEngine {
       this.ambient.resize(width / height);
       this.swarm.resize(pixelRatio);
       this.postfx?.setSize(width, height);
-      this.sectionElements = null;
       this.readShape();
     };
 
@@ -177,22 +191,33 @@ export class UniverseEngine {
     this.canvas.addEventListener('webglcontextlost', this.onContextLost);
   }
 
+  /**
+   * Turns the stepper's page position into a place on the journey.
+   *
+   * A page-to-page flight passes through the legs between them, so the camera
+   * traverses the whole span of stops rather than cutting from one page to the
+   * next. Position 2.4 is forty per cent of the way along the flight from page
+   * two to page three, wherever that lands among the stops.
+   */
   readShape() {
-    // Cached: this runs every frame now, and re-querying the DOM sixty times a
-    // second to find eighteen unchanging elements is pure waste.
-    if (!this.sectionElements) {
-      this.sectionElements = [...document.querySelectorAll(this.sectionSelector)];
-    }
-    const { from, to, t, weight } = pickActiveBlend(
-      readSections(this.sectionElements),
-      window.innerHeight,
-    );
+    const pages = this.pages;
+    const position = this.stepper.position;
+    const page = Math.min(pages.length - 2, Math.max(0, Math.floor(position)));
+    const within = Math.min(1, Math.max(0, position - page));
 
-    // Total progress through the document, which drives the radial breath.
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    this.scroll = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0;
+    const start = pages[page];
+    const end = pages[page + 1] ?? start;
+    const stop = start + (end - start) * within;
 
-    this.targetWeight = weight;
+    const from = Math.min(this.journey.length - 1, Math.floor(stop));
+    const to = Math.min(this.journey.length - 1, from + 1);
+    const t = stop - from;
+
+    // Progress through the whole journey, which drives the radial breath.
+    this.scroll = pages.length > 1 ? position / (pages.length - 1) : 0;
+    // Full weight on arrival, easing off while in flight.
+    this.targetWeight = 1 - Math.min(1, Math.abs(position - Math.round(position)) * 2);
+
     this.waypoint = { from, to, t };
     this.applyTint(from, to, t);
     this.aimGlow(from, to, t);
@@ -272,9 +297,9 @@ export class UniverseEngine {
     const dt = clampDelta(this.clock.getDelta());
     if (!this.reducedMotion) this.time += dt;
 
-    // Read every frame rather than on the scroll event. With smooth scrolling
-    // the page keeps moving after the last event fires, and a camera driven by
-    // events alone would stop dead while the text glided on without it.
+    // The flight advances on real time, not on input, and everything else
+    // follows from where it has got to.
+    this.stepper.update(dt);
     this.readShape();
 
     // Heavily damped, as in the reference: the scene must not twitch each time

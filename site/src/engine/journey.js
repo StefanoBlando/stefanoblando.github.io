@@ -406,3 +406,17 @@ export function interpolateStops(journey, from, to, t) {
   ];
   return { position: mix(a.position, b.position), target: mix(a.target, b.target) };
 }
+
+/**
+ * The stops that are pages — everything except the travelling.
+ *
+ * Returns their indices into the journey, so a page-to-page flight knows which
+ * span of stops to fly through: the legs between two pages are the transition,
+ * not destinations of their own.
+ */
+export function pagesOf(journey) {
+  return journey.reduce((pages, stop, index) => {
+    if (stop.kind !== 'leg') pages.push(index);
+    return pages;
+  }, []);
+}
