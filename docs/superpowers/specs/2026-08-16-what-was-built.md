@@ -72,9 +72,20 @@ regenerates the copy, so a wrong rule is fixed by editing the rule.
 describe different work. Pillars are data in `src/data/pillars.yaml`; each
 publication declares its own `pillar:`.
 
+The one thing not in that copy is the person: `data/authors/me.yaml` is still
+the source for degrees, roles, awards, skills and languages, and
+`build-resume.mjs` turns it into `src/data/resume.json`. It is a second file
+rather than more of universe.json because **universe.json is imported by the
+homepage's client script** — anything added to it is downloaded by every
+visitor, and a résumé is read by one page at build time. The summaries in that
+YAML are Hugo markdown, hard wrapped, so `resume-source.mjs` reflows them into
+facts, prose and bullets; that parsing is a pure function with tests, which is
+how the split of "Supervisor: Prof. Alessio Farcomeni" into "Prof" was caught.
+
 ## 5. Pages
 
-37 built. Every internal link resolves — 345 checked.
+**77 built: 39 English, 38 Italian.** Every internal link resolves. The table
+below lists the English paths; each has an `/it/` twin (see §7).
 
 | Route | |
 |---|---|
@@ -83,24 +94,217 @@ publication declares its own `pillar:`.
 | `/projects/` + 13 details | card grid over the migrated cover images |
 | `/publications/` + 6 details | a bibliography: no cards, only one has an image |
 | `/blog/` + 7 details | card grid |
-| `/experience/`, `/network/` | the co-author graph, off the CDN d3 global |
+| `/experience/` | the whole résumé on one rail: degrees, roles, awards, methods, languages |
+| `/network/` | the co-author graph, off the CDN d3 global; its images live in `site/public/images/` and were 404 until they were copied there |
 
 **Content pages ship no 3D JavaScript**, verified per page. The homepage is
-about 149 KB gzip, inside the 150–200 KB the parent spec predicted.
+about 148 KB gzip, inside the 150–200 KB the parent spec predicted.
 
 Type is Fraunces italic and Instrument Sans, both of which the Hugo site already
 self-hosted, with a monospace for anything that is instrument output.
 
-## 6. Still missing, and why it matters
+### The nav
 
-- **Italian.** The 54 `.it.md` files are migrated and present but nothing routes
-  them. The live Hugo site is bilingual, so **there can be no cutover until this
-  exists.** This is the blocking item.
-- **Pagefind.** No search.
+The wordmark and eight items **measure 1040px**, so below 1080px they become a
+`<details>` disclosure — no script, because these pages ship none. That number
+was guessed at 700 first, which left the row silently cut off across the whole
+tablet range: the overflow probe missed it because the masthead is `fixed` and
+overflowing it never grows `document.scrollWidth`. **A layout check that only
+reads the document cannot see inside a fixed element.** Re-measure whenever an
+item is added.
+
+On the homepage the nav follows the scroll: the reached section is lit and
+carries a dash that grows from the centre, as the Hugo site's did. It is driven
+by the same position the page dots read, not by an observer of its own — two
+opinions about which section you are on can disagree, and one of them would be
+wrong on screen.
+
+The bar itself is a blurred layer that hangs below its own box: a gradient
+alone hid nothing, and a page scrolling past was legible straight through the
+top of it. The current section is marked from `Astro.url.pathname`, on its
+index and on everything under it — which is also why `Research` points at
+`/research/` and not at the homepage's own section, as it used to.
+
+### The type on the reading pages
+
+Raised across the board and taken out of the greys, because at the old scale
+the indexes read as captions: card titles 1.04 → 1.24rem, summaries 0.84 →
+0.98rem, publication titles to `clamp(1.2, 1.8vw, 1.45)`, CV notes and bullets
+0.88 → 0.98rem, prose 0.98 → 1.06rem. Body copy moved from `--muted` to
+`--dim`; `--muted` is now only for metadata. Three things were wrong rather
+than merely small:
+
+- **The card grid squared itself off at the wrong end.** `.card-title` reserved
+  two lines on every card so summaries would line up, which opened a hole under
+  every one-line title. The card is a flex column now and the tag row is pinned
+  with `margin-top: auto`, so every card in a row ends on the same line — which
+  is where the eye actually reads a grid — and the title is free.
+- **`.card-title` was clamped to two lines.** At the new size that cut titles
+  mid-word. A title a reader cannot finish is the one thing a card must not do.
+- **The tag separators produced stray slashes.** The row was `nowrap` with a
+  `/` in an `::after`; a long label wrapped inside its `li` while its separator
+  stayed behind. Tags wrap as whole items now, separated by space.
+
+### One column on a detail page
+
+A blog post, a project and a publication were each running **four measures at
+once**: the title to 62rem, the lede to 44, the cover picture to 62 and the
+prose to 36. The text hung as a narrow column under a picture half again as
+wide, sharing neither edge with it. `.page-article` gives the head, the
+picture and the prose a single `--measure`, left-aligned inside the page
+rather than centred — the whole site hangs off one left edge, and a centred
+column here would read as a different site.
+
+### Citing the work
+
+Every publication carries a **Cite** disclosure. Four of the six have their own
+`cite.bib` in the bundle — carried since the migration with nothing ever
+offering it — and those are used verbatim: they are the author's record of how
+the work should be cited, and regenerating them from frontmatter would quietly
+overrule it. The two that live on arXiv get a `@misc` entry built from the
+frontmatter and **labelled as generated**. Anything neither published nor
+preprinted gets no button at all.
+
+The `.bib` files are read through Vite's `import.meta.glob`, not `fs`: the page
+module is compiled, so `import.meta.url` points into the build output and every
+path resolved against it missed — silently, because "no file" is a valid answer
+here and the four citations simply never appeared.
+
+### What the phone was actually missing
+
+Checked at 320, 390 and 768 with a probe that names any element sticking out
+past the viewport — every route is clean at all three. Three things were not:
+
+- **The co-author graph.** Its radial layout has a floor on the node radius,
+  so at 390px fifteen people were drawn on top of each other. It now keeps a
+  minimum working width of 820 and the container pans. Scaling the figure down
+  instead would have taken the labels to four pixels.
+- **The topic core of that graph, at every width.** The boundary clamp ran
+  *after* the collision simulation and undid it. The collision was circular
+  too, which reserves the space above and below a wide flat pill — the space
+  the next pill needs. Rectangular separation, clamped inside the tick loop.
+- **The homepage copy**, read through the brightest part of the cloud: the
+  mobile scrim is a top-down gradient that has run out by the middle of the
+  screen, which is exactly where the copy sits. It now carries its own pocket.
+
+## 6. What a page now tells the outside world
+
+The head used to carry a title and a description and nothing else, so a link
+shared anywhere rendered as a bare URL, and the Hugo site's sitemap, robots,
+404 and feed had no counterpart here. All of that is in `Base.astro` and four
+routes now:
+
+| | |
+|---|---|
+| `astro.config.mjs` | `site:` — every absolute URL resolves against it; `SITE_URL` overrides for a preview deploy |
+| canonical, Open Graph, Twitter | on all 39 pages, off one card generated by `build-brand.mjs` from the site's own portrait and palette |
+| `/sitemap-index.xml`, `/robots.txt` | robots is generated, so it advertises the sitemap of the origin it was built for |
+| `/rss.xml` | the news feed Hugo published at `index.xml`; dropping it silently unsubscribes anyone following |
+| `/404.html` | there was none: a bad URL left the site entirely |
+| `favicon.svg`, `apple-touch-icon.png` | the wordmark's own mark |
+| `citation_*` + `ScholarlyArticle` | Highwire tags are what Google Scholar reads; without them a publication page is a web page that happens to mention a title |
+| `Person` JSON-LD | `sameAs` is what ties the site, Scholar, GitHub and LinkedIn together as one person |
+
+**Search** is Pagefind, indexed from `dist/` after the build (`npm run
+search:index`, wired into `npm run build`). `data-pagefind-body` sits on the
+`#content` wrapper in the layout, so the nav never appears in a result and the
+homepage — eight labels, no answers — is excluded along with `/search/` and the
+404. The section facet is derived from the first path segment. 36 pages
+indexed. The UI's assets only exist after a build: in `astro dev` the search
+page is an empty box, by design.
+
+`lang` is a prop rather than a constant, and `alternates` emits `hreflang` —
+but **it is deliberately inert**: there are no Italian routes yet, and
+advertising alternates that 404 is worse than advertising none.
+
+### One theme, and why the second was withdrawn
+
+The site is dark, full stop. A light theme was built, measured, shipped behind
+a toggle and **removed the same day** — worth recording, because the numbers
+said it should have worked.
+
+Every light value cleared 4.5:1 against its background and the two carrying
+small uppercase cleared 5.8:1, so the text was never the problem. **The
+pictures were.** Every project and post cover is dark artwork on black; on
+paper they read as black slabs punched through the page, and a detail page
+became a white article wrapped around a black rectangle. The co-author graph
+had the same trouble — dark pills, faint emissive threads, drawn for a dark
+field. The homepage could not follow at all: additive blending, bloom and
+additive trails add light to the background, and on white there is none to add.
+
+**A light theme here is a second art direction, not a second palette.** It
+needs new cover images and a recoloured graph first; the CSS is the smallest
+part of that job. The measured values survive in `engine/palette.js` as `LIGHT`
+with that note beside them, unwired, because the measuring was the expensive
+part.
+
+Removing it also took the last JavaScript off the reading pages: **an index or
+a detail page now ships zero inline script and zero external script.** Only the
+publication pages carry one, for the citation copy button.
+
+Cutting that CSS block also cut, unnoticed, the `@media (min-width: 1080px)`
+rule beside it that shows the desktop nav — every page above 1080px lost its
+navigation until a screenshot caught it. **Deleting a region of a stylesheet by
+its start and end markers takes whatever sits between them.**
+
+While mapping the theme it turned out `CoauthorNetwork.astro` referenced seven
+`--portfolio-*` variables **that were never carried over from the Hugo
+stylesheet**. Every rule using one was invalid at computed-value time, so the
+tabs, the search field and the detail card had been taking inherited colours
+all along. They are now defined in terms of the site palette.
+
+## 7. Both languages
+
+**77 pages: 39 English, 38 Italian.** The blocking item is closed.
+
+One page file serves both languages. The whole tree lives under
+`src/pages/[...locale]/`, and `getStaticPaths` returns two entries per route —
+`locale: undefined` for English, which Astro renders at the unprefixed path,
+and `locale: 'it'`. Duplicating twelve routes into an `it/` folder would have
+meant every future change being made twice and one of the two being forgotten.
+
+| | |
+|---|---|
+| Interface | `src/i18n/ui.js`, one dictionary, ~120 keys per language |
+| Content | `index.it.md` beside each original, loaded by parallel collections |
+| Pillars | `pillars.yaml` gained `*_it`; `build-pillars.mjs` emits both |
+| Résumé | `me-it.yaml` was already there; `build-resume.mjs` now writes `resume.it.json` too |
+| Feed | `/rss.xml` and `/it/rss.xml`, over their own posts |
+| Search | Pagefind indexes per `lang` attribute; an Italian search answers with Italian pages |
+
+`tests/i18n.test.mjs` fails the build if a key exists in one language and not
+the other, if any string is blank, or if an English string was copied into the
+Italian and left there. `useTranslations` throws on a missing key rather than
+rendering an empty element — a blank heading is the kind of thing that ships.
+
+**The language switch only appears where the other language exists.** It is
+built from the same `alternates` list that feeds `hreflang`, so it cannot land
+on a 404, and it holds your place: `/blog/vadistat-award-2026/` switches to
+`/it/blog/vadistat-award-2026/` and back, not to the homepage.
+
+Two things worth not re-learning:
+
+- **`export const getStaticPaths = () => …` is not picked up.** Astro hoists
+  the declaration form; with the arrow-const the page renders with
+  `Astro.props` undefined and the build dies on a destructure, naming a
+  compiled chunk rather than the route. Use `export function`.
+- The Italian author file still said `Thesis:`, `Focus:` and `University of
+  Rome Tor Vergata`. Translating a CV means translating its labels, not only
+  its sentences.
+
+## 8. Still missing, and why it matters
+- **DOIs and PDFs.** `doi:` and `pdf:` are in the schema and the page renders
+  them when present; **all six publications have neither.** These cannot be
+  generated — they have to be filled in from the proceedings.
+The CV PDF and the ORCID were on this list and are now linked: `resume.pdf`
+had been sitting unlinked in `public/uploads/` since the migration, and the
+ORCID (`0009-0007-0523-6855`) is in `data/authors/me.yaml`, in the contact
+section, at the head of the Experience page, and in the `Person` JSON-LD as
+both `identifier` and `sameAs`.
 - **The cutover itself.** `netlify.toml` still builds Hugo and publishes
   `public/`. Nothing built here is live.
 
-## 7. Two traps this repository sets
+## 9. Two traps this repository sets
 
 Both cost real time on 2026-08-15 and neither is a bug in the code.
 
@@ -113,7 +317,7 @@ Both cost real time on 2026-08-15 and neither is a bug in the code.
   `<script src="…">` inside a comment in a `.astro` file makes Vite try to
   resolve it as a dependency.
 
-## 8. The reference bundle
+## 10. The reference bundle
 
 `/home/stefano/Scrivania/portfolio-v2-archivio/_nuxt/` holds the reference
 site's compiled bundle. It is a studio's proprietary code and is not licensed
