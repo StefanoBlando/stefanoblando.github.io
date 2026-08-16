@@ -112,25 +112,6 @@
   color: var(--dim);
 }
 
-.index-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 0.8rem 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.76rem;
-}
-
-.index-links a {
-  color: var(--teal);
-  text-decoration: none;
-}
-
-.index-links a:hover {
-  color: var(--gold);
-}
-
 .year-heading {
   margin: 3rem 0 0.5rem;
   font-size: 0.72rem;

@@ -1,5 +1,9 @@
 # Homepage Sections and Index Pages Implementation Plan
 
+> **Superseded.** The homepage design in this document was replaced on 2026-08-16.
+> See `docs/superpowers/specs/2026-08-16-what-was-built.md` for the site as it
+> stands. Kept for the decisions and measurements it records.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Rebuild the Astro homepage on the eleven-band structure of the Hugo landing page, add the five missing index pages, and replace the binary shape switch with a scroll-driven blend.

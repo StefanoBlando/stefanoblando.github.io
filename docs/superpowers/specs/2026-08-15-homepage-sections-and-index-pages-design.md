@@ -1,5 +1,9 @@
 # Homepage Section Structure and Index Pages — Design Spec
 
+> **Superseded.** The homepage design in this document was replaced on 2026-08-16.
+> See `docs/superpowers/specs/2026-08-16-what-was-built.md` for the site as it
+> stands. Kept for the decisions and measurements it records.
+
 **Date:** 2026-08-15
 **Status:** Approved, not yet implemented.
 **Parent:** `2026-08-14-spatial-3d-portfolio-design.md`. This spec covers the first
