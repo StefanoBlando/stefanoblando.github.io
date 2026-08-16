@@ -96,8 +96,7 @@
 
 /* The copy is sticky within its tall section, so it holds the middle of the
    screen while the cloud morphs around it instead of sliding away. */
-.page-panel .station-inner,
-.page-panel .hero-portrait {
+.page-panel .station-inner {
   position: sticky;
   top: 50vh;
   transform: translateY(-50%);
@@ -146,46 +145,20 @@ body[data-scene='off'] .page-dots {
 }
 
 /*
- * The hero carries the portrait: a name and a line are not recognition.
- * It comes after the copy in the DOM so a reader meets the words first, and
- * is ordered to the right visually, opposite the text column.
+ * The portrait sits at the top of the text column, above the role and the
+ * name. Opposite them on the right it read as a separate object floating in
+ * the field; here it belongs to the words it introduces.
  */
-.page-hero {
-  justify-content: space-between;
-  gap: clamp(1.5rem, 5vw, 4rem);
-}
-
 .hero-portrait {
-  order: 2;
-  flex: 0 0 auto;
-}
-
-.hero-portrait img {
-  width: clamp(9rem, 15vw, 15rem);
+  display: block;
+  width: clamp(5rem, 7vw, 6.5rem);
   height: auto;
+  margin: 0 0 1.6rem;
   border-radius: 50%;
   filter: grayscale(0.45) contrast(1.05);
   opacity: 0.94;
   /* Lifts the circle off a field that may be bright right behind it. */
-  box-shadow: 0 0 0 1px var(--line), 0 18px 60px rgba(0, 0, 0, 0.55);
-}
-
-.page-hero .station-inner {
-  order: 1;
-}
-
-@media (max-width: 720px) {
-  .page-hero {
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-  }
-
-  .hero-portrait {
-    order: 0;
-  }
-
-  .hero-portrait img {
-    width: 7.5rem;
-  }
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 14px 44px rgba(0, 0, 0, 0.55);
 }

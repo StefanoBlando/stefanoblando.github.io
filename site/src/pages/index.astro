@@ -37,21 +37,17 @@ const PAGES = buildPages();
           data-page={ordinal}
           id={page.kind === 'contact' ? 'contact' : page.label?.toLowerCase()}
         >
-          {page.kind === 'hero' && (
-            <div class="hero-portrait">
-              <img
-                src="/media/portrait.png"
-                alt="Portrait of Stefano Blando"
-                width="320"
-                height="320"
-                loading="eager"
-              />
-            </div>
-          )}
-
           <div class="station-inner">
             {page.kind === 'hero' && (
               <>
+                <img
+                  class="hero-portrait"
+                  src="/media/portrait.png"
+                  alt="Portrait of Stefano Blando"
+                  width="320"
+                  height="320"
+                  loading="eager"
+                />
                 <p class="eyebrow">
                   <span class="pip" />
                   AI Researcher &amp; PhD Candidate
