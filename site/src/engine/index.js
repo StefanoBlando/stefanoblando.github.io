@@ -3,7 +3,7 @@ import { AmbientLayer } from './ambient-layer.js';
 import { Swarm } from './swarm.js';
 import { createPostFX } from './postfx.js';
 import { pickActiveBlend, readSections } from './sections.js';
-import { WAYPOINTS, interpolateWaypoint } from './waypoints.js';
+import { buildJourney, interpolateStops } from './journey.js';
 import { clampDelta, damp } from './damping.js';
 
 
@@ -86,10 +86,13 @@ export class UniverseEngine {
     this.parallax = new THREE.Vector2();
     this.parallaxTarget = new THREE.Vector2();
 
-    // The camera's station, and where it currently is on the way there.
+    // The walk through the graph, and where the camera currently is on it.
+    // Built from the same universe the page rendered its stops from, so the
+    // two cannot disagree about where stop N is.
+    this.journey = buildJourney(this.universe);
     this.waypoint = { from: 0, to: 0, t: 0 };
-    this.camDesired = new THREE.Vector3(...WAYPOINTS[0].position);
-    this.camLookDesired = new THREE.Vector3(...WAYPOINTS[0].target);
+    this.camDesired = new THREE.Vector3(...this.journey[0].position);
+    this.camLookDesired = new THREE.Vector3(...this.journey[0].target);
     this.camPos = this.camDesired.clone();
     this.camLook = this.camLookDesired.clone();
 
@@ -198,8 +201,11 @@ export class UniverseEngine {
     const tints = palette.tints;
     if (!tints) return;
 
-    const A = tints[from] ?? tints[tints.length - 1];
-    const B = tints[to] ?? tints[tints.length - 1];
+    // Stops share a tint within a leg, so the colour changes on arrival rather
+    // than on every screen of travelling.
+    const zoneOf = (i) => this.journey[i]?.tint ?? 0;
+    const A = tints[zoneOf(from)] ?? tints[tints.length - 1];
+    const B = tints[zoneOf(to)] ?? tints[tints.length - 1];
     if (!A || !B) return;
 
     const mix = (key) =>
@@ -241,7 +247,7 @@ export class UniverseEngine {
     // The camera travels between authored stations. The scroll curve decides
     // where between two it sits; the damping only smooths a fast scroll into
     // a glide, it does not decide the destination.
-    const shot = interpolateWaypoint(this.waypoint.from, this.waypoint.to, this.waypoint.t);
+    const shot = interpolateStops(this.journey, this.waypoint.from, this.waypoint.to, this.waypoint.t);
     this.camDesired.set(shot.position[0], shot.position[1], shot.position[2]);
     this.camLookDesired.set(shot.target[0], shot.target[1], shot.target[2]);
 

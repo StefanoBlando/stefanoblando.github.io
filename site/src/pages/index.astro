@@ -1,15 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
-import { STATIONS } from '../data/stations.js';
+import universe from '../data/universe.json';
+import { buildJourney } from '../engine/journey.js';
 
 /**
- * The homepage is the menu, laid out in space.
+ * The homepage is a walk through the graph.
  *
- * Each station is one screen of a camera journey through a single, unchanging
- * particle field: a title, a link, and a great deal of deliberate emptiness.
- * The reading lives on the pages these point at. `data-shape` is the station
- * index, which the engine resolves to a camera waypoint and a tint.
+ * Every stop is one screen of scroll. Destinations carry a title and a link;
+ * the stops between them carry nothing at all — they are the travelling, and
+ * the field is the only thing to look at. `data-shape` is the stop index, and
+ * the engine resolves it to the same camera composition this list was built
+ * from, so the DOM and the camera cannot disagree about where you are.
  */
+const JOURNEY = buildJourney(universe);
 ---
 
 <Base
@@ -26,10 +29,10 @@ import { STATIONS } from '../data/stations.js';
 
   <main>
     {
-      STATIONS.map((station) => (
-        <section class={`station station-${station.kind ?? 'link'}`} data-shape={station.shape}>
+      JOURNEY.map((stop, index) => (
+        <section class={`station station-${stop.kind}`} data-shape={index}>
           <div class="station-inner">
-            {station.kind === 'hero' && (
+            {stop.kind === 'hero' && (
               <>
                 <p class="eyebrow">
                   <span class="pip" />
@@ -44,17 +47,17 @@ import { STATIONS } from '../data/stations.js';
               </>
             )}
 
-            {station.kind === undefined && (
+            {stop.kind === 'destination' && (
               <>
-                <p class="station-index">{String(station.shape).padStart(2, '0')}</p>
-                <h2 class="station-title">{station.label}</h2>
-                <a class="station-link" href={station.href}>
-                  {station.cta} →
+                <p class="station-index">{String(JOURNEY.slice(0, index).filter((s) => s.kind === 'destination').length + 1).padStart(2, '0')}</p>
+                <h2 class="station-title">{stop.label}</h2>
+                <a class="station-link" href={stop.href}>
+                  {stop.cta} →
                 </a>
               </>
             )}
 
-            {station.kind === 'contact' && (
+            {stop.kind === 'contact' && (
               <>
                 <p class="station-index">07</p>
                 <h2 class="station-title">Contact</h2>
