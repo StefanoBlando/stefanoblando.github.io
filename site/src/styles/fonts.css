@@ -1,0 +1,38 @@
+/*
+ * The two faces the site already had. Self-hosted, as they were under Hugo:
+ * Instrument Sans for everything read, Fraunces italic for the moments that
+ * carry the voice — a name, an emphasis, a number.
+ *
+ * Only Fraunces' italic exists in the repository, which is why it is used as
+ * an accent and never for a paragraph.
+ */
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('/fonts/instrument-sans-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('/fonts/instrument-sans-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-italic.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --serif: 'Fraunces', Georgia, serif;
+  /* Metadata reads as instrument output, not as prose. */
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+}

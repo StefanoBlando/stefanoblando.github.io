@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
@@ -9,6 +10,12 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+
+const covers = import.meta.glob('../../content/blog/*/featured.{png,jpg,jpeg,webp}', {
+  eager: true,
+});
+const cover = Object.entries(covers).find(([path]) => path.includes(`/${post.id}/`))?.[1]?.default;
 
 const formatDate = (date) =>
   date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -23,6 +30,14 @@ const formatDate = (date) =>
     <ul class="tag-row">
       {post.data.tags.map((tag) => <li>{tag}</li>)}
     </ul>
+
+    {
+      cover && (
+        <figure class="detail-cover">
+          <Image src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 900px) 92vw, 62rem" />
+        </figure>
+      )
+    }
 
     <article class="prose"><Content /></article>
 

@@ -27,10 +27,10 @@ const year = entry.data.date.getFullYear();
 
     {
       links.length > 0 && (
-        <ul class="index-links">
+        <ul class="action-links">
           {links.map((link) => (
             <li>
-              <a href={link.url}>{link.name ?? 'Link'}</a>
+              <a href={link.url}>{link.name ?? 'Link'} →</a>
             </li>
           ))}
         </ul>

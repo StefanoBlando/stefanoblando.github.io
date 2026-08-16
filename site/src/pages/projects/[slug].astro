@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
@@ -12,6 +13,11 @@ const { Content } = await render(project);
 
 // Author-supplied links: a blank url renders href="" and reloads the page.
 const links = project.data.links.filter((link) => link.url);
+const covers = import.meta.glob('../../content/projects/*/featured.{png,jpg,jpeg,webp}', {
+  eager: true,
+});
+const cover = Object.entries(covers).find(([path]) => path.includes(`/${project.id}/`))?.[1]?.default;
+
 ---
 
 <Base
@@ -30,13 +36,21 @@ const links = project.data.links.filter((link) => link.url);
 
     {
       links.length > 0 && (
-        <ul class="index-links">
+        <ul class="action-links">
           {links.map((link) => (
             <li>
-              <a href={link.url}>{link.name ?? 'Link'}</a>
+              <a href={link.url}>{link.name ?? 'Link'} →</a>
             </li>
           ))}
         </ul>
+      )
+    }
+
+    {
+      cover && (
+        <figure class="detail-cover">
+          <Image src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 900px) 92vw, 62rem" />
+        </figure>
       )
     }
 

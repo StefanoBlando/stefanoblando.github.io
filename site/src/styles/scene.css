@@ -6,7 +6,7 @@ body {
   margin: 0;
   background: var(--ink);
   color: var(--paper);
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -172,6 +172,7 @@ h1 {
 }
 
 h1 em {
+  font-family: var(--serif);
   font-style: italic;
   color: var(--gold);
 }

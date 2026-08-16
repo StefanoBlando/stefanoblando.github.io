@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+
+/**
+ * A card for one work.
+ *
+ * The image is the point — a column of titles gives a reader nothing to
+ * recognise, and every project already carries a `featured.png` in its
+ * bundle. Astro optimises it at build time, so the page pays for a webp at
+ * the size it is actually shown.
+ *
+ * `index` prints as a plate number: this is a dossier of work, and numbering
+ * it says so more cheaply than any decoration would.
+ */
+const { href, title, summary, tags = [], image, index, kind } = Astro.props;
+---
+
+<article class="card">
+  <a class="card-link" href={href}>
+    <div class="card-media">
+      {
+        image ? (
+          <Image src={image} alt="" widths={[420, 840]} sizes="(max-width: 720px) 92vw, 30vw" />
+        ) : (
+          <span class="card-media-empty" aria-hidden="true" />
+        )
+      }
+      <span class="card-index">{String(index).padStart(2, '0')}</span>
+    </div>
+
+    <div class="card-body">
+      {kind && <span class="card-kind">{kind}</span>}
+      <h3 class="card-title">{title}</h3>
+      <p class="card-summary">{summary}</p>
+      {
+        tags.length > 0 && (
+          <ul class="card-tags">
+            {tags.slice(0, 3).map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </a>
+</article>

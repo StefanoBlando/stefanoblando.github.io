@@ -1,38 +1,50 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import WorkCard from '../../components/WorkCard.astro';
 
 const projects = (await getCollection('projects')).sort((a, b) => b.data.date - a.data.date);
+
+/**
+ * The bundle images, keyed by slug. They sit beside their Markdown rather than
+ * in the frontmatter, which is how Hugo page bundles work and how they were
+ * migrated, so they are picked up by path instead of being declared.
+ */
+const covers = import.meta.glob('../../content/projects/*/featured.{png,jpg,jpeg,webp}', {
+  eager: true,
+});
+const coverFor = (slug) =>
+  Object.entries(covers).find(([path]) => path.includes(`/${slug}/`))?.[1]?.default;
 ---
 
 <Base
   title="Projects — Stefano Blando"
-  description="Research translated into working simulations, interfaces, and agentic systems."
+  description="Simulations, interfaces and agentic systems built around the research questions."
   scene={false}
 >
-  <main class="page">
-    <h1>Projects</h1>
-    <p class="page-lede">
-      Simulations, interfaces and agentic systems built around the research questions — some from
-      the work itself, some from hackathons, some from curiosity.
-    </p>
+  <main class="page page-wide">
+    <header class="page-head">
+      <p class="page-kicker">{projects.length} projects</p>
+      <h1>Research, <em>built</em></h1>
+      <p class="page-lede">
+        Simulations, interfaces and agentic systems built around the research questions — some
+        from the work itself, some from hackathons, some from curiosity.
+      </p>
+    </header>
 
-    <ul class="index-list">
+    <div class="card-grid">
       {
-        projects.map((project) => (
-          <li>
-            <a href={`/projects/${project.id}/`}>
-              <span class="index-title">{project.data.title}</span>
-              <span class="index-summary">{project.data.summary}</span>
-            </a>
-            <ul class="tag-row">
-              {project.data.tags.slice(0, 5).map((tag) => (
-                <li>{tag}</li>
-              ))}
-            </ul>
-          </li>
+        projects.map((project, i) => (
+          <WorkCard
+            href={`/projects/${project.id}/`}
+            title={project.data.title}
+            summary={project.data.summary}
+            tags={project.data.tags}
+            image={coverFor(project.id)}
+            index={i + 1}
+          />
         ))
       }
-    </ul>
+    </div>
   </main>
 </Base>

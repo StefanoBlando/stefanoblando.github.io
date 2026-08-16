@@ -9,11 +9,24 @@ const publications = (await getCollection('publications')).sort(
 const years = [...new Set(publications.map((p) => p.data.date.getFullYear()))];
 
 /**
- * Only links that point somewhere. The migration folded url_* into links[] and
- * dropped the empty ones, but `links` is author-supplied and a blank url would
- * render an href="" that silently reloads the page.
+ * Only links that point somewhere. `doi` and `url_pdf` are empty on every
+ * publication, so an unguarded template would put six dead links on the page.
  */
 const linksOf = (data) => data.links.filter((link) => link.url);
+
+const ME = 'Stefano Blando';
+
+const escape = (value) =>
+  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/** Joined here rather than in the template, which inserted a space before
+ *  every comma: Astro preserves the whitespace between elements. */
+const authorsHtml = (authors) =>
+  authors
+    .map((name) =>
+      name === ME ? `<span class="is-me">${escape(name)}</span>` : escape(name),
+    )
+    .join(', ');
 ---
 
 <Base
@@ -22,42 +35,42 @@ const linksOf = (data) => data.links.filter((link) => link.url);
   scene={false}
 >
   <main class="page">
-    <h1>Publications</h1>
-    <p class="page-lede">
-      Peer-reviewed papers, conference proceedings, and working papers in computational economics,
-      agent-based modeling, and quantitative finance.
-    </p>
+    <header class="page-head">
+      <p class="page-kicker">{publications.length} publications</p>
+      <h1>Papers and <em>proceedings</em></h1>
+      <p class="page-lede">
+        Peer-reviewed papers, conference proceedings and working papers in computational
+        economics, agent-based modeling and quantitative finance.
+      </p>
+    </header>
 
-    {
-      years.map((year) => (
-        <>
-          <h2 class="year-heading">{year}</h2>
-          <ul class="index-list">
-            {publications
-              .filter((p) => p.data.date.getFullYear() === year)
-              .map((entry) => (
-                <li>
-                  <a href={`/publications/${entry.id}/`}>
-                    <span class="index-title">{entry.data.title}</span>
-                    <span class="index-summary">{entry.data.summary}</span>
-                  </a>
-                  <span class="index-meta">
-                    {[entry.data.type, entry.data.venue].filter(Boolean).join(' · ')}
-                  </span>
-                  {linksOf(entry.data).length > 0 && (
-                    <ul class="index-links">
-                      {linksOf(entry.data).map((link) => (
-                        <li>
-                          <a href={link.url}>{link.name ?? 'Link'}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+    <ul class="record-list">
+      {
+        publications.map((entry) => (
+          <li class="record">
+            <span class="record-year">{entry.data.date.getFullYear()}</span>
+            <div>
+              <a class="record-title" href={`/publications/${entry.id}/`}>
+                      {entry.data.title}
+                    </a>
+                    <p class="record-venue">{entry.data.venue}</p>
+                    <p class="record-authors" set:html={authorsHtml(entry.data.authors)} />
+                    <div class="record-meta">
+                      <span class="record-type">{entry.data.type}</span>
+                      {linksOf(entry.data).length > 0 && (
+                        <ul class="record-links">
+                          {linksOf(entry.data).map((link) => (
+                            <li>
+                              <a href={link.url}>{link.name ?? 'Link'}</a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
                 </li>
-              ))}
-          </ul>
-        </>
-      ))
-    }
+        ))
+      }
+    </ul>
   </main>
 </Base>
