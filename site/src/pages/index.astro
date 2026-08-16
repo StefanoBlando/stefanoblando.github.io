@@ -1,31 +1,15 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import universe from '../data/universe.json';
-import { PEOPLE, INSTITUTION_COUNT } from '../data/people.js';
+import { STATIONS } from '../data/stations.js';
 
-const { clusters, nodes, education, experience } = universe;
-
-const worksOf = (id, kind) => nodes.filter((n) => n.cluster === id && n.kind === kind);
-
-// The same three the Hugo landing page held up, by the same slugs.
-const FEATURED_PROJECTS = ['risk-sentinel', 'island-model-smc', 'multi-agent-orchestration'];
-
-const allProjects = await getCollection('projects');
-const allPublications = await getCollection('publications');
-const allPosts = await getCollection('blog');
-
-const featuredProjects = FEATURED_PROJECTS.map((slug) => {
-  const project = allProjects.find((p) => p.id === slug);
-  if (!project) throw new Error(`featured project "${slug}" does not exist`);
-  return project;
-});
-
-const featuredPublications = allPublications
-  .filter((p) => p.data.featured)
-  .sort((a, b) => b.data.date - a.data.date);
-
-const latestPosts = allPosts.sort((a, b) => b.data.date - a.data.date).slice(0, 3);
+/**
+ * The homepage is the menu, laid out in space.
+ *
+ * Each station is one screen of a camera journey through a single, unchanging
+ * particle field: a title, a link, and a great deal of deliberate emptiness.
+ * The reading lives on the pages these point at. `data-shape` is the station
+ * index, which the engine resolves to a camera waypoint and a tint.
+ */
 ---
 
 <Base
@@ -34,275 +18,102 @@ const latestPosts = allPosts.sort((a, b) => b.data.date - a.data.date).slice(0, 
   scene={true}
   anchorBase=""
 >
-    <!-- Fixed backdrop. It carries no text and nothing in it is clickable. -->
-    <canvas id="universe" aria-hidden="true"></canvas>
+  <!-- Fixed backdrop. It carries no text and nothing in it is clickable. -->
+  <canvas id="universe" aria-hidden="true"></canvas>
 
-    <div class="tint-wash" aria-hidden="true"></div>
-    <div class="scrim" aria-hidden="true"></div>
+  <div class="tint-wash" aria-hidden="true"></div>
+  <div class="scrim" aria-hidden="true"></div>
 
-    <main>
-      <section class="band band-hero" data-shape="0">
-        <div class="band-inner">
-          <p class="eyebrow">
-            <span class="pip"></span>Stefano Blando | AI Researcher and PhD Candidate
-          </p>
-          <h1>Understanding complex systems through <em>adaptive intelligence</em></h1>
-          <p class="lede">
-            My research lies at the intersection of artificial intelligence, agent-based modeling,
-            and economics. I develop adaptive simulations, statistical verification methods, and
-            practical tools for studying complex economic systems.
-          </p>
-          <div class="hero-actions">
-            <a class="cta cta-primary" href="#work">Explore my work</a>
-            <a class="cta cta-secondary" href="/uploads/resume.pdf">Download CV</a>
+  <main>
+    {
+      STATIONS.map((station) => (
+        <section class={`station station-${station.kind ?? 'link'}`} data-shape={station.shape}>
+          <div class="station-inner">
+            {station.kind === 'hero' && (
+              <>
+                <p class="eyebrow">
+                  <span class="pip" />
+                  AI Researcher &amp; PhD Candidate
+                </p>
+                <h1>Stefano Blando</h1>
+                <p class="lede">
+                  Adaptive multi-agent systems, statistical verification, and robust
+                  quantitative methods for economic and financial systems.
+                </p>
+                <p class="scroll-hint">Scroll to travel</p>
+              </>
+            )}
+
+            {station.kind === undefined && (
+              <>
+                <p class="station-index">{String(station.shape).padStart(2, '0')}</p>
+                <h2 class="station-title">{station.label}</h2>
+                <a class="station-link" href={station.href}>
+                  {station.cta} →
+                </a>
+              </>
+            )}
+
+            {station.kind === 'contact' && (
+              <>
+                <p class="station-index">07</p>
+                <h2 class="station-title">Contact</h2>
+                <a class="station-link" href="mailto:stefano.blando@santannapisa.it">
+                  stefano.blando@santannapisa.it →
+                </a>
+                <ul class="social-row" aria-label="Social profiles">
+                  <li>
+                    <a href="https://github.com/stefano-blando">GitHub</a>
+                  </li>
+                  <li>
+                    <a href="https://www.linkedin.com/in/stefano-blando/">LinkedIn</a>
+                  </li>
+                  <li>
+                    <a href="https://scholar.google.com/citations?user=dNbRRG0AAAAJ">Scholar</a>
+                  </li>
+                </ul>
+              </>
+            )}
           </div>
-          <ul class="social-row" aria-label="Social profiles">
-            <li><a href="https://github.com/stefano-blando">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/stefano-blando/">LinkedIn</a></li>
-            <li>
-              <a href="https://scholar.google.com/citations?user=dNbRRG0AAAAJ">Google Scholar</a>
-            </li>
-          </ul>
-          <p class="affiliation-line">Scuola Superiore Sant'Anna · Pisa</p>
-        </div>
-        <div class="hero-portrait">
-          <img
-            src="/media/portrait.png"
-            alt="Portrait of Stefano Blando"
-            width="360"
-            height="360"
-            loading="eager"
-          />
-        </div>
-      </section>
+        </section>
+      ))
+    }
+  </main>
 
-      <section class="band band-lead" id="research" data-shape="0">
-        <div class="band-inner">
-          <p class="section-label">Research profile</p>
-          <h2 class="section-lead">Four connected research pillars</h2>
-          <p class="lede">
-            My work combines adaptive agents, statistical verification, robust quantitative methods,
-            and large-scale text analysis to study complex economic and social systems, from
-            simulation design to empirical validation.
-          </p>
-        </div>
-      </section>
+  <script>
+    import universeData from '../data/universe.json';
+    import { UniverseEngine, isWebGLAvailable } from '../engine/index.js';
+    import { installDiagnostics, reportEnvironment, report } from '../engine/diagnostics.js';
 
-      {
-        clusters.map((cluster) => (
-          <section class="band band-pillar" id={cluster.id} data-shape={cluster.index}>
-            <div class="band-inner">
-              <p class="section-label">
-                {String(cluster.index).padStart(2, '0')} — Research pillar
-              </p>
-              <h2>{cluster.title}</h2>
-              <p class="lede">{cluster.description}</p>
-              <p class="pillar-detail">{cluster.detailed_text}</p>
+    installDiagnostics();
 
-              <ul class="topic-row">
-                {cluster.topics.map((topic) => (
-                  <li>{topic}</li>
-                ))}
-              </ul>
+    const canvas = document.getElementById('universe');
+    reportEnvironment(canvas, universeData);
 
-              {worksOf(cluster.id, 'publication').length > 0 && (
-                <div class="work-group">
-                  <h3 class="work-group-title">Publications</h3>
-                  <ul class="work-list">
-                    {worksOf(cluster.id, 'publication').map((work) => (
-                      <li>
-                        <a href={work.href}>
-                          <span class="work-title">{work.title}</span>
-                          <span class="work-summary">{work.summary}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {worksOf(cluster.id, 'project').length > 0 && (
-                <div class="work-group">
-                  <h3 class="work-group-title">Projects</h3>
-                  <ul class="work-list">
-                    {worksOf(cluster.id, 'project').map((work) => (
-                      <li>
-                        <a href={work.href}>
-                          <span class="work-title">{work.title}</span>
-                          <span class="work-summary">{work.summary}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <a class="pillar-link" href={`/research/${cluster.id}/`}>
-                Explore this pillar →
-              </a>
-            </div>
-          </section>
-        ))
-      }
-
-      <section class="band band-work" id="work" data-shape="5">
-        <div class="band-inner">
-          <p class="section-label">Selected work</p>
-          <h2>Research translated into technology</h2>
-          <p class="lede">
-            Three projects that connect research questions with working simulations, interfaces,
-            and agentic systems.
-          </p>
-          <ul class="card-grid">
-            {
-              featuredProjects.map((project) => (
-                <li class="card">
-                  <a href={`/projects/${project.id}/`}>
-                    <span class="card-title">{project.data.title}</span>
-                    <span class="card-summary">{project.data.summary}</span>
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-          <a class="pillar-link" href="/projects/">Explore all projects →</a>
-        </div>
-      </section>
-
-      <section class="band band-publications" data-shape="5">
-        <div class="band-inner">
-          <p class="section-label">Research output</p>
-          <h2>Selected publications</h2>
-          <p class="lede">
-            Peer-reviewed papers, conference proceedings, and working papers in computational
-            economics, agent-based modeling, and quantitative finance.
-          </p>
-          <ul class="work-list">
-            {
-              featuredPublications.map((entry) => (
-                <li>
-                  <a href={`/publications/${entry.id}/`}>
-                    <span class="work-title">{entry.data.title}</span>
-                    <span class="work-summary">{entry.data.venue}</span>
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-          <a class="pillar-link" href="/publications/">Explore all publications →</a>
-        </div>
-      </section>
-
-      <section class="band band-path" id="path" data-shape="6">
-        <div class="band-inner">
-          <p class="section-label">Academic path</p>
-          <h2>Experience &amp; Education</h2>
-
-          <h3 class="work-group-title">Education</h3>
-          <ul class="timeline">
-            {
-              education.map((entry) => (
-                <li>
-                  <span class="timeline-years">
-                    {entry.from}–{entry.to}
-                  </span>
-                  <span class="timeline-degree">{entry.degree}</span>
-                  <span class="timeline-institution">{entry.institution}</span>
-                </li>
-              ))
-            }
-          </ul>
-
-          <h3 class="work-group-title">Experience</h3>
-          <ul class="timeline">
-            {
-              experience.map((entry) => (
-                <li>
-                  <span class="timeline-years">
-                    {entry.from}–{entry.to}
-                  </span>
-                  <span class="timeline-degree">{entry.role}</span>
-                  <span class="timeline-institution">{entry.org}</span>
-                </li>
-              ))
-            }
-          </ul>
-
-          <a class="pillar-link" href="/network/">
-            {PEOPLE.length} co-authors across {INSTITUTION_COUNT} institutions → Explore the network
-          </a>
-        </div>
-      </section>
-
-      <section class="band band-news" data-shape="7">
-        <div class="band-inner">
-          <p class="section-label">Latest updates</p>
-          <h2>News &amp; Recognition</h2>
-          <ul class="work-list">
-            {
-              latestPosts.map((post) => (
-                <li>
-                  <a href={`/blog/${post.id}/`}>
-                    <span class="work-title">{post.data.title}</span>
-                    <span class="work-summary">{post.data.summary}</span>
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-          <a class="pillar-link" href="/blog/">Explore all news →</a>
-        </div>
-      </section>
-
-      <section class="band band-contact" id="contact" data-shape="7">
-        <div class="band-inner">
-          <p class="section-label">Contact</p>
-          <h2>Let us discuss research, systems, or collaboration.</h2>
-          <p class="lede">
-            I am based in Pisa and open to academic and technical collaborations in artificial
-            intelligence, economic networks, and complex systems.
-          </p>
-          <a class="contact-link" href="mailto:stefano.blando@santannapisa.it">
-            stefano.blando@santannapisa.it
-          </a>
-        </div>
-      </section>
-    </main>
-
-    <script>
-      import universeData from '../data/universe.json';
-      import { UniverseEngine, isWebGLAvailable } from '../engine/index.js';
-      import { installDiagnostics, reportEnvironment, report } from '../engine/diagnostics.js';
-
-      installDiagnostics();
-
-      const canvas = document.getElementById('universe');
-      reportEnvironment(canvas, universeData);
-
-      if (!isWebGLAvailable()) {
+    if (!isWebGLAvailable()) {
+      document.body.dataset.scene = 'off';
+      report({ kind: 'fallback', reason: 'WebGL2 unavailable' });
+    } else {
+      document.body.dataset.scene = 'on';
+      try {
+        new UniverseEngine({
+          canvas,
+          universe: universeData,
+          quality: window.innerWidth < 780 ? 'low' : 'high',
+          onShape: (state) => {
+            if (state.type === 'context-lost') document.body.dataset.scene = 'off';
+            else report({ kind: state.type, ...state });
+          },
+        });
+      } catch (error) {
+        // The page is readable without the scene; never freeze on a dead canvas.
         document.body.dataset.scene = 'off';
-        report({ kind: 'fallback', reason: 'WebGL2 unavailable' });
-      } else {
-        document.body.dataset.scene = 'on';
-        try {
-          new UniverseEngine({
-            canvas,
-            universe: universeData,
-            quality: window.innerWidth < 780 ? 'low' : 'high',
-            onShape: (state) => {
-              if (state.type === 'context-lost') document.body.dataset.scene = 'off';
-              else report({ kind: state.type, ...state });
-            },
-          });
-        } catch (error) {
-          // The page is readable without the scene; never freeze on a dead canvas.
-          document.body.dataset.scene = 'off';
-          report({
-            kind: 'start-threw',
-            message: error.message,
-            stack: error.stack?.split('\n').slice(0, 8).join(' | '),
-          });
-        }
+        report({
+          kind: 'start-threw',
+          message: error.message,
+          stack: error.stack?.split('\n').slice(0, 8).join(' | '),
+        });
       }
-    </script>
+    }
+  </script>
 </Base>

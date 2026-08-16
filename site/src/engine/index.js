@@ -3,15 +3,11 @@ import { AmbientLayer } from './ambient-layer.js';
 import { Swarm } from './swarm.js';
 import { createPostFX } from './postfx.js';
 import { pickActiveBlend, readSections } from './sections.js';
+import { WAYPOINTS, interpolateWaypoint } from './waypoints.js';
 import { clampDelta, damp } from './damping.js';
 
 
 import { palette } from './palette.js';
-
-const smoothstep = (edge0, edge1, x) => {
-  const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
-  return t * t * (3 - 2 * t);
-};
 
 export function isWebGLAvailable() {
   try {
@@ -23,12 +19,14 @@ export function isWebGLAvailable() {
 }
 
 /**
- * A reactive backdrop, not a stage.
+ * A journey through one place.
  *
- * The document scrolls normally and carries the content; this engine only
- * watches which `[data-shape]` section is nearest the centre of the viewport
- * and morphs the constellation toward that topology. Nothing here is clickable
- * and nothing here holds text — that belongs to the DOM above it.
+ * The field is fixed in world space and the camera travels between authored
+ * stations, one per `[data-shape]` section. Scroll decides where between two
+ * stations the camera sits; the same curve carries the colour.
+ *
+ * Nothing here is clickable and nothing here holds text — the stations'
+ * titles and links live in the DOM above it.
  */
 export class UniverseEngine {
   constructor({ canvas, universe, sectionSelector = '[data-shape]', quality = 'high', onShape } = {}) {
@@ -74,29 +72,31 @@ export class UniverseEngine {
       dustCount: this.quality === 'low' ? 600 : 1600,
     });
 
-    // Right of centre on desktop, so section text sits to its left.
-    this.bodyCenter = new THREE.Vector3(width >= 900 ? 1.55 : 0, 0.05, 0);
-
+    // The field is a place: it sits at the origin and stays there. Earlier
+    // builds welded it to the camera so it held its spot on screen, which is
+    // incompatible with travelling — the destination would move with you.
     this.swarm = new Swarm(this.scene, {
       universe: this.universe,
       primary: palette.primary,
       accent: palette.accent,
       count: this.quality === 'low' ? 220 : 350,
-      offset: this.bodyCenter,
+      offset: new THREE.Vector3(0, 0, 0),
     });
 
     this.parallax = new THREE.Vector2();
     this.parallaxTarget = new THREE.Vector2();
-    this.orbit = 0;
 
-    // Pointer speed, and the body's own rotation on top of the camera frame.
+    // The camera's station, and where it currently is on the way there.
+    this.waypoint = { from: 0, to: 0, t: 0 };
+    this.camDesired = new THREE.Vector3(...WAYPOINTS[0].position);
+    this.camLookDesired = new THREE.Vector3(...WAYPOINTS[0].target);
+    this.camPos = this.camDesired.clone();
+    this.camLook = this.camLookDesired.clone();
+
     this.pointerSpeed = 0;
     this.lastPointer = null;
+    // The body turns slowly on its own, so a station is never quite static.
     this.bodyYaw = 0;
-    this.bodyPitch = 0;
-    this.bodyOffset = new THREE.Vector3();
-    this.bodyEuler = new THREE.Euler(0, 0, 0, 'XYZ');
-    this.bodyQuat = new THREE.Quaternion();
     this.cursorLocal = new THREE.Vector3();
     this.cursorNdc = new THREE.Vector2(-10, -10);
 
@@ -175,12 +175,12 @@ export class UniverseEngine {
     const elements = document.querySelectorAll(this.sectionSelector);
     const { from, to, t, weight } = pickActiveBlend(readSections(elements), window.innerHeight);
 
-    // Total progress through the document, which drives the camera orbit.
+    // Total progress through the document, which drives the radial breath.
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     this.scroll = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0;
 
     this.targetWeight = weight;
-    this.swarm.setBlend(from, to, t);
+    this.waypoint = { from, to, t };
     this.applyTint(from, to, t);
 
     if (from !== this.shape) {
@@ -238,37 +238,27 @@ export class UniverseEngine {
     this.parallax.x = damp(this.parallax.x, this.parallaxTarget.x, 3, dt);
     this.parallax.y = damp(this.parallax.y, this.parallaxTarget.y, 3, dt);
 
-    // The reference's orbit: three quarters of a turn across the whole page,
-    // closing in over the first fifth and arcing in elevation on the way.
-    this.orbit = damp(this.orbit, this.scroll, 1.8, dt);
-    const azimuth = this.orbit * Math.PI * 1.5;
-    const elevation = Math.sin(this.orbit * Math.PI) * 0.18;
-    const distance = 5.9 - smoothstep(0, 0.22, this.orbit) * 2.6 - this.weight * 0.35;
-    const planar = Math.cos(elevation) * distance;
+    // The camera travels between authored stations. The scroll curve decides
+    // where between two it sits; the damping only smooths a fast scroll into
+    // a glide, it does not decide the destination.
+    const shot = interpolateWaypoint(this.waypoint.from, this.waypoint.to, this.waypoint.t);
+    this.camDesired.set(shot.position[0], shot.position[1], shot.position[2]);
+    this.camLookDesired.set(shot.target[0], shot.target[1], shot.target[2]);
 
-    this.camera.position.set(
-      Math.sin(azimuth) * planar + this.parallax.x * 0.3,
-      Math.sin(elevation) * distance + this.parallax.y * 0.22,
-      Math.cos(azimuth) * planar,
-    );
-    this.camera.lookAt(0, 0, 0);
+    this.camPos.x = damp(this.camPos.x, this.camDesired.x + this.parallax.x * 0.22, 3.2, dt);
+    this.camPos.y = damp(this.camPos.y, this.camDesired.y + this.parallax.y * 0.18, 3.2, dt);
+    this.camPos.z = damp(this.camPos.z, this.camDesired.z, 3.2, dt);
+    this.camLook.x = damp(this.camLook.x, this.camLookDesired.x, 3.2, dt);
+    this.camLook.y = damp(this.camLook.y, this.camLookDesired.y, 3.2, dt);
+    this.camLook.z = damp(this.camLook.z, this.camLookDesired.z, 3.2, dt);
 
-    // The body rides in the camera's frame, so it holds the same place on
-    // screen while the orbit sweeps the world's dust and smoke past it. With
-    // the body fixed in world space instead, the orbit swings it across the
-    // view and the composition never settles.
-    const grow = 1 + this.orbit * 0.35;
-    this.bodyOffset
-      .set(this.bodyCenter.x, this.bodyCenter.y, -4.2)
-      .applyQuaternion(this.camera.quaternion);
-    this.swarm.group.position.copy(this.camera.position).add(this.bodyOffset);
+    this.camera.position.copy(this.camPos);
+    this.camera.lookAt(this.camLook);
 
-    this.bodyYaw += dt * 0.16 + (this.parallax.x * 0.3 - this.bodyYaw) * dt * 1.4;
-    this.bodyPitch = damp(this.bodyPitch, this.parallax.y * 0.18, 2, dt);
-    this.bodyEuler.set(this.bodyPitch, this.bodyYaw, 0);
-    this.bodyQuat.setFromEuler(this.bodyEuler);
-    this.swarm.group.quaternion.copy(this.camera.quaternion).multiply(this.bodyQuat);
-    this.swarm.group.scale.setScalar(grow);
+    // The field stays where it is and turns slowly on its own, so a station is
+    // never quite static without the camera having to move.
+    this.bodyYaw += dt * 0.05;
+    this.swarm.group.rotation.set(0, this.bodyYaw, 0);
     this.swarm.group.updateMatrixWorld();
 
     // Pointer speed decays on real time, then drives the agitation.
@@ -302,7 +292,8 @@ export class UniverseEngine {
         lineOpacity: this.swarm.lineMaterial.uniforms.uOpacity.value,
         postfx: !!this.postfx,
         camera: `${c.x.toFixed(2)},${c.y.toFixed(2)},${c.z.toFixed(2)}`,
-        lookingAt: `${this.bodyCenter.x},${this.bodyCenter.y},${this.bodyCenter.z}`,
+        lookingAt: `${this.camLook.x.toFixed(2)},${this.camLook.y.toFixed(2)},${this.camLook.z.toFixed(2)}`,
+        station: `${this.waypoint.from}->${this.waypoint.to} t=${this.waypoint.t.toFixed(2)}`,
         segments: this.swarm.segmentCount,
         weight: Number(this.weight.toFixed(2)),
       });

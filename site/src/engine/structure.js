@@ -1,19 +1,18 @@
 /**
  * The constellation as the site's actual structure.
  *
- * Every particle belongs to one real work, and the wiring is computed once and
- * holds across every layout: proximity threads through the resting network,
- * plus bridges between works that genuinely share a research topic.
+ * Every particle belongs to one real work, and the wiring is real too:
+ * proximity threads through the network, plus bridges between works that
+ * genuinely share a research topic.
  *
- * The layouts are complex-system structures, not geometric solids — a
- * scale-free hub network, an ensemble of stochastic trajectories, a
- * two-community contagion network, a small-world ring. Each stays compact and
- * space-filling, which is what keeps the threads short and organic. An earlier
- * version scattered the works far apart and the same threads stretched into
- * rigid radial lines.
+ * There is one structure and it does not change. Earlier builds morphed
+ * between several, which cannot coexist with a camera that travels: if the
+ * world reshapes as you move through it, nothing you fly toward stays where
+ * it was, and there is no journey. The other generators were deleted rather
+ * than left dormant; git holds them.
  *
- * Works occupy contiguous wedges of each structure, so a work stays a
- * recognisable body through every morph and its bridges keep their meaning.
+ * Works occupy contiguous wedges of the structure, so each work reads as a
+ * body and its bridges keep their meaning.
  */
 
 function mulberry32(seed) {
@@ -47,207 +46,13 @@ function randomNetwork(count, rand) {
   return points;
 }
 
-/** Power-law hubs: a handful of dense centres, each with its own periphery. */
-function scaleFree(count, rand) {
-  const hubCount = 6;
-  const hubs = [];
-  for (let h = 0; h < hubCount; h += 1) {
-    const theta = (h / hubCount) * Math.PI * 2 + rand() * 0.4;
-    const r = 0.9 + rand() * 0.7;
-    hubs.push([Math.cos(theta) * r, (rand() - 0.5) * 1.5, Math.sin(theta) * r]);
-  }
 
-  const points = [];
-  for (let i = 0; i < count; i += 1) {
-    // Preferential attachment: the first hubs draw disproportionately more.
-    const pick = Math.min(hubCount - 1, Math.floor(hubCount * Math.pow(rand(), 1.7)));
-    const hub = hubs[pick];
-    const spread = 0.24 + rand() * 0.5;
-    points.push([
-      hub[0] + gaussian(rand) * spread,
-      hub[1] + gaussian(rand) * spread,
-      hub[2] + gaussian(rand) * spread,
-    ]);
-  }
-  return points;
-}
 
-/** An ensemble of stochastic trajectories: what statistical verification samples. */
-function trajectories(count, rand) {
-  const bundles = 7;
-  const perBundle = Math.ceil(count / bundles);
-  const points = [];
 
-  for (let b = 0; b < bundles && points.length < count; b += 1) {
-    // Runs start from nearly the same state and diverge — the reason one trace
-    // is never enough.
-    let x = (rand() - 0.5) * 0.25;
-    let y = (rand() - 0.5) * 0.25;
-    let z = (rand() - 0.5) * 0.25;
-    const drift = 0.12 + rand() * 0.1;
-    const swirl = 0.8 + rand() * 0.7;
 
-    for (let k = 0; k < perBundle && points.length < count; k += 1) {
-      const t = k / perBundle;
-      x += Math.cos(t * Math.PI * 2 * swirl) * drift + gaussian(rand) * 0.045;
-      y += 0.055 * Math.sin(t * Math.PI * 1.6 + b) + gaussian(rand) * 0.045;
-      z += Math.sin(t * Math.PI * 2 * swirl) * drift + gaussian(rand) * 0.045;
-      points.push([x * 0.55, y * 1.5 - 0.3, z * 0.55]);
-    }
-  }
-  while (points.length < count) points.push(points[points.length - 1].slice());
-  return points;
-}
 
-/** Two communities joined by a thin bridge: the contagion picture. */
-function twoCommunities(count, rand) {
-  const coreA = [-1.05, 0.12, 0];
-  const coreB = [1.05, -0.12, 0];
-  const points = [];
 
-  for (let i = 0; i < count; i += 1) {
-    if (i % 9 === 0) {
-      // The exposure channel between them: thin, and therefore fragile.
-      const t = rand();
-      points.push([
-        coreA[0] + (coreB[0] - coreA[0]) * t,
-        coreA[1] + (coreB[1] - coreA[1]) * t + gaussian(rand) * 0.16,
-        gaussian(rand) * 0.16,
-      ]);
-      continue;
-    }
-    const core = i % 2 === 0 ? coreA : coreB;
-    const spread = 0.3 + Math.cbrt(rand()) * 0.55;
-    points.push([
-      core[0] + gaussian(rand) * spread,
-      core[1] + gaussian(rand) * spread,
-      core[2] + gaussian(rand) * spread,
-    ]);
-  }
-  return points;
-}
 
-/** A small-world ring: dense local neighbourhoods, a few long shortcuts. */
-function smallWorld(count, rand) {
-  const points = [];
-  for (let i = 0; i < count; i += 1) {
-    if (rand() < 0.14) {
-      // The shortcuts that collapse the diameter of the network.
-      const radius = Math.cbrt(rand()) * 1.05;
-      const theta = rand() * Math.PI * 2;
-      const phi = Math.acos(2 * rand() - 1);
-      points.push([
-        radius * Math.sin(phi) * Math.cos(theta),
-        radius * Math.sin(phi) * Math.sin(theta) * 0.7,
-        radius * Math.cos(phi),
-      ]);
-      continue;
-    }
-    const angle = (i / count) * Math.PI * 2;
-    const r = 1.55 + gaussian(rand) * 0.16;
-    points.push([Math.cos(angle) * r, gaussian(rand) * 0.34, Math.sin(angle) * r]);
-  }
-  return points;
-}
-
-/** A dense core inside a thin shell: the shape of work held up as strongest. */
-function corePeriphery(count, rand) {
-  const points = [];
-  for (let i = 0; i < count; i += 1) {
-    // A third of the cloud forms the core; the rest is a diffuse halo.
-    if (i % 3 === 0) {
-      const radius = Math.cbrt(rand()) * 0.62;
-      const theta = rand() * Math.PI * 2;
-      const phi = Math.acos(2 * rand() - 1);
-      points.push([
-        radius * Math.sin(phi) * Math.cos(theta),
-        radius * Math.sin(phi) * Math.sin(theta),
-        radius * Math.cos(phi),
-      ]);
-      continue;
-    }
-    const radius = 1.35 + Math.cbrt(rand()) * 0.85;
-    const theta = rand() * Math.PI * 2;
-    const phi = Math.acos(2 * rand() - 1);
-    points.push([
-      radius * Math.sin(phi) * Math.cos(theta),
-      radius * Math.sin(phi) * Math.sin(theta) * 0.8,
-      radius * Math.cos(phi),
-    ]);
-  }
-  return points;
-}
-
-/** A branching growth process: one trajectory that keeps splitting. */
-function branchingGrowth(count, rand) {
-  const SEED = { p: [0, -1.7, 0], d: [0, 1, 0] };
-  let frontier = [SEED];
-  const points = [];
-
-  while (points.length < count) {
-    const next = [];
-    for (const tip of frontier) {
-      if (points.length >= count) break;
-      const step = 0.26 + rand() * 0.12;
-      const p = [
-        tip.p[0] + tip.d[0] * step + gaussian(rand) * 0.06,
-        tip.p[1] + tip.d[1] * step + gaussian(rand) * 0.06,
-        tip.p[2] + tip.d[2] * step + gaussian(rand) * 0.06,
-      ];
-      points.push([p[0] * 0.9, p[1] * 0.85, p[2] * 0.9]);
-
-      // Split or continue. The frontier is capped, and a tip that wanders too
-      // far is retired: without both, the structure compounds out of frame.
-      const children = rand() < 0.32 ? 2 : 1;
-      for (let c = 0; c < children && next.length < 26; c += 1) {
-        if (Math.hypot(p[0], p[1], p[2]) > 2.6) continue;
-        const spread = children === 2 ? 0.55 : 0.16;
-        const d = [
-          tip.d[0] + gaussian(rand) * spread,
-          tip.d[1] + gaussian(rand) * spread * 0.4 + 0.12,
-          tip.d[2] + gaussian(rand) * spread,
-        ];
-        const length = Math.hypot(d[0], d[1], d[2]) || 1;
-        next.push({ p, d: [d[0] / length, d[1] / length, d[2] / length] });
-      }
-    }
-    // A frontier that dies out entirely would loop forever.
-    frontier = next.length > 0 ? next : [SEED];
-  }
-  return points;
-}
-
-/** A percolation front: a cluster spreading outward from a seed. */
-function percolationFront(count, rand) {
-  const points = [];
-  for (let i = 0; i < count; i += 1) {
-    // Radius grows with index, so later particles sit further out and the
-    // cluster reads as something that arrived rather than as a static shell.
-    const progress = i / count;
-    const radius = 0.35 + progress * 1.55 + gaussian(rand) * 0.12;
-    const theta = rand() * Math.PI * 2;
-    const phi = Math.acos(2 * rand() - 1);
-    // Anisotropy keeps the front ragged instead of spherical.
-    const ragged = 1 + Math.sin(theta * 5 + phi * 3) * 0.22;
-    points.push([
-      radius * ragged * Math.sin(phi) * Math.cos(theta),
-      radius * ragged * Math.sin(phi) * Math.sin(theta) * 0.75,
-      radius * ragged * Math.cos(phi),
-    ]);
-  }
-  return points;
-}
-
-const GENERATORS = [
-  randomNetwork,
-  scaleFree,
-  trajectories,
-  twoCommunities,
-  smallWorld,
-  corePeriphery,
-  branchingGrowth,
-  percolationFront,
-];
 
 /**
  * Orders a structure's points so consecutive slots are spatial neighbours, then
@@ -292,15 +97,16 @@ export function buildStructure(universe, count) {
     membersOf[w].push(i);
   }
 
-  const layouts = GENERATORS.map((generator) => assignByWedge(generator(count, rand), owner, count));
+  const positions = assignByWedge(randomNetwork(count, rand), owner, count);
 
   const pairs = [];
   const strengths = [];
   // 0 = ambient thread, 1 = a real shared-topic relationship.
   const kinds = [];
 
-  // Proximity threads over the resting network.
-  const base = layouts[0];
+  // Proximity threads over the structure itself, so the wiring is exactly
+  // true to the geometry it is drawn across.
+  const base = positions;
   const PROXIMITY = 0.72;
   // No cap on connections, as in the reference: the web reads because faint
   // threads accumulate where they overlap, not because any one of them is bright.
@@ -367,7 +173,7 @@ export function buildStructure(universe, count) {
   }
 
   return {
-    layouts,
+    positions,
     pairs: Int32Array.from(pairs),
     strengths: Float32Array.from(strengths),
     kinds: Float32Array.from(kinds),

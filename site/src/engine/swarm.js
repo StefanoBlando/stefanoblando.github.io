@@ -6,13 +6,13 @@ import { buildStructure } from './structure.js';
  * The constellation: the site's own structure, drawn.
  *
  * Particles belong to real works and the edges are real relationships — same
- * work, or a shared research topic. Layouts reposition the works; the wiring
- * never changes, so a morph redraws the same relationships from a new angle.
+ * work, or a shared research topic. The structure is fixed: it is a place the
+ * camera travels through, not a thing that reshapes itself.
  *
- * The morph runs on the CPU and rewrites both buffers each frame. At this size
- * that is about twelve thousand floats, well under a millisecond, and it is
- * what the reference does too. The earlier objection to CPU line updates was
- * about far denser fields, where it does not hold.
+ * The line buffer is still rewritten on the CPU each frame, because the breath
+ * and the settle move the points. At this size that is about twelve thousand
+ * floats, well under a millisecond. The earlier objection to CPU line updates
+ * was about far denser fields, where it does not hold.
  *
  * Points and lines share one GLSL `drift()`, evaluated on the GPU. Because it
  * is a pure function of base position and time, line endpoints stay welded to
@@ -20,12 +20,12 @@ import { buildStructure } from './structure.js';
  */
 
 /**
- * The morph damping is only a jitter filter now. The target itself is driven
- * by scroll position, so a slow rate here would reintroduce exactly the lag
- * the blend was written to remove — the cloud would trail the page instead of
- * moving with it.
+ * The structure is fixed, so this only serves the radial breath: how quickly a
+ * particle settles onto its resting position as the body expands and contracts.
+ * Fast enough that the breath reads as the body moving rather than as the
+ * particles chasing it.
  */
-const MORPH_RATE = 8;
+const SETTLE_RATE = 8;
 
 /**
  * Low spatial frequencies on purpose: neighbours receive nearly the same phase,
@@ -162,10 +162,9 @@ export class Swarm {
     this.tintTargetAccent = new THREE.Color(accent);
 
     this.structure = buildStructure(universe, count);
-    this.layouts = this.structure.layouts;
+    this.positions = this.structure.positions;
 
-    this.current = Float32Array.from(this.layouts[0]);
-    this.target = Float32Array.from(this.layouts[0]);
+    this.current = Float32Array.from(this.positions);
 
     this.buildPoints({ primary, accent });
     this.buildLines({ primary });
@@ -246,25 +245,6 @@ export class Swarm {
     this.segmentCount = edgeCount;
   }
 
-  /**
-   * Positions the cloud between two layouts. `t` is where the document sits
-   * between them, so the morph is driven by scroll rather than by a timer.
-   */
-  setBlend(from, to, t) {
-    const last = this.layouts.length - 1;
-    const A = this.layouts[Math.max(0, Math.min(last, from))];
-    const B = this.layouts[Math.max(0, Math.min(last, to))];
-
-    // Consecutive bands sharing a shape land here, and the topology holds
-    // perfectly still for the length of both.
-    if (A === B) {
-      this.target.set(A);
-      return;
-    }
-    for (let i = 0; i < this.target.length; i += 1) {
-      this.target[i] = A[i] + (B[i] - A[i]) * t;
-    }
-  }
 
   /** Pointer speed, 0..1: how restless the fine noise becomes. */
   setAgitation(value) {
@@ -314,7 +294,7 @@ export class Swarm {
 
     this.breath = damp(this.breath, this.breathTarget, 1.2, dt);
     for (let i = 0; i < this.current.length; i += 1) {
-      this.current[i] = damp(this.current[i], this.target[i] * this.breath, MORPH_RATE, dt);
+      this.current[i] = damp(this.current[i], this.positions[i] * this.breath, SETTLE_RATE, dt);
     }
     this.pointAttribute.needsUpdate = true;
 

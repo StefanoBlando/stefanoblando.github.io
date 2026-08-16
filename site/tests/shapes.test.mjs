@@ -3,85 +3,71 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { buildStructure } from '../src/engine/structure.js';
 import { PRESETS, ACTIVE } from '../src/engine/palette.js';
+import { WAYPOINTS } from '../src/engine/waypoints.js';
+import { STATIONS } from '../src/data/stations.js';
 
 const universe = JSON.parse(readFileSync(new URL('../src/data/universe.json', import.meta.url)));
 const COUNT = 350;
 
-test('there are eight layouts, one per band group', () => {
-  const { layouts } = buildStructure(universe, COUNT);
-  assert.equal(layouts.length, 8);
+test('the field is populated, finite and does not collapse', () => {
+  const { positions } = buildStructure(universe, COUNT);
+  assert.equal(positions.length, COUNT * 3);
+
+  let min = Infinity;
+  let max = -Infinity;
+  for (let i = 0; i < positions.length; i += 1) {
+    assert.ok(Number.isFinite(positions[i]), `non-finite value at ${i}`);
+    if (positions[i] < min) min = positions[i];
+    if (positions[i] > max) max = positions[i];
+  }
+  assert.ok(max - min > 0.5, `the field spans only ${max - min}`);
 });
 
-test('every layout is fully populated and finite', () => {
-  const { layouts } = buildStructure(universe, COUNT);
-  for (const [index, layout] of layouts.entries()) {
-    assert.equal(layout.length, COUNT * 3, `layout ${index} has the wrong length`);
-    for (let i = 0; i < layout.length; i += 1) {
-      assert.ok(Number.isFinite(layout[i]), `layout ${index} has a non-finite value at ${i}`);
-    }
+test('the field stays within the volume the waypoints were authored against', () => {
+  // The camera positions assume a radius of roughly 2.25. If the field grew,
+  // every station would be framed wrongly and nothing would report it.
+  const { positions } = buildStructure(universe, COUNT);
+  let maxRadius = 0;
+  for (let i = 0; i < positions.length; i += 3) {
+    const r = Math.hypot(positions[i], positions[i + 1], positions[i + 2]);
+    if (r > maxRadius) maxRadius = r;
   }
+  assert.ok(maxRadius < 3, `the field reaches ${maxRadius.toFixed(2)}, past the waypoint volume`);
 });
 
-test('no layout collapses to a point', () => {
-  // A generator that silently produced one repeated coordinate would morph the
-  // whole constellation into a dot, which is easy to miss in a dark scene.
-  const { layouts } = buildStructure(universe, COUNT);
-  for (const [index, layout] of layouts.entries()) {
-    let min = Infinity;
-    let max = -Infinity;
-    for (let i = 0; i < layout.length; i += 1) {
-      if (layout[i] < min) min = layout[i];
-      if (layout[i] > max) max = layout[i];
-    }
-    assert.ok(max - min > 0.5, `layout ${index} spans only ${max - min}`);
-  }
+test('the field is deterministic for a given content set', () => {
+  const a = buildStructure(universe, COUNT).positions;
+  const b = buildStructure(universe, COUNT).positions;
+  assert.deepEqual(Array.from(a), Array.from(b));
 });
 
-test('no layout runs away past the frame', () => {
-  // branchingGrowth compounds a step each generation; an unbounded frontier
-  // would put most of the cloud outside the camera without any error.
-  const { layouts } = buildStructure(universe, COUNT);
-  for (const [index, layout] of layouts.entries()) {
-    for (let i = 0; i < layout.length; i += 1) {
-      assert.ok(Math.abs(layout[i]) < 6, `layout ${index} reaches ${layout[i]} at ${i}`);
-    }
-  }
-});
+test('every station has a waypoint and a tint', () => {
+  assert.equal(STATIONS.length, WAYPOINTS.length, 'a station lost or gained its camera');
 
-test('layouts are deterministic for a given content set', () => {
-  const a = buildStructure(universe, COUNT).layouts;
-  const b = buildStructure(universe, COUNT).layouts;
-  for (let i = 0; i < a.length; i += 1) {
-    assert.deepEqual(Array.from(a[i]), Array.from(b[i]), `layout ${i} is not reproducible`);
-  }
-});
-
-test('no band asks for a layout that does not exist', () => {
-  // setBlend clamps, so a data-shape typo would not throw: band 9 would
-  // quietly render band 7 and nobody would know which one they were looking at.
-  const page = readFileSync(new URL('../src/pages/index.astro', import.meta.url), 'utf8');
-  const literals = [...page.matchAll(/data-shape="(\d+)"/g)].map((m) => Number(m[1]));
-  const { layouts } = buildStructure(universe, COUNT);
-  assert.ok(literals.length > 0, 'no data-shape literals found; has the page changed shape?');
-  for (const shape of literals) {
-    assert.ok(shape < layouts.length, `index.astro asks for shape ${shape}, only ${layouts.length} exist`);
-  }
-  // The pillar bands use data-shape={cluster.index}, which is not a literal.
-  for (const cluster of universe.clusters) {
-    assert.ok(cluster.index < layouts.length, `cluster ${cluster.id} has no layout`);
-  }
-});
-
-test('the active preset carries a tint for every layout', () => {
-  const { layouts } = buildStructure(universe, COUNT);
   const tints = PRESETS[ACTIVE].tints;
-  assert.ok(tints, `preset ${ACTIVE} defines no tints`);
-  assert.equal(tints.length, layouts.length);
-  for (const [index, tint] of tints.entries()) {
-    for (const key of ['primary', 'accent', 'smoke', 'scrim']) {
-      assert.ok(tint[key], `tint ${index} is missing ${key}`);
-    }
-    assert.match(tint.primary, /^#[0-9a-f]{6}$/i, `tint ${index} has a malformed primary`);
-    assert.match(tint.scrim, /^\d+, \d+, \d+$/, `tint ${index} has a malformed scrim`);
+  assert.ok(tints.length >= STATIONS.length, `${STATIONS.length} stations, ${tints.length} tints`);
+
+  for (const station of STATIONS) {
+    assert.ok(WAYPOINTS[station.shape], `station ${station.shape} has no waypoint`);
+    assert.ok(tints[station.shape], `station ${station.shape} has no tint`);
+  }
+});
+
+test('station indices are a complete run with no gaps or repeats', () => {
+  // A repeated index would give two stations the same camera and the same
+  // colour, which reads as the scroll having stopped working.
+  const shapes = STATIONS.map((s) => s.shape);
+  assert.deepEqual(shapes, [...shapes].sort((a, b) => a - b), 'stations are out of order');
+  assert.deepEqual(shapes, [...new Set(shapes)], 'two stations share an index');
+  assert.equal(shapes[0], 0);
+  assert.equal(shapes.at(-1), STATIONS.length - 1);
+});
+
+test('every station that links somewhere has a label and a destination', () => {
+  for (const station of STATIONS) {
+    if (station.kind) continue;
+    assert.ok(station.label, `station ${station.shape} has no label`);
+    assert.match(station.href, /^\/[a-z-]*\/$/, `station ${station.shape} has a suspect href`);
+    assert.ok(station.cta, `station ${station.shape} has no call to action`);
   }
 });
