@@ -27,10 +27,18 @@ const JOURNEY = buildJourney(universe);
   <div class="tint-wash" aria-hidden="true"></div>
   <div class="scrim" aria-hidden="true"></div>
 
-  <main>
-    {
+  <!-- The canvas and the overlays stay outside the scrolled wrapper: a
+       transform makes an element the containing block for its fixed
+       descendants, which would leave them scrolling with the page. -->
+  <div id="scroll-content">
+    <main>
+      {
       JOURNEY.map((stop, index) => (
-        <section class={`station station-${stop.kind}`} data-shape={index}>
+        <section
+          class={`station station-${stop.kind}`}
+          data-shape={index}
+          id={stop.kind === 'contact' ? 'contact' : stop.label?.toLowerCase()}
+        >
           <div class="station-inner">
             {stop.kind === 'hero' && (
               <>
@@ -79,16 +87,27 @@ const JOURNEY = buildJourney(universe);
             )}
           </div>
         </section>
-      ))
-    }
-  </main>
+        ))
+      }
+    </main>
+  </div>
+  <div id="scroll-spacer" aria-hidden="true"></div>
 
   <script>
     import universeData from '../data/universe.json';
     import { UniverseEngine, isWebGLAvailable } from '../engine/index.js';
+    import { installSmoothScroll } from '../engine/smooth-scroll.js';
     import { installDiagnostics, reportEnvironment, report } from '../engine/diagnostics.js';
 
     installDiagnostics();
+
+    // Text and camera on one inertia. Without this the copy moves on the raw
+    // scroll position while the scene glides, and the page reads as two things
+    // bolted together.
+    installSmoothScroll({
+      content: document.getElementById('scroll-content'),
+      spacer: document.getElementById('scroll-spacer'),
+    });
 
     const canvas = document.getElementById('universe');
     reportEnvironment(canvas, universeData);

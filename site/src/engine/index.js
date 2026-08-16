@@ -144,6 +144,7 @@ export class UniverseEngine {
       this.ambient.resize(width / height);
       this.swarm.resize(pixelRatio);
       this.postfx?.setSize(width, height);
+      this.sectionElements = null;
       this.readShape();
     };
 
@@ -163,8 +164,6 @@ export class UniverseEngine {
       this.lastPointer = { x: px, y: py };
     };
 
-    this.onScroll = () => this.readShape();
-
     // A lost context is a real event on mobile and in long sessions; the page
     // must degrade rather than freeze on a dead canvas.
     this.onContextLost = (event) => {
@@ -174,14 +173,20 @@ export class UniverseEngine {
     };
 
     window.addEventListener('resize', this.onResize, { passive: true });
-    window.addEventListener('scroll', this.onScroll, { passive: true });
     window.addEventListener('pointermove', this.onPointerMove, { passive: true });
     this.canvas.addEventListener('webglcontextlost', this.onContextLost);
   }
 
   readShape() {
-    const elements = document.querySelectorAll(this.sectionSelector);
-    const { from, to, t, weight } = pickActiveBlend(readSections(elements), window.innerHeight);
+    // Cached: this runs every frame now, and re-querying the DOM sixty times a
+    // second to find eighteen unchanging elements is pure waste.
+    if (!this.sectionElements) {
+      this.sectionElements = [...document.querySelectorAll(this.sectionSelector)];
+    }
+    const { from, to, t, weight } = pickActiveBlend(
+      readSections(this.sectionElements),
+      window.innerHeight,
+    );
 
     // Total progress through the document, which drives the radial breath.
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
@@ -266,6 +271,11 @@ export class UniverseEngine {
 
     const dt = clampDelta(this.clock.getDelta());
     if (!this.reducedMotion) this.time += dt;
+
+    // Read every frame rather than on the scroll event. With smooth scrolling
+    // the page keeps moving after the last event fires, and a camera driven by
+    // events alone would stop dead while the text glided on without it.
+    this.readShape();
 
     // Heavily damped, as in the reference: the scene must not twitch each time
     // a section edge crosses the centre line.
@@ -411,7 +421,6 @@ export class UniverseEngine {
   dispose() {
     this.running = false;
     window.removeEventListener('resize', this.onResize);
-    window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('pointermove', this.onPointerMove);
     this.canvas.removeEventListener('webglcontextlost', this.onContextLost);
     this.ambient.dispose();

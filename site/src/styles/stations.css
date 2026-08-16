@@ -73,3 +73,17 @@
     max-width: none;
   }
 }
+
+/*
+ * Smooth scrolling. The content is taken out of flow and moved by a damped
+ * value; the spacer holds the document's real height so the scrollbar, the
+ * keyboard and anchor links keep working. The script sets the height and the
+ * transform — these rules only stop the page flashing before it runs.
+ */
+#scroll-content {
+  width: 100%;
+}
+
+#scroll-spacer {
+  pointer-events: none;
+}
