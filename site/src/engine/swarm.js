@@ -27,6 +27,9 @@ import { buildStructure } from './structure.js';
  */
 const SETTLE_RATE = 8;
 
+/** How far the cloud swells outward at the midpoint of a morph. */
+const SCATTER = 0.28;
+
 /**
  * Low spatial frequencies on purpose: neighbours receive nearly the same phase,
  * so a region swells and subsides as one body. High frequencies here read as
@@ -73,7 +76,7 @@ const POINT_VERT = /* glsl */ `
   ${NEAR_FADE}
   attribute float aScale;
   attribute float aTint;
-  attribute float aGlow;
+  uniform float uArrival;
   uniform float uTime;
   uniform float uPixelRatio;
   uniform vec3 uTeal;
@@ -86,10 +89,8 @@ const POINT_VERT = /* glsl */ `
     vec3 pos = drift(position, uTime);
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     float depth = max(-mv.z, 0.001);
-    // How lit this particle's work is. An attribute rather than a lookup into
-    // a uniform array: GLSL ES 1.00 does not guarantee dynamic indexing, and a
-    // shader that fails to compile takes the whole scene with it.
-    float glow = aGlow;
+    // How fully the cloud has gathered into this page's shape.
+    float glow = uArrival;
     // Constant screen size, as in the reference: the constellation reads as a
     // drawn figure rather than as objects receding into depth. A lit work
     // swells, which is what makes arriving somewhere feel like arriving.
@@ -117,7 +118,7 @@ const LINE_VERT = /* glsl */ `
   ${DRIFT}
   ${NEAR_FADE}
   attribute float aStrength;
-  attribute float aGlow;
+  uniform float uArrival;
   uniform float uTime;
   varying float vFade;
   varying float vStrength;
@@ -128,7 +129,7 @@ const LINE_VERT = /* glsl */ `
     float depth = max(-mv.z, 0.001);
     vFade = smoothstep(32.0, 2.5, depth) * nearFade(depth);
     vStrength = aStrength;
-    vGlow = aGlow;
+    vGlow = uArrival;
     gl_Position = projectionMatrix * mv;
   }
 `;
@@ -177,9 +178,10 @@ export class Swarm {
     this.tintTargetAccent = new THREE.Color(accent);
 
     this.structure = buildStructure(universe, count);
-    this.positions = this.structure.positions;
+    this.layouts = this.structure.layouts;
 
-    this.current = Float32Array.from(this.positions);
+    this.current = Float32Array.from(this.layouts[0]);
+    this.target = Float32Array.from(this.layouts[0]);
 
     this.buildPoints({ primary, accent });
     this.buildLines({ primary });
@@ -201,10 +203,7 @@ export class Swarm {
     geometry.setAttribute('position', this.pointAttribute);
     geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
     geometry.setAttribute('aTint', new THREE.BufferAttribute(tints, 1));
-    this.pointGlow = new Float32Array(this.count);
-    this.pointGlowAttribute = new THREE.BufferAttribute(this.pointGlow, 1);
-    this.pointGlowAttribute.setUsage(THREE.DynamicDrawUsage);
-    geometry.setAttribute('aGlow', this.pointGlowAttribute);
+
 
     this.pointMaterial = new THREE.ShaderMaterial({
       vertexShader: POINT_VERT,
@@ -217,6 +216,7 @@ export class Swarm {
         uAgitation: { value: 0 },
         uCursor: { value: new THREE.Vector3(999, 999, 999) },
         uRepel: { value: 0 },
+        uArrival: { value: 0 },
       },
       transparent: true,
       depthWrite: false,
@@ -242,10 +242,7 @@ export class Swarm {
 
     // Each thread endpoint carries the work it belongs to, so a lit work lights
     // the threads leaving it — which is what makes the road visible.
-    this.lineGlow = new Float32Array(this.pairs.length);
-    this.lineGlowAttribute = new THREE.BufferAttribute(this.lineGlow, 1);
-    this.lineGlowAttribute.setUsage(THREE.DynamicDrawUsage);
-    geometry.setAttribute('aGlow', this.lineGlowAttribute);
+
 
     this.lineMaterial = new THREE.ShaderMaterial({
       vertexShader: LINE_VERT,
@@ -260,6 +257,7 @@ export class Swarm {
         // A whisper. The reference sits at 0.06; this is a touch higher only
         // because the finishing pass lifts contrast and crushes faint values.
         uOpacity: { value: 0.4 },
+        uArrival: { value: 0 },
       },
       transparent: true,
       depthWrite: false,
@@ -300,12 +298,34 @@ export class Swarm {
    * Written in place: the uniform holds this exact array, so there is nothing
    * to copy and nothing that can fall out of step with it.
    */
-  setGlow(values) {
-    const owner = this.structure.owner;
-    for (let i = 0; i < this.count; i += 1) this.pointGlow[i] = values[owner[i]];
-    for (let k = 0; k < this.pairs.length; k += 1) this.lineGlow[k] = values[owner[this.pairs[k]]];
-    this.pointGlowAttribute.needsUpdate = true;
-    this.lineGlowAttribute.needsUpdate = true;
+  /** How fully the cloud has gathered, 0 mid-flight to 1 on arrival. */
+  setArrival(value) {
+    this.pointMaterial.uniforms.uArrival.value = value;
+    this.lineMaterial.uniforms.uArrival.value = value;
+  }
+
+  /**
+   * Blends the cloud between two shapes.
+   *
+   * `t` comes from the flight, so the morph is paced by the site rather than
+   * by the wheel. The radial push at the middle is what makes it read as the
+   * cloud dispersing and gathering again instead of every particle sliding
+   * along its own straight line — the straight version looked mechanical.
+   */
+  setBlend(from, to, t) {
+    const last = this.layouts.length - 1;
+    const A = this.layouts[Math.max(0, Math.min(last, from))];
+    const B = this.layouts[Math.max(0, Math.min(last, to))];
+
+    if (A === B) {
+      this.target.set(A);
+      return;
+    }
+
+    const scatter = 1 + Math.sin(Math.PI * t) * SCATTER;
+    for (let i = 0; i < this.target.length; i += 1) {
+      this.target[i] = (A[i] * (1 - t) + B[i] * t) * scatter;
+    }
   }
 
   /** Scroll-driven radial swell: the body expands and contracts as you move. */
@@ -336,7 +356,7 @@ export class Swarm {
 
     this.breath = damp(this.breath, this.breathTarget, 1.2, dt);
     for (let i = 0; i < this.current.length; i += 1) {
-      this.current[i] = damp(this.current[i], this.positions[i] * this.breath, SETTLE_RATE, dt);
+      this.current[i] = damp(this.current[i], this.target[i] * this.breath, SETTLE_RATE, dt);
     }
     this.pointAttribute.needsUpdate = true;
 

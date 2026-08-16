@@ -1,22 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
-import universe from '../data/universe.json';
-import { buildJourney, pagesOf } from '../engine/journey.js';
+import { buildPages } from '../engine/pages.js';
 
 /**
- * The homepage is a walk through the graph, one page at a time.
+ * The homepage is one cloud taking eight shapes, a page at a time.
  *
- * Two or three gestures advance a page; the flight between them travels the
- * legs of the walk and always takes the same time. The pages are stacked in
- * one place and cross-faded by the engine, because there is no scrolling
- * document any more — handing the pace of the animation to the wheel is what
- * made it read as chaos.
+ * Three gestures advance a page; the flight always takes the same time, and
+ * during it the particles disperse and gather into the next page's topology.
+ * The pages are stacked in one place and cross-faded by the engine, because
+ * there is no scrolling document any more — handing the pace of the animation
+ * to the wheel is what made it read as chaos.
  *
  * Every page is in the markup and readable without JavaScript: a crawler, or
  * a visitor whose engine failed, gets all the destinations as a plain list.
  */
-const JOURNEY = buildJourney(universe);
-const PAGES = pagesOf(JOURNEY).map((index) => ({ ...JOURNEY[index], index }));
+const PAGES = buildPages();
 ---
 
 <Base

@@ -1,88 +1,102 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildStructure } from '../src/engine/structure.js';
+import { buildStructure, SHAPE_COUNT } from '../src/engine/structure.js';
 import { PRESETS, ACTIVE } from '../src/engine/palette.js';
-import { buildJourney } from '../src/engine/journey.js';
+import { buildPages } from '../src/engine/pages.js';
 
 const universe = JSON.parse(readFileSync(new URL('../src/data/universe.json', import.meta.url)));
 const COUNT = 350;
 
-test('the field is populated, finite and does not collapse', () => {
-  const { positions } = buildStructure(universe, COUNT);
-  assert.equal(positions.length, COUNT * 3);
-
-  let min = Infinity;
-  let max = -Infinity;
-  for (let i = 0; i < positions.length; i += 1) {
-    assert.ok(Number.isFinite(positions[i]), `non-finite value at ${i}`);
-    if (positions[i] < min) min = positions[i];
-    if (positions[i] > max) max = positions[i];
-  }
-  assert.ok(max - min > 0.5, `the field spans only ${max - min}`);
+test('there is one shape per page', () => {
+  const { layouts } = buildStructure(universe, COUNT);
+  assert.equal(layouts.length, SHAPE_COUNT);
+  assert.equal(buildPages().length, SHAPE_COUNT);
 });
 
-test('every region is a separate body, and none swallows another', () => {
-  // Two regions overlapping would read as one misshapen blob, and the road
-  // between them would have nowhere to go.
-  const { regions } = buildStructure(universe, COUNT);
-  assert.equal(regions.length, 7);
-  for (let a = 0; a < regions.length; a += 1) {
-    for (let b = a + 1; b < regions.length; b += 1) {
-      const gap = Math.hypot(
-        regions[a].centre[0] - regions[b].centre[0],
-        regions[a].centre[1] - regions[b].centre[1],
-        regions[a].centre[2] - regions[b].centre[2],
-      );
-      const touching = regions[a].radius + regions[b].radius;
-      assert.ok(gap > touching, `${regions[a].id} and ${regions[b].id} overlap`);
+test('every shape is fully populated, finite, and does not collapse', () => {
+  const { layouts } = buildStructure(universe, COUNT);
+  for (const [index, layout] of layouts.entries()) {
+    assert.equal(layout.length, COUNT * 3, `shape ${index} has the wrong length`);
+
+    let min = Infinity;
+    let max = -Infinity;
+    for (let i = 0; i < layout.length; i += 1) {
+      assert.ok(Number.isFinite(layout[i]), `shape ${index} has a non-finite value at ${i}`);
+      if (layout[i] < min) min = layout[i];
+      if (layout[i] > max) max = layout[i];
+    }
+    assert.ok(max - min > 0.5, `shape ${index} spans only ${max - min}`);
+  }
+});
+
+test('every shape occupies the same volume', () => {
+  // A morph should change the figure, not lurch the cloud toward or away from
+  // the camera. Normalising the extent is what stops that, and nothing else
+  // would report it if the normalisation were dropped.
+  const { layouts } = buildStructure(universe, COUNT);
+  const extents = layouts.map((layout) => {
+    let extent = 0;
+    for (let i = 0; i < layout.length; i += 3) {
+      extent = Math.max(extent, Math.hypot(layout[i], layout[i + 1], layout[i + 2]));
+    }
+    return extent;
+  });
+  for (const [index, extent] of extents.entries()) {
+    assert.ok(Math.abs(extent - extents[0]) < 0.01, `shape ${index} reaches ${extent}`);
+  }
+});
+
+test('no two shapes are the same figure', () => {
+  // Two pages morphing into indistinguishable clouds would look like the
+  // scroll had stopped working.
+  const { layouts } = buildStructure(universe, COUNT);
+  for (let a = 0; a < layouts.length; a += 1) {
+    for (let b = a + 1; b < layouts.length; b += 1) {
+      let moved = 0;
+      for (let i = 0; i < layouts[a].length; i += 1) {
+        moved += Math.abs(layouts[a][i] - layouts[b][i]);
+      }
+      const average = moved / layouts[a].length;
+      assert.ok(average > 0.25, `shapes ${a} and ${b} differ by only ${average.toFixed(3)}`);
     }
   }
 });
 
-test('a region is as big as what is behind its link', () => {
-  const { regions } = buildStructure(universe, COUNT);
-  const size = (id) => regions.find((r) => r.id === id).size;
-  assert.ok(size('projects') > size('publications'), '13 projects against 6 publications');
-  assert.ok(size('research') > size('news'), '16 works against 7 posts');
-});
-
-test('the particle budget is spent exactly', () => {
-  for (const count of [220, 350]) {
-    const { positions, regions } = buildStructure(universe, count);
-    assert.equal(positions.length, count * 3, `count ${count} produced the wrong buffer`);
-    assert.equal(
-      regions.reduce((sum, r) => sum + r.size, 0),
-      count,
-      `count ${count}: the regions do not add up`,
-    );
+test('the shapes are deterministic for a given content set', () => {
+  const a = buildStructure(universe, COUNT).layouts;
+  const b = buildStructure(universe, COUNT).layouts;
+  for (let i = 0; i < a.length; i += 1) {
+    assert.deepEqual(Array.from(a[i]), Array.from(b[i]), `shape ${i} is not reproducible`);
   }
 });
 
-test('the field is deterministic for a given content set', () => {
-  const a = buildStructure(universe, COUNT).positions;
-  const b = buildStructure(universe, COUNT).positions;
-  assert.deepEqual(Array.from(a), Array.from(b));
-});
-
-test('every stop has a tint the palette actually defines', () => {
-  const journey = buildJourney(universe);
+test('every page has a shape and a tint the palette defines', () => {
+  const pages = buildPages();
   const tints = PRESETS[ACTIVE].tints;
   assert.ok(tints, `preset ${ACTIVE} defines no tints`);
 
-  for (const [i, stop] of journey.entries()) {
-    assert.equal(typeof stop.tint, 'number', `stop ${i} has no tint zone`);
-    assert.ok(tints[stop.tint], `stop ${i} asks for tint ${stop.tint}, which does not exist`);
+  for (const [index, page] of pages.entries()) {
+    assert.equal(page.shape, index, `page ${index} points at the wrong shape`);
+    assert.ok(tints[page.tint], `page ${index} asks for tint ${page.tint}, which does not exist`);
   }
 });
 
-test('the colour changes on arrival, not on every screen of travelling', () => {
-  const journey = buildJourney(universe);
-  for (let i = 1; i < journey.length; i += 1) {
-    const changed = journey[i].tint !== journey[i - 1].tint;
-    const arrived = journey[i].kind === 'destination' || journey[i].kind === 'contact';
-    if (changed) {
-      assert.ok(arrived, `the tint changes at stop ${i}, which is only travelling`);
-    }
+test('every page that links somewhere has a label and a destination', () => {
+  for (const page of buildPages()) {
+    if (page.kind !== 'destination') continue;
+    assert.ok(page.label, 'a destination has no label');
+    assert.match(page.href, /^\/[a-z-]*\/$/, `${page.label} has a suspect href`);
+    assert.ok(page.cta, `${page.label} has no call to action`);
+  }
+});
+
+test('no two pages are the same view', () => {
+  const pages = buildPages();
+  for (let i = 1; i < pages.length; i += 1) {
+    const a = pages[i - 1].position;
+    const b = pages[i].position;
+    const moved = Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+    assert.ok(moved > 0.5, `pages ${i - 1} and ${i} are ${moved.toFixed(2)} apart`);
   }
 });

@@ -17,18 +17,20 @@ const settle = (stepper, seconds = 3) => {
   for (let i = 0; i < seconds * 60; i += 1) stepper.update(1 / 60);
 };
 
-test('one gesture is not enough to leave the page', () => {
+test('one or two gestures are not enough to leave the page', () => {
   const stepper = createStepper({ pages: 8 });
-  wheel(100);
+  wheel(120);
   assert.equal(stepper.index, 0, 'a single notch moved the page');
+  wheel(120);
+  assert.equal(stepper.index, 0, 'two notches moved the page');
   stepper.destroy();
 });
 
-test('two or three gestures advance exactly one page', () => {
+test('three gestures advance exactly one page', () => {
   const stepper = createStepper({ pages: 8 });
-  wheel(100);
-  wheel(100);
-  wheel(100);
+  wheel(120);
+  wheel(120);
+  wheel(120);
   assert.equal(stepper.index, 1, 'three notches should arrive at the next page');
   settle(stepper);
   assert.equal(stepper.position, 1);
@@ -38,10 +40,10 @@ test('two or three gestures advance exactly one page', () => {
 test('a flight cannot be hurried by scrolling harder', () => {
   // This is the whole point: the pace belongs to the site, not the device.
   const stepper = createStepper({ pages: 8 });
-  wheel(300);
+  wheel(400);
   assert.equal(stepper.index, 1);
 
-  for (let i = 0; i < 40; i += 1) wheel(300);
+  for (let i = 0; i < 40; i += 1) wheel(400);
   assert.equal(stepper.index, 1, 'input during a flight moved the page');
 
   settle(stepper);
@@ -51,7 +53,7 @@ test('a flight cannot be hurried by scrolling harder', () => {
 
 test('the flight takes its own time and eases at both ends', () => {
   const stepper = createStepper({ pages: 8 });
-  wheel(300);
+  wheel(400);
 
   const quarter = [];
   for (let i = 0; i < 60; i += 1) {
@@ -73,19 +75,19 @@ test('the flight takes its own time and eases at both ends', () => {
 
 test('reversing direction discards the push already accumulated', () => {
   const stepper = createStepper({ pages: 8 });
-  wheel(200);
-  wheel(-200);
+  wheel(300);
+  wheel(-300);
   assert.equal(stepper.index, 0, 'opposite pushes should cancel, not add up');
   stepper.destroy();
 });
 
 test('the journey does not run past either end', () => {
   const stepper = createStepper({ pages: 3 });
-  wheel(-500);
+  wheel(-600);
   assert.equal(stepper.index, 0);
 
   for (let i = 0; i < 10; i += 1) {
-    wheel(500);
+    wheel(600);
     settle(stepper);
   }
   assert.equal(stepper.index, 2, 'it should stop at the last page');
@@ -94,7 +96,7 @@ test('the journey does not run past either end', () => {
 
 test('reduced motion arrives without a flight', () => {
   const stepper = createStepper({ pages: 8, reducedMotion: true });
-  wheel(300);
+  wheel(400);
   assert.equal(stepper.index, 1);
   assert.equal(stepper.position, 1, 'there should be nothing left to animate');
   assert.equal(stepper.flying, false);

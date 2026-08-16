@@ -12,8 +12,14 @@
  * along rather than a sequence of jumps.
  */
 
-/** Accumulated wheel distance that commits to the next page. */
-const THRESHOLD = 260;
+/**
+ * Accumulated wheel distance that commits to the next page.
+ *
+ * Three notches on a typical wheel, which is the pacing the reference uses:
+ * enough that a page cannot be crossed by accident, few enough that reaching
+ * the end is not work.
+ */
+const THRESHOLD = 320;
 
 /** How long one page-to-page flight takes, in seconds. */
 const DURATION = 1.7;

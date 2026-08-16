@@ -2,8 +2,7 @@ import * as THREE from 'three';
 import { AmbientLayer } from './ambient-layer.js';
 import { Swarm } from './swarm.js';
 import { createPostFX } from './postfx.js';
-import { buildJourney, interpolateStops, pagesOf } from './journey.js';
-import { regionLayout } from './structure.js';
+import { buildPages, interpolateCamera } from './pages.js';
 import { createStepper } from './stepper.js';
 import { clampDelta, damp } from './damping.js';
 
@@ -20,16 +19,13 @@ export function isWebGLAvailable() {
 }
 
 /**
- * A journey through one place.
+ * One cloud, eight shapes, and a camera that only turns.
  *
- * The field is fixed in world space and the camera travels a walk through its
- * graph. Two or three gestures advance one page; the flight between pages
- * always takes the same time, passing through the stops on the way, and the
- * colour and the lighting ride along with it.
- *
- * The pace deliberately does not belong to the input device. Free scrolling
- * let a trackpad flick cross three stops in a moment, and no amount of care in
- * the path survives that.
+ * Three gestures advance a page; the flight always takes the same time, and
+ * during it the cloud disperses and gathers into the next page's topology.
+ * The pace deliberately does not belong to the input device — free scrolling
+ * let a trackpad flick cross three shapes in a moment, and no amount of care
+ * in the morph survives that.
  *
  * Nothing here is clickable and nothing here holds text — the pages' titles
  * and links live in the DOM above it, driven by `onPage`.
@@ -95,20 +91,12 @@ export class UniverseEngine {
     // The walk through the graph, and where the camera currently is on it.
     // Built from the same universe the page rendered its stops from, so the
     // two cannot disagree about where stop N is.
-    this.journey = buildJourney(this.universe);
-    this.pages = pagesOf(this.journey);
+    this.pages = buildPages();
     this.waypoint = { from: 0, to: 0, t: 0 };
-    this.camDesired = new THREE.Vector3(...this.journey[0].position);
-    this.camLookDesired = new THREE.Vector3(...this.journey[0].target);
+    this.camDesired = new THREE.Vector3(...this.pages[0].position);
+    this.camLookDesired = new THREE.Vector3(...this.pages[0].target);
     this.camPos = this.camDesired.clone();
     this.camLook = this.camLookDesired.clone();
-
-    // How lit each region is. Regions already passed keep an ember; the one
-    // being arrived at burns full. Damped per frame so nothing switches on
-    // abruptly. One value per region, which is what `owner` indexes.
-    const regionCount = regionLayout(this.universe).length;
-    this.glow = new Float32Array(regionCount);
-    this.glowTarget = new Float32Array(regionCount);
 
     this.pointerSpeed = 0;
     this.lastPointer = null;
@@ -195,35 +183,26 @@ export class UniverseEngine {
   }
 
   /**
-   * Turns the stepper's page position into a place on the journey.
+   * Which two shapes the cloud sits between, and how far along.
    *
-   * A page-to-page flight passes through the legs between them, so the camera
-   * traverses the whole span of stops rather than cutting from one page to the
-   * next. Position 2.4 is forty per cent of the way along the flight from page
-   * two to page three, wherever that lands among the stops.
+   * The stepper's position is already the answer: 2.4 means "forty per cent
+   * of the way from page two's shape to page three's". Nothing else decides
+   * the pace, which is the whole reason the morph stopped feeling chaotic.
    */
   readShape() {
-    const pages = this.pages;
     const position = this.stepper.position;
-    const page = Math.min(pages.length - 2, Math.max(0, Math.floor(position)));
-    const within = Math.min(1, Math.max(0, position - page));
-
-    const start = pages[page];
-    const end = pages[page + 1] ?? start;
-    const stop = start + (end - start) * within;
-
-    const from = Math.min(this.journey.length - 1, Math.floor(stop));
-    const to = Math.min(this.journey.length - 1, from + 1);
-    const t = stop - from;
+    const from = Math.min(this.pages.length - 1, Math.max(0, Math.floor(position)));
+    const to = Math.min(this.pages.length - 1, from + 1);
+    const t = position - from;
 
     // Progress through the whole journey, which drives the radial breath.
-    this.scroll = pages.length > 1 ? position / (pages.length - 1) : 0;
-    // Full weight on arrival, easing off while in flight.
+    this.scroll = this.pages.length > 1 ? position / (this.pages.length - 1) : 0;
+    // Full weight on arrival, easing off mid-flight.
     this.targetWeight = 1 - Math.min(1, Math.abs(position - Math.round(position)) * 2);
 
     this.waypoint = { from, to, t };
+    this.swarm.setBlend(from, to, t);
     this.applyTint(from, to, t);
-    this.aimGlow(from, to, t);
 
     if (from !== this.shape) {
       this.shape = from;
@@ -232,37 +211,9 @@ export class UniverseEngine {
   }
 
   /**
-   * Lights the road behind you and the region you are arriving at.
-   *
-   * Everything already passed keeps a low ember, so the road reads as
-   * travelled rather than as a series of unrelated flashes. The region being
-   * approached comes up on the same curve as the camera, so its whole body —
-   * points and the threads inside it — is lit exactly when you arrive.
-   */
-  aimGlow(from, to, t) {
-    const EMBER = 0.28;
-    this.glowTarget.fill(0);
-
-    for (let i = 0; i <= from; i += 1) {
-      const region = this.journey[i]?.region;
-      if (region != null) this.glowTarget[region] = Math.max(this.glowTarget[region], EMBER);
-    }
-
-    const arriving = this.journey[to]?.region;
-    if (arriving != null) {
-      this.glowTarget[arriving] = Math.max(this.glowTarget[arriving], EMBER + (1 - EMBER) * t);
-    }
-
-    const here = this.journey[from];
-    if (here?.region != null) {
-      this.glowTarget[here.region] = Math.max(this.glowTarget[here.region], 1);
-    }
-  }
-
-  /**
-   * Colour rides the same blend as the topology. Snapping it on a section
-   * change while the shape interpolates reads as a cut in a scene that is
-   * otherwise continuous.
+   * Colour rides the same blend as the shape. Snapping it on arrival while
+   * the cloud is still gathering reads as a cut in a scene that is otherwise
+   * continuous.
    */
   applyTint(from, to, t) {
     const tints = palette.tints;
@@ -270,7 +221,7 @@ export class UniverseEngine {
 
     // Stops share a tint within a leg, so the colour changes on arrival rather
     // than on every screen of travelling.
-    const zoneOf = (i) => this.journey[i]?.tint ?? 0;
+    const zoneOf = (i) => this.pages[i]?.tint ?? 0;
     const A = tints[zoneOf(from)] ?? tints[tints.length - 1];
     const B = tints[zoneOf(to)] ?? tints[tints.length - 1];
     if (!A || !B) return;
@@ -319,7 +270,7 @@ export class UniverseEngine {
     // The camera travels between authored stations. The scroll curve decides
     // where between two it sits; the damping only smooths a fast scroll into
     // a glide, it does not decide the destination.
-    const shot = interpolateStops(this.journey, this.waypoint.from, this.waypoint.to, this.waypoint.t);
+    const shot = interpolateCamera(this.pages, this.waypoint.from, this.waypoint.to, this.waypoint.t);
     this.camDesired.set(shot.position[0], shot.position[1], shot.position[2]);
     this.camLookDesired.set(shot.target[0], shot.target[1], shot.target[2]);
 
@@ -339,11 +290,9 @@ export class UniverseEngine {
     this.swarm.group.rotation.set(0, this.bodyYaw, 0);
     this.swarm.group.updateMatrixWorld();
 
-    // The light follows the camera rather than snapping with the scroll event.
-    for (let i = 0; i < this.glow.length; i += 1) {
-      this.glow[i] = damp(this.glow[i], this.glowTarget[i], 2.6, dt);
-    }
-    this.swarm.setGlow(this.glow);
+    // Brightest when the cloud has gathered, dimmest in the middle of a
+    // morph: arriving somewhere should look like arriving.
+    this.swarm.setArrival(this.weight);
 
     // Pointer speed decays on real time, then drives the agitation.
     this.pointerSpeed *= Math.exp(-2.6 * dt);
