@@ -79,28 +79,28 @@
  * document. With the engine off these rules are neutralised below, so the
  * markup falls back to an ordinary readable list.
  */
-body[data-scene='on'] {
-  overflow: hidden;
-  height: 100vh;
-}
-
-body[data-scene='on'] .page-panel {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  padding: 7rem clamp(1.1rem, 5vw, 4.5rem);
-  opacity: 0;
-  will-change: opacity, transform;
-}
-
+/*
+ * A real scrolling document again. Sections are tall so that crossing one
+ * takes a few gestures — which is where the reference's pacing actually comes
+ * from, rather than from snapping.
+ */
 .page-panel {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
+  min-height: 170vh;
   display: flex;
   align-items: center;
   padding: 7rem clamp(1.1rem, 5vw, 4.5rem);
+  will-change: opacity;
+}
+
+/* The copy is sticky within its tall section, so it holds the middle of the
+   screen while the cloud morphs around it instead of sliding away. */
+.page-panel .station-inner,
+.page-panel .hero-portrait {
+  position: sticky;
+  top: 50vh;
+  transform: translateY(-50%);
 }
 
 /* The journey's progress, and a way to jump. */

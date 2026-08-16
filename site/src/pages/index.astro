@@ -3,13 +3,13 @@ import Base from '../layouts/Base.astro';
 import { buildPages } from '../engine/pages.js';
 
 /**
- * The homepage is one cloud taking eight shapes, a page at a time.
+ * The homepage is one cloud taking eight shapes as you scroll.
  *
- * Three gestures advance a page; the flight always takes the same time, and
- * during it the particles disperse and gather into the next page's topology.
- * The pages are stacked in one place and cross-faded by the engine, because
- * there is no scrolling document any more — handing the pace of the animation
- * to the wheel is what made it read as chaos.
+ * A real scrolling document, smoothed by Lenis with the reference's own
+ * easing. Each page is a tall section; crossing one morphs the cloud into the
+ * next topology. An earlier build stacked the pages and snapped between them
+ * to control the pace — the reference turned out not to snap at all, and the
+ * feel comes from the easing curve instead.
  *
  * Every page is in the markup and readable without JavaScript: a crawler, or
  * a visitor whose engine failed, gets all the destinations as a plain list.
@@ -117,6 +117,7 @@ const PAGES = buildPages();
   <script>
     import universeData from '../data/universe.json';
     import { UniverseEngine, isWebGLAvailable } from '../engine/index.js';
+    import { installSmoothScroll } from '../engine/smooth-scroll.js';
     import { installDiagnostics, reportEnvironment, report } from '../engine/diagnostics.js';
 
     installDiagnostics();
@@ -127,18 +128,16 @@ const PAGES = buildPages();
     const panels = [...document.querySelectorAll('.page-panel')];
     const dots = [...document.querySelectorAll('.page-dot')];
 
+    installSmoothScroll();
+
     /**
-     * A page is fully present only once the flight has arrived. Halfway
-     * between two, both are gone and the field has the screen to itself,
-     * which is the point of travelling.
+     * The copy fades as its section leaves the middle of the screen, so the
+     * field is uncluttered while the cloud is between two shapes.
      */
     const paint = (position) => {
       for (const [i, panel] of panels.entries()) {
-        const presence = Math.max(0, 1 - Math.abs(position - i) * 2.4);
+        const presence = Math.max(0, 1 - Math.abs(position - i) * 1.8);
         panel.style.opacity = String(presence);
-        panel.style.transform = `translateY(${(i - position) * 42}px)`;
-        panel.style.pointerEvents = presence > 0.6 ? 'auto' : 'none';
-        panel.setAttribute('aria-hidden', presence > 0.6 ? 'false' : 'true');
       }
       for (const [i, dot] of dots.entries()) {
         dot.classList.toggle('is-current', Math.round(position) === i);
@@ -165,18 +164,10 @@ const PAGES = buildPages();
 
         paint(0);
 
+        // The dots scroll the document; Lenis smooths the trip for free.
         for (const dot of dots) {
-          dot.addEventListener('click', () => engine.goToPage(Number(dot.dataset.goto)));
-        }
-
-        // The masthead's two anchors are pages now, not places to scroll to.
-        for (const link of document.querySelectorAll('a[href^="#"]')) {
-          link.addEventListener('click', (event) => {
-            const target = document.getElementById(link.getAttribute('href').slice(1));
-            const ordinal = panels.indexOf(target);
-            if (ordinal < 0) return;
-            event.preventDefault();
-            engine.goToPage(ordinal);
+          dot.addEventListener('click', () => {
+            window.scrollTo({ top: engine.offsetOfPage(Number(dot.dataset.goto)) });
           });
         }
       } catch (error) {

@@ -3,7 +3,6 @@ import { AmbientLayer } from './ambient-layer.js';
 import { Swarm } from './swarm.js';
 import { createPostFX } from './postfx.js';
 import { buildPages, interpolateCamera } from './pages.js';
-import { createStepper } from './stepper.js';
 import { clampDelta, damp } from './damping.js';
 
 
@@ -21,11 +20,11 @@ export function isWebGLAvailable() {
 /**
  * One cloud, eight shapes, and a camera that only turns.
  *
- * Three gestures advance a page; the flight always takes the same time, and
- * during it the cloud disperses and gathers into the next page's topology.
- * The pace deliberately does not belong to the input device — free scrolling
- * let a trackpad flick cross three shapes in a moment, and no amount of care
- * in the morph survives that.
+ * The scroll is free and smoothed by Lenis with the reference's own easing;
+ * the cloud's shape is read straight off it. An earlier build snapped to
+ * discrete pages to control the pace, which turned out to be imitating
+ * something the reference does not do — its scroll never snaps, and the
+ * measured feel comes from the easing curve.
  *
  * Nothing here is clickable and nothing here holds text — the pages' titles
  * and links live in the DOM above it, driven by `onPage`.
@@ -120,15 +119,6 @@ export class UniverseEngine {
       });
     }
 
-    // Two or three gestures advance one page; the flight between them always
-    // takes the same time. Handing that pace to the wheel is what made the
-    // journey read as chaos.
-    this.stepper = createStepper({
-      pages: this.pages.length,
-      reducedMotion: this.reducedMotion,
-      onChange: (position) => this.onPage?.(position, this.pages.length),
-    });
-
     this.bindEvents();
     this.readShape();
 
@@ -185,18 +175,22 @@ export class UniverseEngine {
   /**
    * Which two shapes the cloud sits between, and how far along.
    *
-   * The stepper's position is already the answer: 2.4 means "forty per cent
-   * of the way from page two's shape to page three's". Nothing else decides
-   * the pace, which is the whole reason the morph stopped feeling chaotic.
+   * Read straight off the scroll, which Lenis has already smoothed: the page
+   * position *is* the answer, and 2.4 means "forty per cent of the way from
+   * page two's shape to page three's". Nothing damps it further — the easing
+   * lives in the scroll itself, which is how the reference does it.
    */
   readShape() {
-    const position = this.stepper.position;
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
+    const position = progress * (this.pages.length - 1);
+    this.onPage(position, this.pages.length);
     const from = Math.min(this.pages.length - 1, Math.max(0, Math.floor(position)));
     const to = Math.min(this.pages.length - 1, from + 1);
     const t = position - from;
 
     // Progress through the whole journey, which drives the radial breath.
-    this.scroll = this.pages.length > 1 ? position / (this.pages.length - 1) : 0;
+    this.scroll = progress;
     // Full weight on arrival, easing off mid-flight.
     this.targetWeight = 1 - Math.min(1, Math.abs(position - Math.round(position)) * 2);
 
@@ -250,9 +244,6 @@ export class UniverseEngine {
     const dt = clampDelta(this.clock.getDelta());
     if (!this.reducedMotion) this.time += dt;
 
-    // The flight advances on real time, not on input, and everything else
-    // follows from where it has got to.
-    this.stepper.update(dt);
     this.readShape();
 
     // Heavily damped, as in the reference: the scene must not twitch each time
