@@ -7,6 +7,13 @@
  */
 const ENDPOINT = '/__diag';
 
+/*
+ * Only the dev server answers that endpoint. Built for production this shipped
+ * anyway, so every visit to the homepage beaconed its WebGL renderer at a URL
+ * that 404s. Vite folds the constant, so the queue goes out of the bundle too.
+ */
+const ENABLED = import.meta.env.DEV;
+
 const queue = [];
 let flushing = false;
 
@@ -25,11 +32,14 @@ function flush() {
 }
 
 export function report(entry) {
+  if (!ENABLED) return;
   queue.push({ at: new Date().toISOString().slice(11, 19), ...entry });
   flush();
 }
 
 export function installDiagnostics() {
+  if (!ENABLED) return;
+
   window.addEventListener('error', (event) => {
     report({
       kind: 'window.error',
@@ -62,6 +72,10 @@ export function installDiagnostics() {
 }
 
 export function reportEnvironment(canvas, universe) {
+  // Probing costs a throwaway WebGL2 context; not worth it for a report that
+  // nothing is listening for.
+  if (!ENABLED) return;
+
   let webgl2 = false;
   let renderer = 'unknown';
   try {

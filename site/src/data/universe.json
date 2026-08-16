@@ -385,58 +385,6 @@
       ]
     }
   ],
-  "education": [
-    {
-      "degree": "PhD in Artificial Intelligence",
-      "institution": "Scuola Superiore Sant'Anna & University of Pisa",
-      "from": "2025",
-      "to": "present"
-    },
-    {
-      "degree": "Second-Level Master in Customer Experience, Statistics, ML and AI",
-      "institution": "University of Rome Tor Vergata",
-      "from": "2025",
-      "to": "2026"
-    },
-    {
-      "degree": "MSc in Financial Markets and Financial Intermediaries",
-      "institution": "University of Rome Tor Vergata",
-      "from": "2022",
-      "to": "2025"
-    },
-    {
-      "degree": "BSc in Governance & International Relations",
-      "institution": "University of Rome Tor Vergata",
-      "from": "2019",
-      "to": "2022"
-    },
-    {
-      "degree": "YUFE Student Journey",
-      "institution": "Young Universities for the Future of Europe (European University Alliance)",
-      "from": "2021",
-      "to": "2023"
-    },
-    {
-      "degree": "BA in Philosophy (not completed)",
-      "institution": "University of Rome La Sapienza",
-      "from": "2015",
-      "to": "2017"
-    }
-  ],
-  "experience": [
-    {
-      "role": "PhD Researcher",
-      "org": "Scuola Superiore Sant'Anna",
-      "from": "2025",
-      "to": "present"
-    },
-    {
-      "role": "Academic Tutor",
-      "org": "University of Rome Tor Vergata",
-      "from": "2020",
-      "to": "2025"
-    }
-  ],
   "counts": {
     "coauthors": 15,
     "institutions": 9,

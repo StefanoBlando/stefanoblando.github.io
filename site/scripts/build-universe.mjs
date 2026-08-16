@@ -19,7 +19,6 @@ import { PEOPLE, INSTITUTION_COUNT } from '../src/data/people.js';
 const here = dirname(fileURLToPath(import.meta.url));
 const CONTENT = join(here, '../src/content');
 const PILLARS = join(here, '../src/data/pillars.yaml');
-const AUTHOR = join(here, '../../data/authors/me.yaml');
 const OUT = join(here, '../src/data/universe.json');
 
 // One body, not four regions. Each pillar owns a sector of a single sphere,
@@ -117,60 +116,6 @@ for (const dir of publicationDirs) {
   });
 }
 
-/**
- * Education entries from the author data file. Parsed rather than restated:
- * the earlier prototype hand-wrote a timeline naming the wrong universities.
- */
-function readEducation() {
-  const raw = readFileSync(AUTHOR, 'utf8');
-  const block = raw.match(/^ {2}education:\n([\s\S]*?)(?=^ {2}[a-z_]+:)/m);
-  if (!block) return [];
-
-  return block[1]
-    .split(/^ {4}- /m)
-    .slice(1)
-    .map((entry) => {
-      const field = (key) => (entry.match(new RegExp(`^ *${key}: *(.+)$`, 'm')) || [, ''])[1].trim();
-      const start = field('start');
-      const end = field('end');
-      return {
-        degree: field('degree').replace(/^["']|["']$/g, ''),
-        institution: field('institution').replace(/^["']|["']$/g, ''),
-        from: start.slice(0, 4),
-        to: end ? end.slice(0, 4) : 'present',
-      };
-    })
-    .filter((e) => e.degree && e.institution);
-}
-
-/**
- * Work history, normalised to the same from/to shape as education so one
- * timeline component renders both. The author file calls them `role` and
- * `org` where education says `degree` and `institution`.
- */
-function readExperience() {
-  const raw = readFileSync(AUTHOR, 'utf8');
-  const block = raw.match(/^ {2}experience:\n([\s\S]*?)(?=^ {2}[a-z_]+:)/m);
-  if (!block) return [];
-
-  return block[1]
-    .split(/^ {4}- /m)
-    .slice(1)
-    .map((entry) => {
-      const field = (key) => (entry.match(new RegExp(`^ *${key}: *(.+)$`, 'm')) || [, ''])[1].trim();
-      const strip = (s) => s.replace(/^["']|["']$/g, '');
-      const start = strip(field('start'));
-      const end = strip(field('end'));
-      return {
-        role: strip(field('role')),
-        org: strip(field('org')),
-        from: start.slice(0, 4),
-        to: end ? end.slice(0, 4) : 'present',
-      };
-    })
-    .filter((e) => e.role && e.org);
-}
-
 /** Unit vector for a sector axis. */
 function axisOf(azimuth, elevation) {
   return [
@@ -232,16 +177,11 @@ const clusters = CLUSTER_ORDER.map((id, index) => {
   };
 });
 
-const education = readEducation();
-const experience = readExperience();
-
 const universe = {
   generatedAt: new Date().toISOString().slice(0, 10),
   source: 'src/content',
   clusters,
   nodes,
-  education,
-  experience,
   // The scene sizes each region of the sky by what is behind its link, so it
   // needs the counts even for the parts that are not works.
   counts: {
@@ -255,8 +195,5 @@ const universe = {
 mkdirSync(dirname(OUT), { recursive: true });
 writeFileSync(OUT, `${JSON.stringify(universe, null, 2)}\n`);
 
-console.log(
-  `universe.json written: ${clusters.length} clusters, ${nodes.length} nodes, ` +
-    `${education.length} degrees, ${experience.length} roles`,
-);
+console.log(`universe.json written: ${clusters.length} clusters, ${nodes.length} nodes`);
 for (const c of clusters) console.log(`  ${c.index}. ${c.title.padEnd(38)} ${c.count} nodes`);

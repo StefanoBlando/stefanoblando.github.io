@@ -15,6 +15,15 @@ import { glob } from 'astro/loaders';
  */
 const bundleId = ({ entry }: { entry: string }) => entry.replace(/\/index\.md$/, '');
 
+/**
+ * The Italian entries live beside their originals as `index.it.md` and are
+ * loaded as parallel collections. The id is stripped of the language too, so
+ * `/projects/pokenexus/` and `/it/projects/pokenexus/` are the same slug in
+ * two languages rather than two unrelated pages — which is what lets one
+ * `hreflang` pair point at the other.
+ */
+const bundleIdIt = ({ entry }: { entry: string }) => entry.replace(/\/index\.it\.md$/, '');
+
 const link = z.object({
   name: z.string().optional(),
   url: z.string(),
@@ -48,6 +57,16 @@ const publications = defineCollection({
     projects: z.array(z.string()).optional(),
     links: z.array(link).default([]),
     image: image.optional(),
+    /*
+     * The two identifiers a paper is actually cited and found by. Optional
+     * because most entries do not have them yet; when they are filled in the
+     * detail page emits them as `citation_doi` and `citation_pdf_url`, which
+     * is what Google Scholar reads to index a paper.
+     *
+     * `doi` is the bare identifier — 10.xxxx/yyyy — not a URL.
+     */
+    doi: z.string().optional(),
+    pdf: z.string().optional(),
   }),
 });
 
@@ -83,4 +102,31 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { publications, projects, blog };
+/** Same schemas, Italian sources. */
+const publicationsIt = defineCollection({
+  loader: glob({
+    base: './src/content/publications',
+    pattern: '*/index.it.md',
+    generateId: bundleIdIt,
+  }),
+  schema: publications.schema,
+});
+
+const projectsIt = defineCollection({
+  loader: glob({ base: './src/content/projects', pattern: '*/index.it.md', generateId: bundleIdIt }),
+  schema: projects.schema,
+});
+
+const blogIt = defineCollection({
+  loader: glob({ base: './src/content/blog', pattern: '*/index.it.md', generateId: bundleIdIt }),
+  schema: blog.schema,
+});
+
+export const collections = {
+  publications,
+  projects,
+  blog,
+  publicationsIt,
+  projectsIt,
+  blogIt,
+};

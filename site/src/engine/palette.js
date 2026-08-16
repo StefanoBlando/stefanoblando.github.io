@@ -131,3 +131,35 @@ export const PRESETS = {
 export const ACTIVE = 'tonal-night';
 
 export const palette = PRESETS[ACTIVE];
+
+/**
+ * A light theme, measured but **not wired up**. Nothing emits it today; it is
+ * kept because the measurement is the expensive part and throwing it away
+ * would mean redoing it.
+ *
+ * It was built, shipped behind a toggle, and removed the same day — and the
+ * reason is worth keeping, because the numbers say it should have worked.
+ * Every value below clears 4.5:1 against the background and the two that carry
+ * small uppercase clear 5.8:1, so the *text* was never the problem. The
+ * pictures were. Every project and post cover is dark artwork on black; on
+ * paper they read as black slabs punched through the page, and a detail page
+ * became a white article wrapped around a black rectangle. The co-author graph
+ * has the same trouble: dark pills and faint emissive threads, drawn for a
+ * dark field. The homepage could not follow at all — additive blending, bloom
+ * and additive trails add light to the background, and on white there is none
+ * to add.
+ *
+ * **So a light theme here is a second art direction, not a second palette.**
+ * Turning it back on means new cover images and a recoloured graph first; the
+ * CSS below is the smallest part of that job.
+ */
+export const LIGHT = {
+  ink: '#f2f4f8',
+  paper: '#101a2c',
+  primary: '#3d5c8a',
+  accent: '#1f4f96',
+  smoke: '#cbd6e8',
+  muted: '#4d6079',
+  dim: '#41546f',
+  raised: '#ffffff',
+};

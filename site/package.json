@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "astro dev --port 4321",
-    "build": "npm run universe && astro build",
+    "build": "npm run universe && astro build && npm run search:index",
     "preview": "astro preview --port 4321",
-    "universe": "node scripts/build-universe.mjs && node scripts/build-palette.mjs",
+    "search:index": "pagefind --site dist",
+    "universe": "node scripts/build-universe.mjs && node scripts/build-resume.mjs && node scripts/build-pillars.mjs && node scripts/build-palette.mjs && node scripts/build-brand.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
     "astro": "^5.14.1",
     "d3-array": "^3.2.4",
     "d3-ease": "^3.0.1",
@@ -21,6 +24,7 @@
     "three": "^0.181.0"
   },
   "devDependencies": {
-    "js-yaml": "^5.3.0"
+    "js-yaml": "^5.3.0",
+    "pagefind": "^1.5.2"
   }
 }

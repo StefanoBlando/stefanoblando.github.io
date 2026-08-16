@@ -1,0 +1,132 @@
+[
+  {
+    "id": "multi-agent",
+    "index": 1,
+    "projects": [
+      "risk-sentinel",
+      "multi-agent-orchestration",
+      "real-estate-ai-agent"
+    ],
+    "title": {
+      "en": "Adaptive Multi-Agent Systems",
+      "it": "Sistemi Multi-Agente Adattivi"
+    },
+    "description": {
+      "en": "I study populations of learning, heuristic, and deliberative agents interacting over evolving economic networks, studying how local adaptation shapes aggregate dynamics.",
+      "it": "Studio popolazioni di agenti che apprendono, seguono euristiche e deliberano, in interazione su reti economiche in evoluzione, per capire come l'adattamento locale plasmi le dinamiche aggregate."
+    },
+    "detailed_text": {
+      "en": "In this research line, I model economic systems as dynamic, decentralized networks of heterogeneous decision-makers. Rather than assuming hyper-rational global equilibrium, agents operate with bounded rationality, local interactions, and adaptive strategies (such as multi-agent reinforcement learning or heuristic decision rules). By combining network science and agent-based modeling, I analyze how micro-level adaptation gives rise to macroeconomic phenomena, market liquidity shifts, and emergent systemic patterns.",
+      "it": "In questa linea di ricerca modello i sistemi economici come reti dinamiche e decentralizzate di decisori eterogenei. Invece di assumere un equilibrio globale iper-razionale, gli agenti operano con razionalità limitata, interazioni locali e strategie adattive (dall'apprendimento per rinforzo multi-agente a regole decisionali euristiche). Combinando scienza delle reti e modellazione ad agenti, analizzo come l'adattamento a livello micro dia origine a fenomeni macroeconomici, spostamenti di liquidità sui mercati e schemi sistemici emergenti."
+    },
+    "topics": {
+      "en": [
+        "Multi-Agent Systems",
+        "Reinforcement Learning",
+        "Graph Neural Networks"
+      ],
+      "it": [
+        "Sistemi Multi-Agente",
+        "Apprendimento per Rinforzo",
+        "Graph Neural Network"
+      ]
+    }
+  },
+  {
+    "id": "statistical-verification",
+    "index": 2,
+    "projects": [
+      "island-model-smc"
+    ],
+    "title": {
+      "en": "Statistical Verification",
+      "it": "Verifica Statistica"
+    },
+    "description": {
+      "en": "I use convergence diagnostics and statistical model checking to make simulation evidence more reliable and reproducible.",
+      "it": "Uso diagnostiche di convergenza e statistical model checking per rendere le evidenze di simulazione più affidabili e riproducibili."
+    },
+    "detailed_text": {
+      "en": "Agent-based models and complex stochastic simulations generate massive execution traces that are notoriously challenging to validate formally. My work applies Statistical Model Checking (SMC), hypothesis testing, and rigorous statistical convergence diagnostics to verify complex simulation outcomes against temporal logic specifications. This bridge between formal methods and agent-based economics establishes quantifiable confidence intervals for policy interventions and stress-test scenarios.",
+      "it": "I modelli ad agenti e le simulazioni stocastiche complesse generano tracce di esecuzione enormi, notoriamente difficili da validare in modo formale. Il mio lavoro applica lo Statistical Model Checking (SMC), i test d'ipotesi e diagnostiche rigorose di convergenza statistica per verificare gli esiti di simulazioni complesse rispetto a specifiche in logica temporale. Questo ponte fra metodi formali ed economia ad agenti stabilisce intervalli di confidenza quantificabili per gli interventi di policy e per gli scenari di stress test."
+    },
+    "topics": {
+      "en": [
+        "Statistical Model Checking",
+        "Agent-Based Modeling",
+        "Reproducibility"
+      ],
+      "it": [
+        "Statistical Model Checking",
+        "Modellazione ad Agenti",
+        "Riproducibilità"
+      ]
+    }
+  },
+  {
+    "id": "robust-quant",
+    "index": 3,
+    "projects": [
+      "robust-portfolio-optimization",
+      "network-crash-prediction",
+      "gas-network-risk-forecasting"
+    ],
+    "title": {
+      "en": "Robust Quantitative Methods",
+      "it": "Metodi Quantitativi Robusti"
+    },
+    "description": {
+      "en": "I apply econometrics, robust statistics, and graph learning to systemic risk and financial decision problems.",
+      "it": "Applico econometria, statistica robusta e apprendimento su grafi al rischio sistemico e ai problemi di decisione finanziaria."
+    },
+    "detailed_text": {
+      "en": "To address instability and structural shocks in economic infrastructure, I integrate robust econometrics, extreme value theory, and graph neural networks. This approach enables early detection of financial contagion vectors, stress propagation in interbank market networks, and energy network vulnerability forecasting. The goal is to build quantitative decision-support frameworks that remain resilient under heavy-tailed distributions and structural market regime shifts.",
+      "it": "Per affrontare instabilità e shock strutturali nelle infrastrutture economiche, integro econometria robusta, teoria dei valori estremi e graph neural network. Questo approccio permette di individuare precocemente i vettori di contagio finanziario, la propagazione dello stress nelle reti interbancarie e le vulnerabilità delle reti energetiche. L'obiettivo è costruire strumenti quantitativi di supporto alle decisioni che restino affidabili in presenza di distribuzioni a code pesanti e di cambi di regime nei mercati."
+    },
+    "topics": {
+      "en": [
+        "Econometrics",
+        "Systemic Risk",
+        "Economic Networks"
+      ],
+      "it": [
+        "Econometria",
+        "Rischio Sistemico",
+        "Reti Economiche"
+      ]
+    }
+  },
+  {
+    "id": "text-analytics",
+    "index": 4,
+    "projects": [
+      "nlp-semantic-network-analysis",
+      "peft-finetuning",
+      "rag-chatbot"
+    ],
+    "title": {
+      "en": "Text Analytics and Language Models",
+      "it": "Analisi Testuale e Modelli Linguistici"
+    },
+    "description": {
+      "en": "I apply text analytics and language models to multilingual corpora, sentiment and narrative dynamics, and to systems based on retrieval and embeddings.",
+      "it": "Applico l'analisi testuale e i modelli linguistici a corpora multilingue, alle dinamiche di sentiment e narrative, e a sistemi basati su retrieval ed embedding."
+    },
+    "detailed_text": {
+      "en": "I apply text analytics methods and language models to the study of unstructured data. The work covers the semantic structure of multilingual corpora, the extraction of sentiment and narrative dynamics, and the construction of systems based on retrieval, custom embeddings, and parameter-efficient adaptation of pretrained models. I use classical text analytics alongside transformer architectures, state-space models, and foundation models, with attention to verifying that results depend on the data rather than on the technique employed.",
+      "it": "Applico metodi di analisi testuale e modelli linguistici allo studio dei dati non strutturati. Il lavoro riguarda la struttura semantica di corpora multilingue, l'estrazione di sentiment e dinamiche narrative, e la costruzione di sistemi basati su retrieval, embedding su misura e adattamento parameter-efficient di modelli pre-addestrati. Uso l'analisi testuale classica accanto ad architetture transformer, modelli state-space e foundation model, con attenzione a verificare che i risultati dipendano dai dati e non dalla tecnica impiegata."
+    },
+    "topics": {
+      "en": [
+        "NLP",
+        "Narrative Economics",
+        "Foundation Models"
+      ],
+      "it": [
+        "NLP",
+        "Economia Narrativa",
+        "Foundation Model"
+      ]
+    }
+  }
+]

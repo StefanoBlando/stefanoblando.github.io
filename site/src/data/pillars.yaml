@@ -17,6 +17,23 @@
     - Multi-Agent Systems
     - Reinforcement Learning
     - Graph Neural Networks
+  title_it: Sistemi Multi-Agente Adattivi
+  description_it: >-
+    Studio popolazioni di agenti che apprendono, seguono euristiche e deliberano, in
+    interazione su reti economiche in evoluzione, per capire come l'adattamento locale plasmi
+    le dinamiche aggregate.
+  detailed_text_it: >-
+    In questa linea di ricerca modello i sistemi economici come reti dinamiche e
+    decentralizzate di decisori eterogenei. Invece di assumere un equilibrio globale
+    iper-razionale, gli agenti operano con razionalità limitata, interazioni locali e strategie
+    adattive (dall'apprendimento per rinforzo multi-agente a regole decisionali euristiche).
+    Combinando scienza delle reti e modellazione ad agenti, analizzo come l'adattamento a
+    livello micro dia origine a fenomeni macroeconomici, spostamenti di liquidità sui mercati e
+    schemi sistemici emergenti.
+  topics_it:
+    - Sistemi Multi-Agente
+    - Apprendimento per Rinforzo
+    - Graph Neural Network
   projects:
     - risk-sentinel
     - multi-agent-orchestration
@@ -38,6 +55,22 @@
     - Statistical Model Checking
     - Agent-Based Modeling
     - Reproducibility
+  title_it: Verifica Statistica
+  description_it: >-
+    Uso diagnostiche di convergenza e statistical model checking per rendere le evidenze di
+    simulazione più affidabili e riproducibili.
+  detailed_text_it: >-
+    I modelli ad agenti e le simulazioni stocastiche complesse generano tracce di esecuzione
+    enormi, notoriamente difficili da validare in modo formale. Il mio lavoro applica lo
+    Statistical Model Checking (SMC), i test d'ipotesi e diagnostiche rigorose di convergenza
+    statistica per verificare gli esiti di simulazioni complesse rispetto a specifiche in
+    logica temporale. Questo ponte fra metodi formali ed economia ad agenti stabilisce
+    intervalli di confidenza quantificabili per gli interventi di policy e per gli scenari di
+    stress test.
+  topics_it:
+    - Statistical Model Checking
+    - Modellazione ad Agenti
+    - Riproducibilità
   projects:
     - island-model-smc
 - id: robust-quant
@@ -57,6 +90,21 @@
     - Econometrics
     - Systemic Risk
     - Economic Networks
+  title_it: Metodi Quantitativi Robusti
+  description_it: >-
+    Applico econometria, statistica robusta e apprendimento su grafi al rischio sistemico e ai
+    problemi di decisione finanziaria.
+  detailed_text_it: >-
+    Per affrontare instabilità e shock strutturali nelle infrastrutture economiche, integro
+    econometria robusta, teoria dei valori estremi e graph neural network. Questo approccio
+    permette di individuare precocemente i vettori di contagio finanziario, la propagazione
+    dello stress nelle reti interbancarie e le vulnerabilità delle reti energetiche.
+    L'obiettivo è costruire strumenti quantitativi di supporto alle decisioni che restino
+    affidabili in presenza di distribuzioni a code pesanti e di cambi di regime nei mercati.
+  topics_it:
+    - Econometria
+    - Rischio Sistemico
+    - Reti Economiche
   projects:
     - robust-portfolio-optimization
     - network-crash-prediction
@@ -78,6 +126,22 @@
     - NLP
     - Narrative Economics
     - Foundation Models
+  title_it: Analisi Testuale e Modelli Linguistici
+  description_it: >-
+    Applico l'analisi testuale e i modelli linguistici a corpora multilingue, alle dinamiche di
+    sentiment e narrative, e a sistemi basati su retrieval ed embedding.
+  detailed_text_it: >-
+    Applico metodi di analisi testuale e modelli linguistici allo studio dei dati non
+    strutturati. Il lavoro riguarda la struttura semantica di corpora multilingue, l'estrazione
+    di sentiment e dinamiche narrative, e la costruzione di sistemi basati su retrieval,
+    embedding su misura e adattamento parameter-efficient di modelli pre-addestrati. Uso
+    l'analisi testuale classica accanto ad architetture transformer, modelli state-space e
+    foundation model, con attenzione a verificare che i risultati dipendano dai dati e non
+    dalla tecnica impiegata.
+  topics_it:
+    - NLP
+    - Economia Narrativa
+    - Foundation Model
   projects:
     - nlp-semantic-network-analysis
     - peft-finetuning

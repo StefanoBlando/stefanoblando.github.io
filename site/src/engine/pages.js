@@ -10,24 +10,19 @@ import { SHAPE_COUNT } from './structure.js';
  * competes with it.
  */
 
+/*
+ * `key` names the destination; the words come from the interface dictionary,
+ * so the journey speaks whichever language the page is in. The shapes, the
+ * camera and the order do not change with the language — only the labels.
+ */
 const PAGES = [
   { kind: 'hero' },
-  { kind: 'destination', label: 'Research', href: '/research/', cta: 'Four connected pillars' },
-  { kind: 'destination', label: 'Projects', href: '/projects/', cta: 'Research, built' },
-  {
-    kind: 'destination',
-    label: 'Publications',
-    href: '/publications/',
-    cta: 'Papers and proceedings',
-  },
-  { kind: 'destination', label: 'Experience', href: '/experience/', cta: 'The academic path' },
-  {
-    kind: 'destination',
-    label: 'Network',
-    href: '/network/',
-    cta: 'Co-authors and collaborators',
-  },
-  { kind: 'destination', label: 'News', href: '/blog/', cta: 'Recent updates' },
+  { kind: 'destination', key: 'research', href: '/research/' },
+  { kind: 'destination', key: 'projects', href: '/projects/' },
+  { kind: 'destination', key: 'publications', href: '/publications/' },
+  { kind: 'destination', key: 'experience', href: '/experience/' },
+  { kind: 'destination', key: 'network', href: '/network/' },
+  { kind: 'destination', key: 'news', href: '/blog/' },
   { kind: 'contact' },
 ];
 
