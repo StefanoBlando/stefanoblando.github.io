@@ -300,7 +300,7 @@ const REGIONS = [
 ];
 
 /** How far the region centres sit from the origin. */
-const SKY_RADIUS = 5.2;
+const SKY_RADIUS = 3.7;
 /** Smallest share of the particles a region may get: below this it is a smudge. */
 const MIN_SHARE = 0.06;
 /** Proximity threshold for threads inside a region, relative to its own radius. */
@@ -351,7 +351,7 @@ export function regionLayout(universe) {
     index: r,
     centre: centres[r],
     share: shares[r] / shareTotal,
-    radius: 0.85 + (shares[r] / shareTotal) * 2.4,
+    radius: 0.58 + (shares[r] / shareTotal) * 1.65,
   }));
 }
 
@@ -423,7 +423,7 @@ export function buildStructure(universe, count) {
   // space. Without them the sky is seven separate objects rather than one
   // graph whose regions happen to be built differently — and the journey needs
   // something to travel along.
-  const BRIDGES_PER_PAIR = 7;
+  const BRIDGES_PER_PAIR = 14;
   const linked = new Set();
   const bridge = (a, b) => {
     const key = a < b ? `${a}:${b}` : `${b}:${a}`;

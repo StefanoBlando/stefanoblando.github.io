@@ -55,12 +55,16 @@ const normalise = (a) => {
 function arrivalShot(region, previousCentre) {
   const from = previousCentre ?? add(region.centre, [0, region.radius * 2, region.radius * 3]);
   const back = normalise(sub(from, region.centre));
-  const position = add(add(region.centre, scale(back, region.radius * 2.6)), [
-    0,
-    region.radius * 0.55,
-    0,
-  ]);
-  return { position, target: region.centre };
+
+  // Mostly fixed rather than proportional to the region. Scaling the distance
+  // with the radius framed the small regions from so close that no neighbour
+  // fell inside the lens, and every arrival showed one cluster alone.
+  const stand = 2.9 + region.radius * 2.2;
+  const position = add(add(region.centre, scale(back, stand)), [0, region.radius * 1.05, 0]);
+
+  // Aimed slightly back toward the middle of the sky, so the frame keeps some
+  // of the graph the region belongs to instead of only the region.
+  return { position, target: mix(region.centre, [0, 0, 0], 0.18) };
 }
 
 /**

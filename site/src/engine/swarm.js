@@ -93,7 +93,7 @@ const POINT_VERT = /* glsl */ `
     // Constant screen size, as in the reference: the constellation reads as a
     // drawn figure rather than as objects receding into depth. A lit work
     // swells, which is what makes arriving somewhere feel like arriving.
-    gl_PointSize = aScale * uPixelRatio * 4.5 * (1.0 + glow * 1.3);
+    gl_PointSize = aScale * uPixelRatio * 2.7 * (1.0 + glow * 1.6);
     vColor = mix(uTeal, uGold, clamp(aTint + glow * 0.8, 0.0, 1.0));
     vFade = smoothstep(26.0, 2.0, depth) * nearFade(depth);
     vGlow = glow;
@@ -109,7 +109,7 @@ const POINT_FRAG = /* glsl */ `
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float alpha = smoothstep(0.5, 0.03, d);
-    gl_FragColor = vec4(vColor, alpha * vFade * (0.9 + vGlow * 1.4));
+    gl_FragColor = vec4(vColor, alpha * vFade * (0.5 + vGlow * 1.6));
   }
 `;
 
@@ -259,7 +259,7 @@ export class Swarm {
         uRepel: { value: 0 },
         // A whisper. The reference sits at 0.06; this is a touch higher only
         // because the finishing pass lifts contrast and crushes faint values.
-        uOpacity: { value: 0.3 },
+        uOpacity: { value: 0.4 },
       },
       transparent: true,
       depthWrite: false,
