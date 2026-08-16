@@ -50,7 +50,7 @@
 
   education:
     - degree: Dottorato in Intelligenza Artificiale
-      institution: Scuola Superiore Sant'Anna & University of Pisa
+      institution: Scuola Superiore Sant'Anna e Università di Pisa
       start: 2025-11-01
       summary: |
         Focus di ricerca: "Learning How to Learn: Adaptive Cognitive Architectures for Economic
@@ -59,34 +59,34 @@
         robusta.
 
     - degree: Master di II livello in Customer Experience, Statistics, ML and AI
-      institution: University of Rome Tor Vergata
+      institution: Università di Roma Tor Vergata
       start: 2025-02-03
       end: 2026-02-02
       summary: |
         Voto finale: 110/110 con lode.
-        Thesis: "Network Topology Analysis and Machine Learning Techniques for Systemic Risk Prediction in U.S. Equity Markets".
+        Tesi: "Network Topology Analysis and Machine Learning Techniques for Systemic Risk Prediction in U.S. Equity Markets".
         Programma avanzato in statistica, machine learning e intelligenza artificiale con SAS Academic Specialization in Advanced Data Analytics and Machine Learning Engineering.
         Selezionato tra i 3 migliori diplomati del Master da SAS Global Academic Management per l'iniziativa talenti SAS/DDI Data Lovers.
 
     - degree: Laurea Magistrale in Financial Markets and Financial Intermediaries
-      institution: University of Rome Tor Vergata
+      institution: Università di Roma Tor Vergata
       start: 2022-10-20
       end: 2025-04-04
       summary: |
         Voto finale: 108/110.
-        Thesis: "High-dimensional Robust Portfolio Optimization Under Contamination: A Factor-Analytic Approach".
+        Tesi: "High-dimensional Robust Portfolio Optimization Under Contamination: A Factor-Analytic Approach".
         Relatore: Prof. Alessio Farcomeni.
-        Focus: statistica robusta, finanza quantitativa e metodi fattoriali.
+        Ambito: statistica robusta, finanza quantitativa e metodi fattoriali.
 
     - degree: Laurea Triennale in Governance & International Relations
-      institution: University of Rome Tor Vergata
+      institution: Università di Roma Tor Vergata
       start: 2019-09-15
       end: 2022-09-30
       summary: |
         Voto finale: 110/110 con lode.
-        Thesis: "Consumer Choice Under Uncertainty: From Homo Oeconomicus to Homo Temperatus".
+        Tesi: "Consumer Choice Under Uncertainty: From Homo Oeconomicus to Homo Temperatus".
         Relatore: Prof. Gustavo Piga.
-        Scambio Erasmus+: University of Paris Est-Creteil (Ago 2021 - Feb 2022).
+        Erasmus+: University of Paris Est-Creteil (Ago 2021 - Feb 2022).
 
     - degree: YUFE Student Journey
       institution: Young Universities for the Future of Europe (Alleanza Universitaria Europea)
@@ -96,7 +96,7 @@
         Selezionato per la coorte competitiva di Tor Vergata (top 30 studenti di ateneo). Superato esame di lingua tedesca (A1/A2, Università di Brema) e completata formazione accademica inter-ateneo nelle università partner europee.
 
     - degree: Laurea Triennale in Filosofia (non completata)
-      institution: University of Rome La Sapienza
+      institution: Università di Roma La Sapienza
       start: 2015-09-01
       end: 2017-09-01
       summary: "Corsi sostenuti in logica, epistemologia, filosofia della scienza, filosofia del linguaggio, semiotica, filosofia teoretica, etica, filosofia politica, estetica e storia della filosofia."
@@ -114,7 +114,7 @@
         * Metodi robusti e ad alta dimensionalita per dati finanziari, socio-economici e testuali.
 
     - role: Tutor Accademico
-      org: University of Rome Tor Vergata
+      org: Università di Roma Tor Vergata
       company_url: "https://web.uniroma2.it/"
       location: Rome, Italy
       start: "2020-03-01"
@@ -224,19 +224,19 @@
           level: 4
 
   languages:
-    - name: Italian
+    - name: Italiano
       level: 5
       label: Madrelingua
-    - name: English
+    - name: Inglese
       level: 5
       label: Fluente (C1/C2)
-    - name: French
+    - name: Francese
       level: 3
       label: Intermedio (B1)
-    - name: German
+    - name: Tedesco
       level: 2
       label: Base (A1/A2)
-    - name: Spanish
+    - name: Spagnolo
       level: 2
       label: Base (A2)
 

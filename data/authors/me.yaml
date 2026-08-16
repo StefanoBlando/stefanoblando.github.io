@@ -38,6 +38,10 @@
       url: https://www.linkedin.com/in/stefano-blando/
     - icon: academicons/google-scholar
       url: https://scholar.google.com/citations?user=dNbRRG0AAAAJ&hl=it
+    - icon: academicons/orcid
+      url: https://orcid.org/0009-0007-0523-6855
+
+  orcid: 0009-0007-0523-6855
 
   interests:
     - Agent-Based Modeling

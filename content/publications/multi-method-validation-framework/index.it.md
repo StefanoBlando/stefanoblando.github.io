@@ -36,8 +36,6 @@ pillar: text-analytics
 
 # Custom links.
 links:
-- name: Coautrice (Prof.ssa Iezzi)
-  url: https://phd.uniroma2.it/web/DOMENICA-FIOREDISTELLA-IEZZI_nC4200_EN.aspx
 - name: Code
   url: https://github.com/stefano-blando/nlp-semantic-network
 
