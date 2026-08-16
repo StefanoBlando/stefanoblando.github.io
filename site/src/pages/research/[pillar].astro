@@ -1,7 +1,6 @@
 ---
+import Base from '../../layouts/Base.astro';
 import universe from '../../data/universe.json';
-import '../../styles/palette.css';
-import '../../styles/scene.css';
 
 export function getStaticPaths() {
   return universe.clusters.map((cluster) => ({
@@ -17,105 +16,65 @@ const publications = works.filter((w) => w.kind === 'publication');
 const projects = works.filter((w) => w.kind === 'project');
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#030608" />
-    <title>{cluster.title} — Stefano Blando</title>
-    <meta name="description" content={cluster.description} />
-  </head>
+<Base title={`${cluster.title} — Stefano Blando`} description={cluster.description} scene={false}>
+  <main class="page">
+    <p class="index-meta">{String(cluster.index).padStart(2, '0')} — Research pillar</p>
+    <h1>{cluster.title}</h1>
+    <p class="page-lede">{cluster.description}</p>
 
-  <body data-scene="on">
-    <div class="tint-wash" aria-hidden="true"></div>
-    <div class="scrim" aria-hidden="true"></div>
+    <ul class="tag-row">
+      {cluster.topics.map((topic) => <li>{topic}</li>)}
+    </ul>
 
-    <header class="masthead">
-      <a class="wordmark" href="/">Stefano Blando<span>.</span></a>
-      <p class="affiliation-line">Scuola Superiore Sant'Anna · Pisa</p>
-    </header>
+    {/* The long-form paragraph the homepage used to carry, now where it can be read. */}
+    <p class="pillar-detail">{cluster.detailed_text}</p>
 
-    <canvas id="universe" aria-hidden="true"></canvas>
+    {
+      publications.length > 0 && (
+        <>
+          <h2 class="year-heading">Publications</h2>
+          <ul class="index-list">
+            {publications.map((work) => (
+              <li>
+                <a href={work.href}>
+                  <span class="index-title">{work.title}</span>
+                  <span class="index-summary">{work.summary}</span>
+                </a>
+                <ul class="tag-row">
+                  {work.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
 
-    <div class="cluster-stage" data-shape={cluster.index}>
-      <div class="cluster-intro">
-        <p class="eyebrow">
-          <span class="pip"></span>
-          {String(cluster.index).padStart(2, '0')} · Research pillar
-        </p>
-        <h1>{cluster.title}</h1>
-        <p class="lede">{cluster.description}</p>
-        <ul class="topic-row">
-          {cluster.topics.map((topic) => <li>{topic}</li>)}
-        </ul>
-        <a class="back-link" href="/">← Back to the network</a>
-      </div>
-    </div>
+    {
+      projects.length > 0 && (
+        <>
+          <h2 class="year-heading">Projects</h2>
+          <ul class="index-list">
+            {projects.map((work) => (
+              <li>
+                <a href={work.href}>
+                  <span class="index-title">{work.title}</span>
+                  <span class="index-summary">{work.summary}</span>
+                </a>
+                <ul class="tag-row">
+                  {work.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
 
-    <main class="cluster-index">
-      {
-        projects.length > 0 && (
-          <section>
-            <h2>Projects</h2>
-            <ul class="work-grid">
-              {projects.map((work) => (
-                <li>
-                  <a href={work.href}>
-                    <span class="work-kind">Project</span>
-                    <span class="work-title">{work.title}</span>
-                    <span class="work-summary">{work.summary}</span>
-                    <span class="work-tags">{work.tags.join(' · ')}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
-
-      {
-        publications.length > 0 && (
-          <section>
-            <h2>Publications</h2>
-            <ul class="work-grid">
-              {publications.map((work) => (
-                <li>
-                  <a href={work.href}>
-                    <span class="work-kind">Paper</span>
-                    <span class="work-title">{work.title}</span>
-                    <span class="work-summary">{work.summary}</span>
-                    <span class="work-tags">{work.tags.join(' · ')}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
-    </main>
-
-    <script>
-      import universeData from '../../data/universe.json';
-      import { UniverseEngine, isWebGLAvailable } from '../../engine/index.js';
-
-      const canvas = document.getElementById('universe');
-
-      if (isWebGLAvailable()) {
-        try {
-          // The stage carries this pillar's shape, so the backdrop holds its
-          // topology for as long as the reader is at the top of the page.
-          new UniverseEngine({
-            canvas,
-            universe: universeData,
-            quality: window.innerWidth < 780 ? 'low' : 'high',
-          });
-        } catch {
-          document.body.dataset.scene = 'off';
-        }
-      } else {
-        document.body.dataset.scene = 'off';
-      }
-    </script>
-  </body>
-</html>
+    <p class="back-link"><a href="/research/">← All research</a></p>
+  </main>
+</Base>

@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import universe from '../../data/universe.json';
+
+const { clusters, nodes } = universe;
+const countIn = (id, kind) => nodes.filter((n) => n.cluster === id && n.kind === kind).length;
+---
+
+<Base
+  title="Research — Stefano Blando"
+  description="Four connected research pillars: adaptive multi-agent systems, statistical verification, robust quantitative methods, and text analytics."
+  scene={false}
+>
+  <main class="page">
+    <h1>Research</h1>
+    <p class="page-lede">
+      Four connected pillars, from simulation design through to empirical validation. Each
+      gathers the papers and the software built around one line of questions.
+    </p>
+
+    <ul class="index-list">
+      {
+        clusters.map((cluster) => (
+          <li>
+            <a href={`/research/${cluster.id}/`}>
+              <span class="index-title">
+                {String(cluster.index).padStart(2, '0')} — {cluster.title}
+              </span>
+              <span class="index-summary">{cluster.description}</span>
+            </a>
+            <span class="index-meta">
+              {[
+                countIn(cluster.id, 'publication') > 0 &&
+                  `${countIn(cluster.id, 'publication')} publications`,
+                countIn(cluster.id, 'project') > 0 && `${countIn(cluster.id, 'project')} projects`,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </span>
+            <ul class="tag-row">
+              {cluster.topics.map((topic) => (
+                <li>{topic}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Base>
