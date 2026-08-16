@@ -73,22 +73,30 @@ const POINT_VERT = /* glsl */ `
   ${NEAR_FADE}
   attribute float aScale;
   attribute float aTint;
+  attribute float aGlow;
   uniform float uTime;
   uniform float uPixelRatio;
   uniform vec3 uTeal;
   uniform vec3 uGold;
   varying vec3 vColor;
   varying float vFade;
+  varying float vGlow;
 
   void main() {
     vec3 pos = drift(position, uTime);
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     float depth = max(-mv.z, 0.001);
+    // How lit this particle's work is. An attribute rather than a lookup into
+    // a uniform array: GLSL ES 1.00 does not guarantee dynamic indexing, and a
+    // shader that fails to compile takes the whole scene with it.
+    float glow = aGlow;
     // Constant screen size, as in the reference: the constellation reads as a
-    // drawn figure rather than as objects receding into depth.
-    gl_PointSize = aScale * uPixelRatio * 4.5;
-    vColor = mix(uTeal, uGold, aTint);
+    // drawn figure rather than as objects receding into depth. A lit work
+    // swells, which is what makes arriving somewhere feel like arriving.
+    gl_PointSize = aScale * uPixelRatio * 4.5 * (1.0 + glow * 1.3);
+    vColor = mix(uTeal, uGold, clamp(aTint + glow * 0.8, 0.0, 1.0));
     vFade = smoothstep(26.0, 2.0, depth) * nearFade(depth);
+    vGlow = glow;
     gl_Position = projectionMatrix * mv;
   }
 `;
@@ -97,10 +105,11 @@ const POINT_FRAG = /* glsl */ `
   precision mediump float;
   varying vec3 vColor;
   varying float vFade;
+  varying float vGlow;
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float alpha = smoothstep(0.5, 0.03, d);
-    gl_FragColor = vec4(vColor, alpha * vFade * 0.9);
+    gl_FragColor = vec4(vColor, alpha * vFade * (0.9 + vGlow * 1.4));
   }
 `;
 
@@ -108,15 +117,18 @@ const LINE_VERT = /* glsl */ `
   ${DRIFT}
   ${NEAR_FADE}
   attribute float aStrength;
+  attribute float aGlow;
   uniform float uTime;
   varying float vFade;
   varying float vStrength;
+  varying float vGlow;
   void main() {
     vec3 pos = drift(position, uTime);
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     float depth = max(-mv.z, 0.001);
     vFade = smoothstep(32.0, 2.5, depth) * nearFade(depth);
     vStrength = aStrength;
+    vGlow = aGlow;
     gl_Position = projectionMatrix * mv;
   }
 `;
@@ -124,14 +136,17 @@ const LINE_VERT = /* glsl */ `
 const LINE_FRAG = /* glsl */ `
   precision mediump float;
   uniform vec3 uColor;
+  uniform vec3 uGlowColor;
   uniform float uOpacity;
   varying float vFade;
   varying float vStrength;
+  varying float vGlow;
   void main() {
-    // Uniform and quiet, as in the reference: the threads are a whisper that
-    // implies the network. Accent colours and per-edge emphasis turned them
-    // into a diagram competing with the cloud.
-    gl_FragColor = vec4(uColor, uOpacity * vFade * vStrength);
+    // Uniform and quiet by default, as in the reference: the threads are a
+    // whisper that implies the network. The exception is a thread touching a
+    // work the journey has reached — that one is the road, and it is lit.
+    vec3 colour = mix(uColor, uGlowColor, vGlow);
+    gl_FragColor = vec4(colour, uOpacity * vFade * vStrength * (1.0 + vGlow * 2.6));
   }
 `;
 
@@ -186,6 +201,10 @@ export class Swarm {
     geometry.setAttribute('position', this.pointAttribute);
     geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
     geometry.setAttribute('aTint', new THREE.BufferAttribute(tints, 1));
+    this.pointGlow = new Float32Array(this.count);
+    this.pointGlowAttribute = new THREE.BufferAttribute(this.pointGlow, 1);
+    this.pointGlowAttribute.setUsage(THREE.DynamicDrawUsage);
+    geometry.setAttribute('aGlow', this.pointGlowAttribute);
 
     this.pointMaterial = new THREE.ShaderMaterial({
       vertexShader: POINT_VERT,
@@ -221,12 +240,20 @@ export class Swarm {
     geometry.setAttribute('position', this.lineAttribute);
     geometry.setAttribute('aStrength', new THREE.BufferAttribute(this.structure.strengths, 1));
 
+    // Each thread endpoint carries the work it belongs to, so a lit work lights
+    // the threads leaving it — which is what makes the road visible.
+    this.lineGlow = new Float32Array(this.pairs.length);
+    this.lineGlowAttribute = new THREE.BufferAttribute(this.lineGlow, 1);
+    this.lineGlowAttribute.setUsage(THREE.DynamicDrawUsage);
+    geometry.setAttribute('aGlow', this.lineGlowAttribute);
+
     this.lineMaterial = new THREE.ShaderMaterial({
       vertexShader: LINE_VERT,
       fragmentShader: LINE_FRAG,
       uniforms: {
         uTime: { value: 0 },
         uColor: { value: new THREE.Color(primary) },
+        uGlowColor: { value: new THREE.Color(primary) },
         uAgitation: { value: 0 },
         uCursor: { value: new THREE.Vector3(999, 999, 999) },
         uRepel: { value: 0 },
@@ -264,6 +291,21 @@ export class Swarm {
   setTint(primary, accent) {
     this.tintTargetPrimary.set(primary);
     this.tintTargetAccent.set(accent);
+    this.lineMaterial.uniforms.uGlowColor.value.set(accent);
+  }
+
+  /**
+   * How lit each work is, 0 to 1, indexed by work.
+   *
+   * Written in place: the uniform holds this exact array, so there is nothing
+   * to copy and nothing that can fall out of step with it.
+   */
+  setGlow(values) {
+    const owner = this.structure.owner;
+    for (let i = 0; i < this.count; i += 1) this.pointGlow[i] = values[owner[i]];
+    for (let k = 0; k < this.pairs.length; k += 1) this.lineGlow[k] = values[owner[this.pairs[k]]];
+    this.pointGlowAttribute.needsUpdate = true;
+    this.lineGlowAttribute.needsUpdate = true;
   }
 
   /** Scroll-driven radial swell: the body expands and contracts as you move. */

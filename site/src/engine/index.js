@@ -96,6 +96,11 @@ export class UniverseEngine {
     this.camPos = this.camDesired.clone();
     this.camLook = this.camLookDesired.clone();
 
+    // How lit each work is. Works already passed keep an ember; the one being
+    // arrived at burns full. Damped per frame so nothing switches on abruptly.
+    this.glow = new Float32Array(this.universe.nodes.length);
+    this.glowTarget = new Float32Array(this.universe.nodes.length);
+
     this.pointerSpeed = 0;
     this.lastPointer = null;
     // The body turns slowly on its own, so a station is never quite static.
@@ -185,10 +190,40 @@ export class UniverseEngine {
     this.targetWeight = weight;
     this.waypoint = { from, to, t };
     this.applyTint(from, to, t);
+    this.aimGlow(from, to, t);
 
     if (from !== this.shape) {
       this.shape = from;
       this.onShape({ type: 'shape', shape: from });
+    }
+  }
+
+  /**
+   * Lights the road behind you and the node you are arriving at.
+   *
+   * Everything the journey has already passed keeps a low ember, so the path
+   * reads as travelled rather than as a series of unrelated flashes. The stop
+   * being approached comes up on the same curve as the camera, so the light
+   * arrives exactly when you do.
+   */
+  aimGlow(from, to, t) {
+    const EMBER = 0.28;
+    this.glowTarget.fill(0);
+
+    for (let i = 0; i <= from; i += 1) {
+      const work = this.journey[i]?.work;
+      if (work != null) this.glowTarget[work] = Math.max(this.glowTarget[work], EMBER);
+    }
+
+    const arriving = this.journey[to]?.work;
+    if (arriving != null) {
+      this.glowTarget[arriving] = Math.max(this.glowTarget[arriving], EMBER + (1 - EMBER) * t);
+    }
+
+    // A destination burns brighter than a stop you merely travelled through.
+    const here = this.journey[from];
+    if (here?.work != null && here.kind === 'destination') {
+      this.glowTarget[here.work] = Math.max(this.glowTarget[here.work], 1);
     }
   }
 
@@ -266,6 +301,12 @@ export class UniverseEngine {
     this.bodyYaw += dt * 0.05;
     this.swarm.group.rotation.set(0, this.bodyYaw, 0);
     this.swarm.group.updateMatrixWorld();
+
+    // The light follows the camera rather than snapping with the scroll event.
+    for (let i = 0; i < this.glow.length; i += 1) {
+      this.glow[i] = damp(this.glow[i], this.glowTarget[i], 2.6, dt);
+    }
+    this.swarm.setGlow(this.glow);
 
     // Pointer speed decays on real time, then drives the agitation.
     this.pointerSpeed *= Math.exp(-2.6 * dt);

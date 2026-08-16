@@ -327,6 +327,7 @@ export function buildJourney(universe) {
   const firstNode = nodes[walk[0].index].position;
   stops.push({
     kind: 'hero',
+    work: null,
     position: add(scale(normalise(firstNode), 5.4), [0, 0.5, 0]),
     target: [0, 0, 0],
   });
@@ -339,8 +340,8 @@ export function buildJourney(universe) {
 
     stops.push(
       step.destination === null
-        ? { kind: 'leg', ...shot }
-        : { kind: 'destination', ...DESTINATIONS[step.destination], ...shot },
+        ? { kind: 'leg', work: step.index, ...shot }
+        : { kind: 'destination', work: step.index, ...DESTINATIONS[step.destination], ...shot },
     );
   }
 
@@ -348,6 +349,7 @@ export function buildJourney(universe) {
   const lastNode = nodes[walk.at(-1).index].position;
   stops.push({
     kind: 'contact',
+    work: null,
     position: add(scale(normalise(lastNode), 5.8), [0, -0.4, 0]),
     target: [0, 0, 0],
   });
