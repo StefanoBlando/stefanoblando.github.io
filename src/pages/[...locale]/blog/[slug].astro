@@ -30,6 +30,30 @@ const formatDate = (date) =>
   date.toLocaleDateString(LOCALES[lang], { year: 'numeric', month: 'long', day: 'numeric' });
 
 const alternates = await translationsOf('blog', post.id, (l) => localise(`/blog/${post.id}/`, l));
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const coverUrl = cover ? new URL(cover.src, Astro.site).href : undefined;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.summary,
+  datePublished: post.data.date.toISOString(),
+  inLanguage: lang,
+  url: pageUrl,
+  ...(coverUrl ? { image: coverUrl } : {}),
+  keywords: post.data.tags.join(', '),
+  author: {
+    '@type': 'Person',
+    name: 'Stefano Blando',
+    url: 'https://stefano-blando.github.io/',
+    affiliation: [
+      { '@type': 'CollegeOrUniversity', name: 'Scuola Superiore Sant’Anna' },
+      { '@type': 'CollegeOrUniversity', name: 'University of Pisa' },
+    ],
+  },
+};
 ---
 
 <Base
@@ -37,9 +61,13 @@ const alternates = await translationsOf('blog', post.id, (l) => localise(`/blog/
   description={post.data.summary}
   scene={false}
   lang={lang}
+  image={cover}
   alternates={alternates}
   type="article"
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </Fragment>
   <main class="page page-article">
     <p class="index-meta">{formatDate(post.data.date)}</p>
     <h1>{post.data.title}</h1>

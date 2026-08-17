@@ -35,7 +35,10 @@ const {
 
 const t = useTranslations(lang);
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const socialImage = new URL(image, Astro.site);
+const imagePath = typeof image === 'string' ? image : image?.src ?? '/media/social-card.png';
+const socialImage = new URL(imagePath, Astro.site);
+const socialImageWidth = typeof image === 'object' && image?.width ? String(image.width) : '1200';
+const socialImageHeight = typeof image === 'object' && image?.height ? String(image.height) : '630';
 const SITE_NAME = `Stefano Blando — ${t('home.role')}`;
 
 /**
@@ -108,8 +111,8 @@ const section = sectionKey ? t(sectionKey) : null;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={socialImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content={socialImageWidth} />
+    <meta property="og:image:height" content={socialImageHeight} />
     <meta property="og:image:alt" content="Stefano Blando, AI researcher and PhD candidate" />
 
     <meta name="twitter:card" content="summary_large_image" />

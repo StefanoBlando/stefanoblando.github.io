@@ -29,11 +29,34 @@ const covers = import.meta.glob('../../../content/projects/*/featured.{png,jpg,j
 const cover = Object.entries(covers).find(([path]) => path.includes(`/${project.id}/`))?.[1]
   ?.default;
 
-/* Only the languages this project actually exists in, so the switch and the
-   hreflang can never point at a page that is not there. */
 const alternates = await translationsOf('projects', project.id, (l) =>
   localise(`/projects/${project.id}/`, l),
 );
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+const coverUrl = cover ? new URL(cover.src, Astro.site).href : undefined;
+const githubLink = links.find((l) => l.url?.includes('github.com'))?.url;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': githubLink ? 'SoftwareSourceCode' : 'CreativeWork',
+  name: project.data.title,
+  description: project.data.summary,
+  inLanguage: lang,
+  url: pageUrl,
+  ...(coverUrl ? { image: coverUrl } : {}),
+  ...(githubLink ? { codeRepository: githubLink } : {}),
+  keywords: project.data.tags.join(', '),
+  author: {
+    '@type': 'Person',
+    name: 'Stefano Blando',
+    url: 'https://stefano-blando.github.io/',
+    affiliation: [
+      { '@type': 'CollegeOrUniversity', name: 'Scuola Superiore Sant’Anna' },
+      { '@type': 'CollegeOrUniversity', name: 'University of Pisa' },
+    ],
+  },
+};
 ---
 
 <Base
@@ -41,9 +64,13 @@ const alternates = await translationsOf('projects', project.id, (l) =>
   description={project.data.summary}
   scene={false}
   lang={lang}
+  image={cover}
   alternates={alternates}
   type="article"
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </Fragment>
   <main class="page page-article">
     <p class="index-meta">{t('nav.projects')}</p>
     <h1>{project.data.title}</h1>
