@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev --port 4321",
-    "build": "npm run universe && astro build && npm run search:index",
+    "build": "npm run universe && astro build && node -e \"import('node:fs').then(fs => fs.copyFileSync('dist/sitemap-index.xml', 'dist/sitemap.xml'))\" && npm run search:index",
     "preview": "astro preview --port 4321",
     "search:index": "pagefind --site dist",
     "universe": "node scripts/build-universe.mjs && node scripts/build-resume.mjs && node scripts/build-pillars.mjs && node scripts/build-palette.mjs && node scripts/build-brand.mjs",
