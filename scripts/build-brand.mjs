@@ -101,17 +101,32 @@ await sharp(Buffer.from(card))
   .toFile(join(PUBLIC, 'media/social-card.png'));
 
 /*
- * The favicon is the wordmark's own mark: the initials and the full stop that
- * the site sets in gold. Drawn as SVG so it stays sharp, with a PNG for the
- * platforms that still refuse one.
+ * The favicon and app icon use the modern particle network SB monogram.
+ * Rendered at multiple resolutions for maximum sharpness across all browsers and devices.
  */
-const icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="${INK}"/>
-  <text x="32" y="42" text-anchor="middle" font-family="Helvetica, Arial, sans-serif"
-        font-size="30" font-weight="700" letter-spacing="-0.5" fill="${PAPER}">SB<tspan fill="${GOLD}">.</tspan></text>
-</svg>`;
+const BRAND_ICON = join(here, '../src/data/brand/icon.jpg');
 
-writeFileSync(join(PUBLIC, 'favicon.svg'), `${icon}\n`);
-await sharp(Buffer.from(icon)).resize(180, 180).png().toFile(join(PUBLIC, 'apple-touch-icon.png'));
+await sharp(BRAND_ICON)
+  .resize(180, 180)
+  .png({ quality: 95, compressionLevel: 9 })
+  .toFile(join(PUBLIC, 'apple-touch-icon.png'));
 
-console.log('brand written: media/social-card.png, favicon.svg, apple-touch-icon.png');
+await sharp(BRAND_ICON)
+  .resize(64, 64)
+  .png({ quality: 95 })
+  .toFile(join(PUBLIC, 'favicon.png'));
+
+await sharp(BRAND_ICON)
+  .resize(32, 32)
+  .png({ quality: 95 })
+  .toFile(join(PUBLIC, 'favicon-32x32.png'));
+
+const base64Png = (await sharp(BRAND_ICON).resize(512, 512).png({ quality: 95 }).toBuffer()).toString('base64');
+const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <image width="512" height="512" href="data:image/png;base64,${base64Png}"/>
+</svg>\n`;
+
+writeFileSync(join(PUBLIC, 'favicon.svg'), svgIcon);
+
+console.log('brand written: media/social-card.png, favicon.svg, favicon.png, favicon-32x32.png, apple-touch-icon.png');
+
