@@ -104,45 +104,45 @@
   transform: translateY(-50%);
 }
 
-/* The journey's progress, and a way to jump. */
-.page-dots {
+/*
+ * The journey's progress.
+ *
+ * This was a column of eight dots, one per section, with the current one lit.
+ * What you actually read off it was a lit dot descending — so it is a rail
+ * that fills instead, which is the same information without asking you to
+ * count stations. It is set by `paint()` on the homepage, every frame.
+ */
+.journey-rail {
   position: fixed;
   right: clamp(1rem, 2.5vw, 2.2rem);
   top: 50%;
   transform: translateY(-50%);
   z-index: 30;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+  width: 2px;
+  /* Long enough to read as a measure of the whole page, short enough not to
+     draw a line down the artwork. */
+  height: min(38vh, 320px);
+  border-radius: 1px;
+  background: var(--line);
+  overflow: hidden;
 }
 
-body[data-scene='off'] .page-dots {
+body[data-scene='off'] .journey-rail {
   display: none;
 }
 
-.page-dot {
-  width: 7px;
-  height: 7px;
-  padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
-  transition:
-    background 300ms ease,
-    border-color 300ms ease,
-    transform 300ms ease;
-}
-
-.page-dot.is-current {
+.journey-rail-fill {
+  display: block;
+  width: 100%;
+  height: 0;
+  border-radius: inherit;
   background: var(--gold);
-  border-color: var(--gold);
-  transform: scale(1.5);
 }
 
 @media (max-width: 720px) {
-  .page-dots {
+  .journey-rail {
     right: 0.7rem;
+    height: min(30vh, 220px);
   }
 }
 

@@ -154,18 +154,18 @@ const person = {
     }
   </main>
 
-  <nav class="page-dots" aria-label="Journey">
-    {
-      PAGES.map((page, ordinal) => (
-        <button
-          type="button"
-          class="page-dot"
-          data-goto={ordinal}
-          aria-label={page.key ? t(`nav.${page.key}`) : t(page.kind === 'hero' ? 'home.start' : 'home.contact')}
-        />
-      ))
-    }
-  </nav>
+  {/*
+    How far along the journey you are. This replaced a column of eight buttons
+    that jumped to each section: at 7px they were never a real target on a
+    phone, and one filling rail says the same thing more plainly.
+
+    `aria-hidden` on purpose. The buttons were named destinations and belonged
+    in a nav landmark; the rail cannot be steered, so announcing it would offer
+    a control that does not exist. The masthead still names every section.
+  */}
+  <div class="journey-rail" aria-hidden="true">
+    <span class="journey-rail-fill"></span>
+  </div>
 
   <script>
     import universeData from '../../data/universe.json';
@@ -179,7 +179,7 @@ const person = {
     reportEnvironment(canvas, universeData);
 
     const panels = [...document.querySelectorAll('.page-panel')];
-    const dots = [...document.querySelectorAll('.page-dot')];
+    const railFill = document.querySelector('.journey-rail-fill');
 
     installSmoothScroll();
 
@@ -214,8 +214,12 @@ const person = {
         const presence = Math.max(0, 1 - Math.abs(position - i) * 1.8);
         panel.style.opacity = String(presence);
       }
-      for (const [i, dot] of dots.entries()) {
-        dot.classList.toggle('is-current', Math.round(position) === i);
+      // `position` is a float across the panels, so the rail moves with the
+      // scroll rather than stepping from section to section. No CSS transition
+      // on the height: this runs every frame, and one would fight it.
+      if (railFill) {
+        const journey = panels.length > 1 ? position / (panels.length - 1) : 0;
+        railFill.style.height = `${Math.min(100, Math.max(0, journey * 100))}%`;
       }
       markNav(Math.round(position));
     };
@@ -239,7 +243,7 @@ const person = {
     } else {
       document.body.dataset.scene = 'on';
       try {
-        const engine = new UniverseEngine({
+        new UniverseEngine({
           canvas,
           universe: universeData,
           quality: window.innerWidth < 780 ? 'low' : 'high',
@@ -251,13 +255,6 @@ const person = {
         });
 
         paint(0);
-
-        // The dots scroll the document; Lenis smooths the trip for free.
-        for (const dot of dots) {
-          dot.addEventListener('click', () => {
-            window.scrollTo({ top: engine.offsetOfPage(Number(dot.dataset.goto)) });
-          });
-        }
       } catch (error) {
         // The page is readable without the scene; never freeze on a dead canvas.
         document.body.dataset.scene = 'off';
