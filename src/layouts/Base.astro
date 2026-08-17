@@ -113,6 +113,31 @@ const section = sectionKey ? t(sectionKey) : null;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
 
+    {/* Google Analytics (G-NX5N314DTK) — loaded asynchronously on idle to preserve 60fps rendering */}
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-NX5N314DTK', { anonymize_ip: true });
+
+      function loadGA() {
+        if (window.__gaLoaded) return;
+        window.__gaLoaded = true;
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-NX5N314DTK';
+        document.head.appendChild(script);
+      }
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadGA, { timeout: 3000 });
+      } else {
+        window.addEventListener('load', loadGA);
+      }
+    </script>
+
     {/* Where a publication puts its citation metadata and a page its JSON-LD. */}
     <slot name="head" />
   </head>
