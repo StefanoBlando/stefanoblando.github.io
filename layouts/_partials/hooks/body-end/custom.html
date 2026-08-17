@@ -1,8 +1,0 @@
-{{ $network := resources.Get "js/research-network/index.js" | js.Build (dict "targetPath" "js/research-network.js" "format" "esm") | minify | fingerprint }}
-<script type="module" src="{{ $network.RelPermalink }}" integrity="{{ $network.Data.Integrity }}"></script>
-
-{{ $interactions := resources.Get "js/portfolio-interactions.js" }}
-{{ with $interactions }}
-  {{ $bundle := . | js.Build (dict "targetPath" "js/portfolio-interactions.js" "format" "esm") | minify | fingerprint }}
-  <script type="module" src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}"></script>
-{{ end }}

@@ -1,0 +1,393 @@
+{
+  "generatedAt": "2026-08-17",
+  "source": "src/content",
+  "clusters": [
+    {
+      "id": "multi-agent",
+      "index": 1,
+      "title": "Adaptive Multi-Agent Systems",
+      "description": "I study populations of learning, heuristic, and deliberative agents interacting over evolving economic networks, studying how local adaptation shapes aggregate dynamics.",
+      "detailed_text": "In this research line, I model economic systems as dynamic, decentralized networks of heterogeneous decision-makers. Rather than assuming hyper-rational global equilibrium, agents operate with bounded rationality, local interactions, and adaptive strategies (such as multi-agent reinforcement learning or heuristic decision rules). By combining network science and agent-based modeling, I analyze how micro-level adaptation gives rise to macroeconomic phenomena, market liquidity shifts, and emergent systemic patterns.",
+      "topics": [
+        "Multi-Agent Systems",
+        "Reinforcement Learning",
+        "Graph Neural Networks"
+      ],
+      "axis": [
+        0.5394,
+        0.2955,
+        0.7885
+      ],
+      "accent": "#dbb057",
+      "count": 3
+    },
+    {
+      "id": "statistical-verification",
+      "index": 2,
+      "title": "Statistical Verification",
+      "description": "I use convergence diagnostics and statistical model checking to make simulation evidence more reliable and reproducible.",
+      "detailed_text": "Agent-based models and complex stochastic simulations generate massive execution traces that are notoriously challenging to validate formally. My work applies Statistical Model Checking (SMC), hypothesis testing, and rigorous statistical convergence diagnostics to verify complex simulation outcomes against temporal logic specifications. This bridge between formal methods and agent-based economics establishes quantifiable confidence intervals for policy interventions and stress-test scenarios.",
+      "topics": [
+        "Statistical Model Checking",
+        "Agent-Based Modeling",
+        "Reproducibility"
+      ],
+      "axis": [
+        0.789,
+        -0.2182,
+        -0.5743
+      ],
+      "accent": "#8acbc1",
+      "count": 4
+    },
+    {
+      "id": "robust-quant",
+      "index": 3,
+      "title": "Robust Quantitative Methods",
+      "description": "I apply econometrics, robust statistics, and graph learning to systemic risk and financial decision problems.",
+      "detailed_text": "To address instability and structural shocks in economic infrastructure, I integrate robust econometrics, extreme value theory, and graph neural networks. This approach enables early detection of financial contagion vectors, stress propagation in interbank market networks, and energy network vulnerability forecasting. The goal is to build quantitative decision-support frameworks that remain resilient under heavy-tailed distributions and structural market regime shifts.",
+      "topics": [
+        "Econometrics",
+        "Systemic Risk",
+        "Economic Networks"
+      ],
+      "axis": [
+        -0.602,
+        0.179,
+        -0.7782
+      ],
+      "accent": "#f2a98c",
+      "count": 5
+    },
+    {
+      "id": "text-analytics",
+      "index": 4,
+      "title": "Text Analytics and Language Models",
+      "description": "I apply text analytics and language models to multilingual corpora, sentiment and narrative dynamics, and to systems based on retrieval and embeddings.",
+      "detailed_text": "I apply text analytics methods and language models to the study of unstructured data. The work covers the semantic structure of multilingual corpora, the extraction of sentiment and narrative dynamics, and the construction of systems based on retrieval, custom embeddings, and parameter-efficient adaptation of pretrained models. I use classical text analytics alongside transformer architectures, state-space models, and foundation models, with attention to verifying that results depend on the data rather than on the technique employed.",
+      "topics": [
+        "NLP",
+        "Narrative Economics",
+        "Foundation Models"
+      ],
+      "axis": [
+        -0.7383,
+        -0.2955,
+        0.6063
+      ],
+      "accent": "#c9d4e8",
+      "count": 4
+    }
+  ],
+  "nodes": [
+    {
+      "id": "project/risk-sentinel",
+      "cluster": "multi-agent",
+      "kind": "project",
+      "title": "RiskSentinel - Agentic Systemic Risk Simulator",
+      "summary": "Multi-agent systemic risk simulator for financial contagion analysis on 210 S&P 500 stocks, built for Microsoft AI Dev Days Hackathon 2026 and deployed as an interactive Streamlit app.",
+      "tags": [
+        "Hackathon",
+        "Multi-Agent Systems",
+        "Financial AI",
+        "Systemic Risk"
+      ],
+      "href": "/projects/risk-sentinel/",
+      "position": [
+        0.9908,
+        0.9853,
+        0.8725
+      ]
+    },
+    {
+      "id": "project/multi-agent-orchestration",
+      "cluster": "multi-agent",
+      "kind": "project",
+      "title": "Multi-Agent Orchestration",
+      "summary": "Event-driven multi-agent coordination system for auction-based procurement, inventory allocation, and real-time fulfillment under demand uncertainty.",
+      "tags": [
+        "Multi-Agent Systems",
+        "Event-Driven Systems",
+        "Auctions",
+        "Inventory Systems"
+      ],
+      "href": "/projects/multi-agent-orchestration/",
+      "position": [
+        0.1475,
+        0.4144,
+        1.5223
+      ]
+    },
+    {
+      "id": "project/real-estate-ai-agent",
+      "cluster": "multi-agent",
+      "kind": "project",
+      "title": "Real Estate AI Agent",
+      "summary": "Autonomous AI agent for property-market analysis, price estimation, and natural-language interaction built on predictive models and LLM orchestration.",
+      "tags": [
+        "Side Quest",
+        "AI Agents",
+        "LLMs",
+        "Predictive Modeling"
+      ],
+      "href": "/projects/real-estate-ai-agent/",
+      "position": [
+        1.2039,
+        0.0702,
+        1.2989
+      ]
+    },
+    {
+      "id": "project/island-model-smc",
+      "cluster": "statistical-verification",
+      "kind": "project",
+      "title": "Island Model + MultiVeStA — Statistical Model Checking of Economic Growth",
+      "summary": "Accepted paper at MARS @ ETAPS 2026. Reproduces and extends Fagiolo & Dosi (2003) Island Model using MultiVeStA for statistical model checking, with formal convergence guarantees on parameter sensitivity analysis.",
+      "tags": [
+        "Research",
+        "Agent-Based Modeling",
+        "Statistical Model Checking",
+        "MultiVeStA"
+      ],
+      "href": "/projects/island-model-smc/",
+      "position": [
+        1.5579,
+        -0.0772,
+        -1.0441
+      ]
+    },
+    {
+      "id": "project/robust-portfolio-optimization",
+      "cluster": "robust-quant",
+      "kind": "project",
+      "title": "Robust Portfolio Optimization under Systematic Market Disruptions (PFSE)",
+      "summary": "Novel PFSE estimator achieves 25% breakdown point with 32× computational speedup over MCD. Out-of-sample Sharpe 1.87 on S&P 500 (2015–2025), 29% lower drawdown during COVID-19. Submitted to Computational Economics.",
+      "tags": [
+        "Research",
+        "Quantitative Finance",
+        "Robust Statistics",
+        "Portfolio Optimization"
+      ],
+      "href": "/projects/robust-portfolio-optimization/",
+      "position": [
+        -0.588,
+        0.5381,
+        -1.4946
+      ]
+    },
+    {
+      "id": "project/network-crash-prediction",
+      "cluster": "robust-quant",
+      "kind": "project",
+      "title": "Network Topology Analysis for Systemic Risk Prediction",
+      "summary": "Financial machine learning project combining dynamic correlation networks, graph neural networks, and trading backtests to detect systemic risk in U.S. equity markets.",
+      "tags": [
+        "Research",
+        "Systemic Risk",
+        "Graph Neural Networks",
+        "Algo Trading"
+      ],
+      "href": "/projects/network-crash-prediction/",
+      "position": [
+        -0.5511,
+        -0.2104,
+        -1.5873
+      ]
+    },
+    {
+      "id": "project/gas-network-risk-forecasting",
+      "cluster": "robust-quant",
+      "kind": "project",
+      "title": "Gas Network Risk Forecasting",
+      "summary": "Second-place hackathon project for gas leak risk prediction using geospatial-temporal features, synthetic data augmentation, and SHAP-based interpretability.",
+      "tags": [
+        "Hackathon",
+        "Side Quest",
+        "Forecasting",
+        "Imbalanced Learning"
+      ],
+      "href": "/projects/gas-network-risk-forecasting/",
+      "position": [
+        -1.2155,
+        -0.0733,
+        -1.282
+      ]
+    },
+    {
+      "id": "project/nlp-semantic-network-analysis",
+      "cluster": "text-analytics",
+      "kind": "project",
+      "title": "NLP & Semantic Network Analysis",
+      "summary": "Technical implementation of the JADT paper pipeline, integrating multilingual preprocessing, topic modeling, correspondence analysis, semantic spaces, sentiment modules, and network-based validation across methods.",
+      "tags": [
+        "Research",
+        "Text Mining",
+        "Network Science",
+        "Correspondence Analysis"
+      ],
+      "href": "/projects/nlp-semantic-network-analysis/",
+      "position": [
+        -1.2742,
+        -0.69,
+        0.6085
+      ]
+    },
+    {
+      "id": "project/peft-finetuning",
+      "cluster": "text-analytics",
+      "kind": "project",
+      "title": "Lightweight Fine-Tuning with PEFT & LoRA",
+      "summary": "Parameter-efficient fine-tuning pipeline using LoRA to adapt DistilBERT for sentiment analysis while training less than 1% of the model parameters.",
+      "tags": [
+        "Side Quest",
+        "Generative AI",
+        "NLP",
+        "PEFT / LoRA"
+      ],
+      "href": "/projects/peft-finetuning/",
+      "position": [
+        -0.9845,
+        -0.7003,
+        1.0489
+      ]
+    },
+    {
+      "id": "project/rag-chatbot",
+      "cluster": "text-analytics",
+      "kind": "project",
+      "title": "Custom Chatbot with RAG",
+      "summary": "Retrieval-augmented chatbot that combines semantic search, custom embeddings, and LLM prompting for grounded domain-specific conversations.",
+      "tags": [
+        "Side Quest",
+        "Generative AI",
+        "NLP",
+        "RAG"
+      ],
+      "href": "/projects/rag-chatbot/",
+      "position": [
+        -0.8705,
+        0.0087,
+        1.5846
+      ]
+    },
+    {
+      "id": "publication/agentic-llm-formalization",
+      "cluster": "statistical-verification",
+      "kind": "publication",
+      "title": "Towards Agentic Agent-based Models: Feasibility, Performance, and Statistical Model Checking",
+      "summary": "arXiv preprint (2607.17948) evaluating LLM-driven agentic agent-based models with Statistical Model Checking via MultiVeStA.",
+      "tags": [
+        "Agentic AI",
+        "Agent-Based Modeling",
+        "Large Language Models",
+        "Statistical Model Checking"
+      ],
+      "href": "/publications/agentic-llm-formalization/",
+      "position": [
+        1.5212,
+        -0.4587,
+        -0.3322
+      ]
+    },
+    {
+      "id": "publication/island-model-smc",
+      "cluster": "statistical-verification",
+      "kind": "publication",
+      "title": "Statistical model checking of the Island Model: an established economic agent-based model of endogenous growth",
+      "summary": "Presented at MARS @ ETAPS 2026, this paper uses MultiVeStA to give the Island Model a more rigorous and reproducible statistical analysis.",
+      "tags": [
+        "Agent-Based Modeling",
+        "Computational Economics",
+        "Statistical Model Checking",
+        "MultiVeStA"
+      ],
+      "href": "/publications/island-model-smc/",
+      "position": [
+        1.1679,
+        -0.7383,
+        -0.9557
+      ]
+    },
+    {
+      "id": "publication/ks-model-smc",
+      "cluster": "statistical-verification",
+      "kind": "publication",
+      "title": "Statistical Model Checking of the Keynes+Schumpeter Model: A Transient Sensitivity Analysis of a Macroeconomic ABM",
+      "summary": "arXiv preprint introducing Statistical Model Checking (SMC) via MultiVeStA for transient sensitivity analysis of the Keynes+Schumpeter (K+S) macroeconomic agent-based model.",
+      "tags": [
+        "Agent-Based Modeling",
+        "Macroeconomics",
+        "Keynes+Schumpeter Model",
+        "Statistical Model Checking"
+      ],
+      "href": "/publications/ks-model-smc/",
+      "position": [
+        1.0223,
+        -0.2589,
+        -1.2306
+      ]
+    },
+    {
+      "id": "publication/multi-method-validation-framework",
+      "cluster": "text-analytics",
+      "kind": "publication",
+      "title": "A Multi-Method Validation Framework for Large-Scale Multilingual Text Analytics",
+      "summary": "Presented at JADT 2026 and awarded the VADISTAT Prize for young researchers, this paper validates 18 analytical approaches on 1M+ texts to identify method-invariant findings.",
+      "tags": [
+        "NLP",
+        "Methodology",
+        "BERT",
+        "Graph Neural Networks"
+      ],
+      "href": "/publications/multi-method-validation-framework/",
+      "position": [
+        -1.5976,
+        0.0028,
+        0.8081
+      ]
+    },
+    {
+      "id": "publication/network-crash-prediction",
+      "cluster": "robust-quant",
+      "kind": "publication",
+      "title": "Network Topology Analysis and Machine Learning Techniques for Systemic Risk Prediction in U.S. Equity Markets",
+      "summary": "Leveraging Graph Neural Networks (GNNs) and complex network theory to detect early warning signals of systemic risk in financial markets.",
+      "tags": [
+        "Systemic Risk",
+        "Graph Neural Networks",
+        "Network Science",
+        "Financial Machine Learning"
+      ],
+      "href": "/publications/network-crash-prediction/",
+      "position": [
+        -1.3174,
+        0.3479,
+        -1.0937
+      ]
+    },
+    {
+      "id": "publication/robust-port-opt",
+      "cluster": "robust-quant",
+      "kind": "publication",
+      "title": "Robust Portfolio Optimization Under Systematic Market Disruptions: A Factor-Analytic Approach",
+      "summary": "Based on my MSc thesis, this paper is currently in review at Computational Economics and develops a robust framework for portfolio optimization under contamination.",
+      "tags": [
+        "Quantitative Finance",
+        "Robust Statistics",
+        "Portfolio Optimization",
+        "High-Dimensional Data"
+      ],
+      "href": "/publications/robust-port-opt/",
+      "position": [
+        -1.0938,
+        0.9608,
+        -1.1977
+      ]
+    }
+  ],
+  "counts": {
+    "coauthors": 15,
+    "institutions": 9,
+    "posts": 7
+  }
+}

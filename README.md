@@ -1,7 +1,7 @@
 # 🎓 Stefano Blando | Research Portfolio
 
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fstefano-blando.github.io&label=Live%20Site&style=for-the-badge&color=2ea44f)](https://stefano-blando.github.io)
-[![Hugo](https://img.shields.io/badge/Built%20with-Hugo-blueviolet?style=for-the-badge&logo=hugo)](https://gohugo.io/)
+[![Astro](https://img.shields.io/badge/Built%20with-Astro-blueviolet?style=for-the-badge&logo=astro)](https://astro.build/)
 
 Source code for my personal academic website and research portfolio.
 
@@ -29,9 +29,40 @@ Currently, I am focused on the **rigorous validation of Complex Dynamical Stocha
 
 ## 🛠️ Built With
 
-* **Framework:** [Hugo](https://gohugo.io/)
-* **Theme:** [Hugo Blox (Academic)](https://hugoblox.com/)
-* **Hosting:** GitHub Pages
+* **Framework:** [Astro](https://astro.build/) — static output, English and Italian
+* **Search:** [Pagefind](https://pagefind.app/), one index per language
+* **Homepage:** a `three.js` particle cloud, [Lenis](https://lenis.darkroom.engineering/) for the scroll
+* **Hosting:** GitHub Pages, deployed from `main` by `.github/workflows/deploy.yml`
+
+## 💻 Running it locally
+
+```bash
+npm install
+npm run dev      # http://localhost:4321
+npm test         # the generators, the dictionary, the citation data
+npm run build    # generators → astro build → Pagefind index, into dist/
+```
+
+`npm run universe` regenerates the files under `src/data/` that the pages read;
+`npm run build` runs it for you. `src/data/authors/me.yaml` and `me-it.yaml` are
+the source for the experience page.
+
+## 📁 What is where
+
+| | |
+|---|---|
+| `src/content/` | the writing — projects, publications, posts, pillars |
+| `src/pages/` | the routes; `[...locale]` renders each one in both languages |
+| `src/engine/` | the homepage particle cloud and its shapes |
+| `scripts/` | the generators that turn content and author files into `src/data/` |
+| `public/` | images, fonts and the files served as-is |
+| `docs/` | the design specs, including the record of what was built and why |
+
+## 🗄️ The previous site
+
+This portfolio was a Hugo (Hugo Blox) site until August 2026. That version is
+kept intact on the **`hugo-legacy`** branch — it is no longer built or deployed,
+and editing it changes nothing that a visitor sees.
 
 ## 🔗 Links
 

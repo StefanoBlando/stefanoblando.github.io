@@ -1,0 +1,446 @@
+{
+  "generatedAt": "2026-08-17",
+  "source": "src/data/authors/me.yaml",
+  "lang": "en",
+  "role": "PhD Student in Artificial Intelligence",
+  "orcid": "0009-0007-0523-6855",
+  "since": "2015",
+  "education": [
+    {
+      "degree": "PhD in Artificial Intelligence",
+      "institution": "Scuola Superiore Sant'Anna & University of Pisa",
+      "from": "2025",
+      "to": "present",
+      "current": true,
+      "facts": [
+        {
+          "label": "Research focus",
+          "value": "\"Learning How to Learn: Adaptive Cognitive Architectures for Economic Network Formation\""
+        }
+      ],
+      "notes": [
+        "Methods include differentiable agent-based models, LLM-based generative agents, multi-agent learning, network dynamics, and robust statistics."
+      ],
+      "bullets": []
+    },
+    {
+      "degree": "Second-Level Master in Customer Experience, Statistics, ML and AI",
+      "institution": "University of Rome Tor Vergata",
+      "from": "2025",
+      "to": "2026",
+      "current": false,
+      "facts": [
+        {
+          "label": "Final Grade",
+          "value": "110/110 cum laude"
+        },
+        {
+          "label": "Thesis",
+          "value": "\"Network Topology Analysis and Machine Learning Techniques for Systemic Risk Prediction in U.S. Equity Markets\""
+        }
+      ],
+      "notes": [
+        "Advanced program in statistics, machine learning, and artificial intelligence with SAS Academic Specialization in Advanced Data Analytics and Machine Learning Engineering.",
+        "Selected as one of the top 3 best-performing graduates by SAS Global Academic Management for the SAS/DDI Data Lovers talent initiative."
+      ],
+      "bullets": []
+    },
+    {
+      "degree": "MSc in Financial Markets and Financial Intermediaries",
+      "institution": "University of Rome Tor Vergata",
+      "from": "2022",
+      "to": "2025",
+      "current": false,
+      "facts": [
+        {
+          "label": "Final Grade",
+          "value": "108/110"
+        },
+        {
+          "label": "Thesis",
+          "value": "\"High-dimensional Robust Portfolio Optimization Under Contamination: A Factor-Analytic Approach\""
+        },
+        {
+          "label": "Supervisor",
+          "value": "Prof. Alessio Farcomeni"
+        },
+        {
+          "label": "Focus",
+          "value": "robust statistics, quantitative finance, and factor-analytic methods"
+        }
+      ],
+      "notes": [],
+      "bullets": []
+    },
+    {
+      "degree": "BSc in Governance & International Relations",
+      "institution": "University of Rome Tor Vergata",
+      "from": "2019",
+      "to": "2022",
+      "current": false,
+      "facts": [
+        {
+          "label": "Final Grade",
+          "value": "110/110 cum laude"
+        },
+        {
+          "label": "Thesis",
+          "value": "\"Consumer Choice Under Uncertainty: From Homo Oeconomicus to Homo Temperatus\""
+        },
+        {
+          "label": "Supervisor",
+          "value": "Prof. Gustavo Piga"
+        },
+        {
+          "label": "Erasmus+ Exchange",
+          "value": "University of Paris Est-Creteil (Aug 2021 - Feb 2022)"
+        }
+      ],
+      "notes": [],
+      "bullets": []
+    },
+    {
+      "degree": "YUFE Student Journey",
+      "institution": "Young Universities for the Future of Europe (European University Alliance)",
+      "from": "2021",
+      "to": "2023",
+      "current": false,
+      "facts": [],
+      "notes": [
+        "Selected for the competitive Tor Vergata cohort (top 30 students university-wide) in the European University Alliance. Completed German coursework (A1/A2, University of Bremen) and cross-institutional academic training across partner universities."
+      ],
+      "bullets": []
+    },
+    {
+      "degree": "BA in Philosophy (not completed)",
+      "institution": "University of Rome La Sapienza",
+      "from": "2015",
+      "to": "2017",
+      "current": false,
+      "facts": [],
+      "notes": [
+        "Coursework in logic, epistemology, philosophy of science, philosophy of language, semiotics, theoretical philosophy, ethics, political philosophy, aesthetics, and history of philosophy."
+      ],
+      "bullets": []
+    }
+  ],
+  "experience": [
+    {
+      "role": "PhD Researcher",
+      "org": "Scuola Superiore Sant'Anna",
+      "url": "https://www.santannapisa.it/",
+      "location": "Pisa, Italy",
+      "from": "2025",
+      "to": "present",
+      "current": true,
+      "facts": [],
+      "notes": [
+        "Research at the intersection of AI, agent-based modeling, and economics, within the National PhD Program in AI (Scuola Superiore Sant'Anna & University of Pisa)."
+      ],
+      "bullets": [
+        "Differentiable agent-based models and LLM-based generative agents for economic simulation.",
+        "Statistical model checking of agent-based models - work published at MARS @ ETAPS 2026.",
+        "Robust and high-dimensional methods for financial, socio-economic, and textual data."
+      ]
+    },
+    {
+      "role": "Academic Tutor",
+      "org": "University of Rome Tor Vergata",
+      "url": "https://web.uniroma2.it/",
+      "location": "Rome, Italy",
+      "from": "2020",
+      "to": "2025",
+      "current": false,
+      "facts": [],
+      "notes": [
+        "Provided academic support across the Data Processing Center, university library, and Supply Chain Management course activities."
+      ],
+      "bullets": [
+        "Supported students with statistics, study planning, and course selection.",
+        "Assisted teaching and supervised student project work."
+      ]
+    }
+  ],
+  "awards": [
+    {
+      "title": "VADISTAT Award for Best Scientific Contribution",
+      "awarder": "Associazione VADISTAT - Per Simona Balbi (JADT 2026)",
+      "year": "2026",
+      "summary": "Awarded for the paper 'A Multi-Method Validation Framework for Large-Scale Multilingual Text Analytics' (developed with Prof. D. Fioredistella Iezzi) at the 18th International Conference JADT 2026 in Palermo.",
+      "url": "/blog/vadistat-award-2026/"
+    },
+    {
+      "title": "CINECA ISCRA C Grant",
+      "awarder": "CINECA - Italian National Supercomputing Infrastructure",
+      "year": "2026",
+      "summary": "Awarded compute resources on the Leonardo supercomputer for a project on differentiable, tensor-native simulative models.",
+      "url": ""
+    },
+    {
+      "title": "University of Pisa Doctoral Grant for Student-Led Scientific Events",
+      "awarder": "University of Pisa",
+      "year": "2026",
+      "summary": "Funding to co-organize COMPASS, an interdisciplinary workshop on complexity, markets, policy, and AI in social systems.",
+      "url": "/blog/compass-workshop-2026/"
+    },
+    {
+      "title": "SAS Top Talent Selection — Master CESMA",
+      "awarder": "SAS Institute & University of Rome Tor Vergata",
+      "year": "2026",
+      "summary": "Selected as one of the top 3 best-performing graduates of Master CESMA by SAS Global Academic Management for the SAS/DDI Data Lovers talent initiative.",
+      "url": ""
+    },
+    {
+      "title": "Alpine Climate Data Challenge Finalist",
+      "awarder": "Alpine Climate Data Challenge",
+      "year": "2025",
+      "summary": "",
+      "url": ""
+    },
+    {
+      "title": "2nd Place AI Data Hackathon",
+      "awarder": "Hera Group, BTO Research & Digitiamo",
+      "year": "2024",
+      "summary": "Second place in national hackathon on predictive gas network risk modeling under class imbalance and rare events.",
+      "url": ""
+    },
+    {
+      "title": "1st Place — Huawei DigitALL Night",
+      "awarder": "Huawei Technologies",
+      "year": "2024",
+      "summary": "Winner in national competition on digital technology, networking, and ICT innovation.",
+      "url": ""
+    },
+    {
+      "title": "Bertelsmann Next Generation Tech Booster Selection",
+      "awarder": "Bertelsmann & Udacity",
+      "year": "2024",
+      "summary": "Selected from 17,000+ global applicants for advanced training in Generative AI and deep learning.",
+      "url": ""
+    },
+    {
+      "title": "Academic Tutorship Awards (x2)",
+      "awarder": "University of Rome Tor Vergata",
+      "year": "2024",
+      "summary": "Awarded twice for excellence in student support and teaching assistance.",
+      "url": ""
+    }
+  ],
+  "skills": [
+    {
+      "name": "Programming & Scientific Computing",
+      "items": [
+        {
+          "label": "Python",
+          "level": 5
+        },
+        {
+          "label": "PyTorch & JAX",
+          "level": 5
+        },
+        {
+          "label": "R",
+          "level": 5
+        },
+        {
+          "label": "MATLAB",
+          "level": 4
+        },
+        {
+          "label": "SQL & SAS",
+          "level": 4
+        },
+        {
+          "label": "LaTeX & Git",
+          "level": 5
+        }
+      ]
+    },
+    {
+      "name": "Machine Learning & AI",
+      "items": [
+        {
+          "label": "Agentic Systems & Multi-Agent Orchestration",
+          "level": 5
+        },
+        {
+          "label": "Deep Learning & Transformers",
+          "level": 5
+        },
+        {
+          "label": "Graph Neural Networks (GNN)",
+          "level": 4
+        },
+        {
+          "label": "LLM Fine-Tuning & RAG",
+          "level": 4
+        },
+        {
+          "label": "Differentiable Programming",
+          "level": 4
+        },
+        {
+          "label": "Explainable AI (XAI)",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "Simulation & Agent-Based Modeling",
+      "items": [
+        {
+          "label": "Agent-Based Modeling (ABM)",
+          "level": 5
+        },
+        {
+          "label": "Statistical Model Checking (SMC)",
+          "level": 5
+        },
+        {
+          "label": "Differentiable Simulation",
+          "level": 4
+        },
+        {
+          "label": "Multi-Agent Reinforcement Learning",
+          "level": 4
+        },
+        {
+          "label": "Counterfactual & Scenario Analysis",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "Statistical Methods & Econometrics",
+      "items": [
+        {
+          "label": "Robust Statistics & Factor Models",
+          "level": 5
+        },
+        {
+          "label": "High-Dimensional Inference",
+          "level": 4
+        },
+        {
+          "label": "Time-Series Econometrics",
+          "level": 4
+        },
+        {
+          "label": "Universal & Causal Inference",
+          "level": 4
+        },
+        {
+          "label": "Monte Carlo Methods",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "Complex Systems & Networks",
+      "items": [
+        {
+          "label": "Network Science & Topology",
+          "level": 5
+        },
+        {
+          "label": "Financial & Economic Networks",
+          "level": 4
+        },
+        {
+          "label": "Contagion & Cascading Dynamics",
+          "level": 4
+        },
+        {
+          "label": "Community Detection",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "NLP & Text Analytics",
+      "items": [
+        {
+          "label": "Text Mining & NLP",
+          "level": 5
+        },
+        {
+          "label": "Semantic Network Analysis",
+          "level": 5
+        },
+        {
+          "label": "Topic Modeling & Sentiment Analysis",
+          "level": 4
+        },
+        {
+          "label": "Multilingual Validation Frameworks",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "Quantitative Finance & Risk",
+      "items": [
+        {
+          "label": "Portfolio Optimization",
+          "level": 5
+        },
+        {
+          "label": "Systemic Risk Modeling",
+          "level": 4
+        },
+        {
+          "label": "Stress Testing & Scenario Analysis",
+          "level": 4
+        },
+        {
+          "label": "Bloomberg Terminal & LSEG Workspace",
+          "level": 4
+        }
+      ]
+    },
+    {
+      "name": "HPC & Infrastructure",
+      "items": [
+        {
+          "label": "HPC Clusters & SLURM (CINECA Leonardo)",
+          "level": 4
+        },
+        {
+          "label": "GPU Computing",
+          "level": 4
+        },
+        {
+          "label": "MLOps / LLMOps",
+          "level": 4
+        }
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "name": "Italian",
+      "label": "Native",
+      "level": 5
+    },
+    {
+      "name": "English",
+      "label": "Fluent (C1/C2)",
+      "level": 5
+    },
+    {
+      "name": "French",
+      "label": "Intermediate (B1)",
+      "level": 3
+    },
+    {
+      "name": "German",
+      "label": "Basic (A1/A2)",
+      "level": 2
+    },
+    {
+      "name": "Spanish",
+      "label": "Basic (A2)",
+      "level": 2
+    }
+  ]
+}
